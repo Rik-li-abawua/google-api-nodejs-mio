@@ -2,7 +2,7 @@
 
 # aiplatform
 
-> Train high-quality custom machine learning models with minimal machine learning expertise and effort.
+> Build, scale, govern, and optimize sophisticated agents and models.
 
 ## Support status
 **Note**: Google provides multiple libraries for this service. This library is in
