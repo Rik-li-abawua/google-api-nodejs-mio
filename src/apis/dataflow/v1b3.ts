@@ -1082,7 +1082,7 @@ export namespace dataflow_v1b3 {
      */
     kmsKeyName?: string | null;
     /**
-     * The machine type to use for launching the job. The default is n1-standard-1.
+     * The machine type to use for launching the job. If not set, Dataflow will select a default machine type.
      */
     launcherMachineType?: string | null;
     /**
@@ -2618,13 +2618,17 @@ export namespace dataflow_v1b3 {
    */
   export interface Schema$RuntimeUpdatableParams {
     /**
-     * Optional. Deprecated: Use `autoscaling_tier` instead. The backlog threshold duration in seconds for autoscaling. Value must be non-negative.
+     * Optional. Deprecated: Use `latency_tier` instead. The backlog threshold duration in seconds for autoscaling. Value must be non-negative.
      */
     acceptableBacklogDuration?: string | null;
     /**
-     * Optional. The backlog threshold tier for autoscaling. Value must be one of "low-latency", "medium-latency", or "high-latency".
+     * Optional. Deprecated: Use `latency_tier` instead. The backlog threshold tier for autoscaling. Value must be one of "low-latency", "medium-latency", or "high-latency".
      */
     autoscalingTier?: string | null;
+    /**
+     * Optional. The backlog threshold tier for autoscaling. Value must be one of "low-latency", "medium-latency", or "high-latency".
+     */
+    latencyTier?: string | null;
     /**
      * The maximum number of workers to cap autoscaling at. This field is currently only supported for Streaming Engine jobs.
      */
