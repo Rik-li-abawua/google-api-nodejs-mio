@@ -155,7 +155,7 @@ export namespace networkservices_v1 {
    */
   export interface Schema$AuthzExtension {
     /**
-     * Required. The `:authority` header in the gRPC request sent from Envoy to the extension service.
+     * Optional. The `:authority` header in the gRPC request sent from Envoy to the extension service. It is required when the `service` field points to a backend service or a wasm plugin.
      */
     authority?: string | null;
     /**
@@ -170,6 +170,10 @@ export namespace networkservices_v1 {
      * Optional. Determines how the proxy behaves if the call to the extension fails or times out. When set to `TRUE`, request or response processing continues without error. Any subsequent extensions in the extension chain are also executed. When set to `FALSE` or the default setting of `FALSE` is used, one of the following happens: * If response headers have not been delivered to the downstream client, a generic 500 error is returned to the client. The error response can be tailored by configuring a custom error response in the load balancer. * If response headers have been delivered, then the HTTP stream to the downstream client is reset.
      */
     failOpen?: boolean | null;
+    /**
+     * Optional. List of the Envoy attributes to forward to the extension server. The attributes provided here are included as part of the `ProcessingRequest.attributes` field (of type `map`), where the keys are the attribute names. Refer to the [documentation](https://cloud.google.com/service-extensions/docs/cel-matcher-language-reference#attributes) for the names of attributes that can be forwarded. If omitted, no attributes are sent. Each element is a string indicating the attribute name.
+     */
+    forwardAttributes?: string[] | null;
     /**
      * Optional. List of the HTTP headers to forward to the extension (from the client). If omitted, all headers are sent. Each element is a string indicating the header name.
      */
@@ -367,6 +371,10 @@ export namespace networkservices_v1 {
      */
     failOpen?: boolean | null;
     /**
+     * Optional. List of the Envoy attributes to forward to the extension server. The attributes provided here are included as part of the `ProcessingRequest.attributes` field (of type `map`), where the keys are the attribute names. Refer to the [documentation](https://cloud.google.com/service-extensions/docs/cel-matcher-language-reference#attributes) for the names of attributes that can be forwarded. If omitted, no attributes are sent. Each element is a string indicating the attribute name.
+     */
+    forwardAttributes?: string[] | null;
+    /**
      * Optional. List of the HTTP headers to forward to the extension (from the client or backend). If omitted, all headers are sent. Each element is a string indicating the header name.
      */
     forwardHeaders?: string[] | null;
@@ -379,7 +387,7 @@ export namespace networkservices_v1 {
      */
     name?: string | null;
     /**
-     * Optional. When set to `TRUE`, enables `observability_mode` on the `ext_proc` filter. This makes `ext_proc` calls asynchronous. Envoy doesn't check for the response from `ext_proc` calls. For more information about the filter, see: https://www.envoyproxy.io/docs/envoy/v1.32.3/api-v3/extensions/filters/http/ext_proc/v3/ext_proc.proto#extensions-filters-http-ext-proc-v3-externalprocessor This field is helpful when you want to try out the extension in async log-only mode. Supported by regional `LbTrafficExtension` and `LbRouteExtension` resources. Only `STREAMED` (default) body processing mode is supported.
+     * Optional. When set to `true`, the calls to the extension backend are performed asynchronously, without pausing the processing of the ongoing request. In this mode, only `STREAMED` (default) body processing is supported. Responses, if any, are ignored. Supported by regional `LbTrafficExtension` and `LbRouteExtension` resources.
      */
     observabilityMode?: boolean | null;
     /**
@@ -420,6 +428,14 @@ export namespace networkservices_v1 {
      * Optional. Zero or one IPv4 or IPv6 address on which the Gateway will receive the traffic. When no address is provided, an IP from the subnetwork is allocated This field only applies to gateways of type 'SECURE_WEB_GATEWAY'. Gateways of type 'OPEN_MESH' listen on 0.0.0.0 for IPv4 and :: for IPv6.
      */
     addresses?: string[] | null;
+    /**
+     * Optional. If true, the gateway will allow traffic from clients outside of the region where the gateway is located. This field is configurable only for gateways of type SECURE_WEB_GATEWAY.
+     */
+    allowGlobalAccess?: boolean | null;
+    /**
+     * Optional. If true, the Gateway will listen on all ports. This is mutually exclusive with the `ports` field. This field only applies to gateways of type 'SECURE_WEB_GATEWAY'.
+     */
+    allPorts?: boolean | null;
     /**
      * Optional. A fully-qualified Certificates URL reference. The proxy presents a Certificate (selected based on SNI) when establishing a TLS connection. This feature only applies to gateways of type 'SECURE_WEB_GATEWAY'.
      */
@@ -2501,7 +2517,7 @@ export namespace networkservices_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -2531,7 +2547,7 @@ export namespace networkservices_v1 {
      *
      *   // Do the magic
      *   const res = await networkservices.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -2658,7 +2674,7 @@ export namespace networkservices_v1 {
   }
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
@@ -2731,6 +2747,7 @@ export namespace networkservices_v1 {
      *       //   "createTime": "my_createTime",
      *       //   "description": "my_description",
      *       //   "failOpen": false,
+     *       //   "forwardAttributes": [],
      *       //   "forwardHeaders": [],
      *       //   "labels": {},
      *       //   "loadBalancingScheme": "my_loadBalancingScheme",
@@ -3036,6 +3053,7 @@ export namespace networkservices_v1 {
      *   //   "createTime": "my_createTime",
      *   //   "description": "my_description",
      *   //   "failOpen": false,
+     *   //   "forwardAttributes": [],
      *   //   "forwardHeaders": [],
      *   //   "labels": {},
      *   //   "loadBalancingScheme": "my_loadBalancingScheme",
@@ -3339,6 +3357,7 @@ export namespace networkservices_v1 {
      *       //   "createTime": "my_createTime",
      *       //   "description": "my_description",
      *       //   "failOpen": false,
+     *       //   "forwardAttributes": [],
      *       //   "forwardHeaders": [],
      *       //   "labels": {},
      *       //   "loadBalancingScheme": "my_loadBalancingScheme",
@@ -5895,6 +5914,8 @@ export namespace networkservices_v1 {
      *       // request body parameters
      *       // {
      *       //   "addresses": [],
+     *       //   "allPorts": false,
+     *       //   "allowGlobalAccess": false,
      *       //   "certificateUrls": [],
      *       //   "createTime": "my_createTime",
      *       //   "description": "my_description",
@@ -6201,6 +6222,8 @@ export namespace networkservices_v1 {
      *   // Example response
      *   // {
      *   //   "addresses": [],
+     *   //   "allPorts": false,
+     *   //   "allowGlobalAccess": false,
      *   //   "certificateUrls": [],
      *   //   "createTime": "my_createTime",
      *   //   "description": "my_description",
@@ -6501,6 +6524,8 @@ export namespace networkservices_v1 {
      *       // request body parameters
      *       // {
      *       //   "addresses": [],
+     *       //   "allPorts": false,
+     *       //   "allowGlobalAccess": false,
      *       //   "certificateUrls": [],
      *       //   "createTime": "my_createTime",
      *       //   "description": "my_description",
@@ -7864,6 +7889,8 @@ export namespace networkservices_v1 {
      *     httpRouteId: 'placeholder-value',
      *     // Required. The parent resource of the HttpRoute. Must be in the format `projects/x/locations/x`.
      *     parent: 'projects/my-project/locations/my-location',
+     *     // Optional. Idempotent request UUID.
+     *     requestId: 'placeholder-value',
      *
      *     // Request body metadata
      *     requestBody: {
@@ -8304,6 +8331,8 @@ export namespace networkservices_v1 {
      *
      *   // Do the magic
      *   const res = await networkservices.projects.locations.httpRoutes.list({
+     *     // Optional. Filter expression to restrict the list.
+     *     filter: 'placeholder-value',
      *     // Maximum number of HttpRoutes to return per call.
      *     pageSize: 'placeholder-value',
      *     // The value returned by the last `ListHttpRoutesResponse` Indicates that this is a continuation of a prior `ListHttpRoutes` call, and that the system should return the next page of data.
@@ -8589,6 +8618,10 @@ export namespace networkservices_v1 {
      * Required. The parent resource of the HttpRoute. Must be in the format `projects/x/locations/x`.
      */
     parent?: string;
+    /**
+     * Optional. Idempotent request UUID.
+     */
+    requestId?: string;
 
     /**
      * Request body metadata
@@ -8608,6 +8641,10 @@ export namespace networkservices_v1 {
     name?: string;
   }
   export interface Params$Resource$Projects$Locations$Httproutes$List extends StandardParameters {
+    /**
+     * Optional. Filter expression to restrict the list.
+     */
+    filter?: string;
     /**
      * Maximum number of HttpRoutes to return per call.
      */
