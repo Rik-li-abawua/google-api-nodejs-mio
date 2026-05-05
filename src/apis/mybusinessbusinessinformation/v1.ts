@@ -344,7 +344,7 @@ export namespace mybusinessbusinessinformation_v1 {
    */
   export interface Schema$Empty {}
   /**
-   * Represents a free-form service offered by the merchant. These are services that are not exposed as part of our structure service data. The merchant manually enters the names for of such services via a geomerchant surface.
+   * Represents a free-form service offered by the merchant. These are services that are not exposed as part of our structure service data. The merchant manually enters the names for such services using a geomerchant surface.
    */
   export interface Schema$FreeFormServiceItem {
     /**
@@ -352,7 +352,7 @@ export namespace mybusinessbusinessinformation_v1 {
      */
     category?: string | null;
     /**
-     * Required. Language-tagged labels for the item. We recommend that item names be 140 characters or less, and descriptions 250 characters or less. This field should only be set if the input is a custom service item. Standardized service types should be updated via service_type_id.
+     * Required. Language-tagged labels for the item. We recommend that item names be 140 characters or less, and descriptions 250 characters or less. This field should only be set if the input is a custom service item. Standardized service types should be updated using service_type_id.
      */
     label?: Schema$Label;
   }
@@ -374,11 +374,11 @@ export namespace mybusinessbusinessinformation_v1 {
     requestAdminRightsUri?: string | null;
   }
   /**
-   * Represents a location that was modified by Google.
+   * Represents the view of a location as it appears to consumers, which includes updates that are currently serving on Google Maps and Search.
    */
   export interface Schema$GoogleUpdatedLocation {
     /**
-     * The fields that Google updated.
+     * The fields where the values in the view as it appears to consumers are different than the merchant's information. To accept these changes, patch the location. To reject, patch with your preferred values.
      */
     diffMask?: string | null;
     /**
@@ -386,7 +386,7 @@ export namespace mybusinessbusinessinformation_v1 {
      */
     location?: Schema$Location;
     /**
-     * The fields that have pending edits that haven't yet been pushed to Maps and Search.
+     * The fields where the merchant has provided an update that is currently in flight and hasn't yet been published to Maps and Search. This mask only tracks the status of the merchant's own edits, not external changes.
      */
     pendingMask?: string | null;
   }
@@ -508,7 +508,7 @@ export namespace mybusinessbusinessinformation_v1 {
      */
     phoneNumbers?: Schema$PhoneNumbers;
     /**
-     * Optional. Describes your business in your own voice and shares with users the unique story of your business and offerings. This field is required for all categories except lodging categories (e.g. hotels, motels, inns).
+     * Optional. Describes your business in your own voice and shares with users the unique story of your business and offerings. This field is required for all categories except lodging categories (e.g., hotels, motels, inns).
      */
     profile?: Schema$Profile;
     /**
@@ -585,7 +585,7 @@ export namespace mybusinessbusinessinformation_v1 {
      */
     duplicateLocation?: string | null;
     /**
-     * Output only. Indicates whether the place ID associated with this location has updates that need to be updated or rejected by the client. If this boolean is set, you should call the `getGoogleUpdated` method to lookup information that's needs to be verified.
+     * Output only. Indicates whether the place ID associated with this location has updates that need to be updated or rejected by the client. If this boolean is set, you should call the `getGoogleUpdated` method to look up information that's needs to be verified.
      */
     hasGoogleUpdated?: boolean | null;
     /**
@@ -2557,7 +2557,7 @@ export namespace mybusinessbusinessinformation_v1 {
     }
 
     /**
-     * Returns the specified location.
+     * Returns the specified location as last set by the merchant. It may not reflect updates from Google or user-generated content that are live on Google Maps.
      * @example
      * ```js
      * // Before running the sample:
@@ -2714,7 +2714,7 @@ export namespace mybusinessbusinessinformation_v1 {
     }
 
     /**
-     * Looks up all the attributes set for a given location.
+     * Retrieves attributes for a location as last set by the merchant. It may not reflect updates from Google or user-generated content that are live on Google Maps.
      * @example
      * ```js
      * // Before running the sample:
@@ -2852,7 +2852,7 @@ export namespace mybusinessbusinessinformation_v1 {
     }
 
     /**
-     * Gets the Google-updated version of the specified location.
+     * Returns the specified location as it appears live on Google Maps and Search. This consumer-facing view may have been updated by Google or user-generated content and may differ from the merchant's version. The returned GoogleUpdatedLocation contains masks that indicate which fields differ from the merchant's information.
      * @example
      * ```js
      * // Before running the sample:
@@ -3409,7 +3409,7 @@ export namespace mybusinessbusinessinformation_v1 {
     }
 
     /**
-     * Gets the Google-updated version of the specified location.
+     * Retrieves attributes for a location as they appear live on Google Maps and Search. This consumer-facing view may have been updated by Google or user-generated content and may differ from the merchant's version.
      * @example
      * ```js
      * // Before running the sample:
