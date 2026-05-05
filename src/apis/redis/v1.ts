@@ -125,6 +125,62 @@ export namespace redis_v1 {
   }
 
   /**
+   * The ACL policy resource.
+   */
+  export interface Schema$AclPolicy {
+    /**
+     * Output only. Etag for the ACL policy.
+     */
+    etag?: string | null;
+    /**
+     * Identifier. Full resource path of the ACL policy.
+     */
+    name?: string | null;
+    /**
+     * Required. The ACL rules within the ACL policy.
+     */
+    rules?: Schema$AclRule[];
+    /**
+     * Output only. The state of the ACL policy.
+     */
+    state?: string | null;
+    /**
+     * Output only. The version of the ACL policy. Used in drift resolution.
+     */
+    version?: string | null;
+  }
+  /**
+   * A single ACL rule which defines the policy for a user.
+   */
+  export interface Schema$AclRule {
+    /**
+     * Required. The rule to be applied to the username. Ex: "on \>password123 ~* +@all" The format of the rule is defined by Redis OSS: https://redis.io/docs/latest/operate/oss_and_stack/management/security/acl/
+     */
+    rule?: string | null;
+    /**
+     * Required. Specifies the IAM user or service account to be added to the ACL policy. This username will be directly set on the Redis OSS.
+     */
+    username?: string | null;
+  }
+  /**
+   * Request message for AddAuthToken.
+   */
+  export interface Schema$AddAuthTokenRequest {
+    /**
+     * Required. The auth token to add.
+     */
+    authToken?: Schema$AuthToken;
+  }
+  /**
+   * Request message for AddTokenAuthUser.
+   */
+  export interface Schema$AddTokenAuthUserRequest {
+    /**
+     * Required. The id of the token auth user to add.
+     */
+    tokenAuthUser?: string | null;
+  }
+  /**
    * Configuration of the AOF based persistence.
    */
   export interface Schema$AOFConfig {
@@ -132,6 +188,27 @@ export namespace redis_v1 {
      * Optional. fsync configuration.
      */
     appendFsync?: string | null;
+  }
+  /**
+   * Auth token for the cluster.
+   */
+  export interface Schema$AuthToken {
+    /**
+     * Output only. Create time of the auth token.
+     */
+    createTime?: string | null;
+    /**
+     * Identifier. Name of the auth token. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}/authTokens/{auth_token\}
+     */
+    name?: string | null;
+    /**
+     * Output only. State of the auth token.
+     */
+    state?: string | null;
+    /**
+     * Output only. The service generated authentication token used to connect to the Redis cluster.
+     */
+    token?: string | null;
   }
   /**
    * The automated backup config for a cluster.
@@ -235,7 +312,7 @@ export namespace redis_v1 {
     uid?: string | null;
   }
   /**
-   * Request for [BackupCluster].
+   * Request for `BackupCluster`.
    */
   export interface Schema$BackupClusterRequest {
     /**
@@ -401,6 +478,14 @@ export namespace redis_v1 {
    * A cluster instance.
    */
   export interface Schema$Cluster {
+    /**
+     * Optional. The ACL policy to be applied to the cluster.
+     */
+    aclPolicy?: string | null;
+    /**
+     * Optional. Output only. Indicates whether the ACL rules applied to the cluster are in sync with the latest ACL policy rules. This field is only applicable if the ACL policy is set for the cluster.
+     */
+    aclPolicyInSync?: boolean | null;
     /**
      * Optional. Immutable. Deprecated, do not use.
      */
@@ -849,7 +934,7 @@ export namespace redis_v1 {
     uniqueId?: string | null;
   }
   /**
-   * Common model for database resource instance metadata. Next ID: 31
+   * Common model for database resource instance metadata. Next ID: 32
    */
   export interface Schema$DatabaseResourceMetadata {
     /**
@@ -920,6 +1005,10 @@ export namespace redis_v1 {
      * Optional. Maintenance info for the resource.
      */
     maintenanceInfo?: Schema$ResourceMaintenanceInfo;
+    /**
+     * Optional. The modes of the database resource.
+     */
+    modes?: string[] | null;
     /**
      * Identifier for this resource's immediate parent/primary resource if the current resource is a replica or derived form of another Database resource. Else it would be NULL. REQUIRED if the immediate parent exists when first time resource is getting ingested, otherwise optional.
      */
@@ -1003,9 +1092,13 @@ export namespace redis_v1 {
     signalType?: string | null;
   }
   /**
-   * Database resource signal data. This is used to send signals to Condor which are based on the DB/Instance/Fleet level configurations. These will be used to send signals for all inventory types. Next ID: 7
+   * Database resource signal data. This is used to send signals to Condor which are based on the DB/Instance/Fleet level configurations. These will be used to send signals for all inventory types. Next ID: 10
    */
   export interface Schema$DatabaseResourceSignalData {
+    /**
+     * Deprecated: Use signal_metadata_list instead.
+     */
+    backupRun?: Schema$BackupRun;
     /**
      * Required. Full Resource name of the source resource.
      */
@@ -1015,13 +1108,21 @@ export namespace redis_v1 {
      */
     lastRefreshTime?: string | null;
     /**
+     * Required. Resource location.
+     */
+    location?: string | null;
+    /**
      * Database resource id.
      */
     resourceId?: Schema$DatabaseResourceId;
     /**
-     * Signal data for boolean signals.
+     * Deprecated: Use signal_metadata_list instead.
      */
     signalBoolValue?: boolean | null;
+    /**
+     * This will support array of OneOf signal metadata information for a given signal type.
+     */
+    signalMetadataList?: Schema$SignalMetadata[];
     /**
      * Required. Output only. Signal state of the signal
      */
@@ -1104,7 +1205,7 @@ export namespace redis_v1 {
     type?: string | null;
   }
   /**
-   * Request for [ExportBackup].
+   * Request for `ExportBackup`.
    */
   export interface Schema$ExportBackupRequest {
     /**
@@ -1342,7 +1443,7 @@ export namespace redis_v1 {
      */
     readReplicasMode?: string | null;
     /**
-     * Optional. Redis configuration parameters, according to http://redis.io/topics/config. Currently, the only supported parameters are: Redis version 3.2 and newer: * maxmemory-policy * notify-keyspace-events Redis version 4.0 and newer: * activedefrag * lfu-decay-time * lfu-log-factor * maxmemory-gb Redis version 5.0 and newer: * stream-node-max-bytes * stream-node-max-entries
+     * Optional. Redis configuration parameters, according to [Redis configuration](https://redis.io/docs/latest/operate/oss_and_stack/management/config/). Currently, the only supported parameters are: Redis version 3.2 and newer: * maxmemory-policy * notify-keyspace-events Redis version 4.0 and newer: * activedefrag * lfu-decay-time * lfu-log-factor * maxmemory-gb Redis version 5.0 and newer: * stream-node-max-bytes * stream-node-max-entries
      */
     redisConfigs?: {[key: string]: string} | null;
     /**
@@ -1431,7 +1532,41 @@ export namespace redis_v1 {
     resourceName?: string | null;
   }
   /**
-   * Response for [ListBackupCollections].
+   * Response for `ListAclPolicies`.
+   */
+  export interface Schema$ListAclPoliciesResponse {
+    /**
+     * A list of ACL policies in the project in the specified location, or across all locations. If the `location_id` in the parent field of the request is "-", all regions available to the project are queried, and the results aggregated.
+     */
+    aclPolicies?: Schema$AclPolicy[];
+    /**
+     * Token to retrieve the next page of results, or empty if there are no more results in the list.
+     */
+    nextPageToken?: string | null;
+    /**
+     * Locations that could not be reached.
+     */
+    unreachable?: string[] | null;
+  }
+  /**
+   * Response message for ListAuthTokens.
+   */
+  export interface Schema$ListAuthTokensResponse {
+    /**
+     * A list of auth tokens in the project.
+     */
+    authTokens?: Schema$AuthToken[];
+    /**
+     * Token to retrieve the next page of results, or empty if there are no more results in the list.
+     */
+    nextPageToken?: string | null;
+    /**
+     * Unordered list. Auth tokens that could not be reached.
+     */
+    unreachable?: string[] | null;
+  }
+  /**
+   * Response for `ListBackupCollections`.
    */
   export interface Schema$ListBackupCollectionsResponse {
     /**
@@ -1448,7 +1583,7 @@ export namespace redis_v1 {
     unreachable?: string[] | null;
   }
   /**
-   * Response for [ListBackups].
+   * Response for `ListBackups`.
    */
   export interface Schema$ListBackupsResponse {
     /**
@@ -1465,7 +1600,7 @@ export namespace redis_v1 {
     unreachable?: string[] | null;
   }
   /**
-   * Response for ListClusters.
+   * Response for `ListClusters`.
    */
   export interface Schema$ListClustersResponse {
     /**
@@ -1525,6 +1660,23 @@ export namespace redis_v1 {
     operations?: Schema$Operation[];
     /**
      * Unordered list. Unreachable resources. Populated when the request sets `ListOperationsRequest.return_partial_success` and reads across collections. For example, when attempting to list all resources across all supported locations.
+     */
+    unreachable?: string[] | null;
+  }
+  /**
+   * Response message for ListTokenAuthUsers.
+   */
+  export interface Schema$ListTokenAuthUsersResponse {
+    /**
+     * Token to retrieve the next page of results, or empty if there are no more results in the list.
+     */
+    nextPageToken?: string | null;
+    /**
+     * A list of token auth users in the project.
+     */
+    tokenAuthUsers?: Schema$TokenAuthUser[];
+    /**
+     * Unordered list. Token auth users that could not be reached.
      */
     unreachable?: string[] | null;
   }
@@ -2100,6 +2252,19 @@ export namespace redis_v1 {
     name?: string | null;
   }
   /**
+   * SignalMetadata contains one of the signal metadata proto messages associated with a SignalType. This proto will be mapped to SignalMetadata message in storage.proto. Next ID: 3
+   */
+  export interface Schema$SignalMetadata {
+    /**
+     * Signal data for backup runs.
+     */
+    backupRun?: Schema$BackupRun;
+    /**
+     * Signal data for boolean signals.
+     */
+    signalBoolValue?: boolean | null;
+  }
+  /**
    * Represents additional information about the state of the cluster.
    */
   export interface Schema$StateInfo {
@@ -2179,6 +2344,19 @@ export namespace redis_v1 {
      * Sha1 Fingerprint of the certificate.
      */
     sha1Fingerprint?: string | null;
+  }
+  /**
+   * Represents a token based auth user for the cluster.
+   */
+  export interface Schema$TokenAuthUser {
+    /**
+     * Identifier. The resource name of the token based auth user. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}
+     */
+    name?: string | null;
+    /**
+     * Output only. The state of the token based auth user.
+     */
+    state?: string | null;
   }
   /**
    * TypedValue represents the value of a metric type. It can either be a double, an int64, a string or a bool.
@@ -2288,12 +2466,16 @@ export namespace redis_v1 {
 
   export class Resource$Projects$Locations {
     context: APIRequestContext;
+    aclPolicies: Resource$Projects$Locations$Aclpolicies;
     backupCollections: Resource$Projects$Locations$Backupcollections;
     clusters: Resource$Projects$Locations$Clusters;
     instances: Resource$Projects$Locations$Instances;
     operations: Resource$Projects$Locations$Operations;
     constructor(context: APIRequestContext) {
       this.context = context;
+      this.aclPolicies = new Resource$Projects$Locations$Aclpolicies(
+        this.context
+      );
       this.backupCollections =
         new Resource$Projects$Locations$Backupcollections(this.context);
       this.clusters = new Resource$Projects$Locations$Clusters(this.context);
@@ -2325,7 +2507,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -2463,7 +2648,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -2589,7 +2777,7 @@ export namespace redis_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -2610,7 +2798,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -2619,7 +2810,7 @@ export namespace redis_v1 {
      *
      *   // Do the magic
      *   const res = await redis.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -2751,7 +2942,7 @@ export namespace redis_v1 {
   }
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
@@ -2770,6 +2961,837 @@ export namespace redis_v1 {
      * A page token received from the `next_page_token` field in the response. Send that page token to receive the subsequent page.
      */
     pageToken?: string;
+  }
+
+  export class Resource$Projects$Locations$Aclpolicies {
+    context: APIRequestContext;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+    }
+
+    /**
+     * Creates an ACL Policy. The creation is executed synchronously and the policy is available for use immediately after the RPC returns.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await redis.projects.locations.aclPolicies.create({
+     *     // Required. The logical name of the ACL Policy in the customer project with the following restrictions: * Must contain only lowercase letters, numbers, and hyphens. * Must start with a letter. * Must be between 1-63 characters. * Must end with a number or a letter. * Must be unique within the customer project / location
+     *     aclPolicyId: 'placeholder-value',
+     *     // Required. The resource name of the cluster location using the form: `projects/{project_id\}/locations/{location_id\}` where `location_id` refers to a Google Cloud region.
+     *     parent: 'projects/my-project/locations/my-location',
+     *     // Optional. Idempotent request UUID. .
+     *     requestId: 'placeholder-value',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "etag": "my_etag",
+     *       //   "name": "my_name",
+     *       //   "rules": [],
+     *       //   "state": "my_state",
+     *       //   "version": "my_version"
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "etag": "my_etag",
+     *   //   "name": "my_name",
+     *   //   "rules": [],
+     *   //   "state": "my_state",
+     *   //   "version": "my_version"
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    create(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Create,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    create(
+      params?: Params$Resource$Projects$Locations$Aclpolicies$Create,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$AclPolicy>>;
+    create(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Create,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    create(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Create,
+      options: MethodOptions | BodyResponseCallback<Schema$AclPolicy>,
+      callback: BodyResponseCallback<Schema$AclPolicy>
+    ): void;
+    create(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Create,
+      callback: BodyResponseCallback<Schema$AclPolicy>
+    ): void;
+    create(callback: BodyResponseCallback<Schema$AclPolicy>): void;
+    create(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Aclpolicies$Create
+        | BodyResponseCallback<Schema$AclPolicy>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$AclPolicy>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$AclPolicy>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$AclPolicy>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Aclpolicies$Create;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Aclpolicies$Create;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+parent}/aclPolicies').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['parent'],
+        pathParams: ['parent'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$AclPolicy>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$AclPolicy>(parameters);
+      }
+    }
+
+    /**
+     * Deletes a specific Acl Policy. This action will delete the Acl Policy and all the rules associated with it. An ACL policy cannot be deleted if it is attached to a cluster.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await redis.projects.locations.aclPolicies.delete({
+     *     // Optional. Etag of the ACL policy. If this is different from the server's etag, the request will fail with an ABORTED error.
+     *     etag: 'placeholder-value',
+     *     // Required. Redis ACL Policy resource name using the form: `projects/{project_id\}/locations/{location_id\}/aclPolicies/{acl_policy_id\}` where `location_id` refers to a GCP region.
+     *     name: 'projects/my-project/locations/my-location/aclPolicies/my-aclPolicie',
+     *     // Optional. Idempotent request UUID.
+     *     requestId: 'placeholder-value',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    delete(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Delete,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    delete(
+      params?: Params$Resource$Projects$Locations$Aclpolicies$Delete,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    delete(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Delete,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    delete(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Delete,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    delete(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Delete,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    delete(callback: BodyResponseCallback<Schema$Operation>): void;
+    delete(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Aclpolicies$Delete
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Aclpolicies$Delete;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Aclpolicies$Delete;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'DELETE',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
+    }
+
+    /**
+     * Gets the details of a specific Redis Cluster ACL Policy.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await redis.projects.locations.aclPolicies.get({
+     *     // Required. Redis ACL Policy resource name using the form: `projects/{project_id\}/locations/{location_id\}/aclPolicies/{acl_policy_id\}` where `location_id` refers to a GCP region.
+     *     name: 'projects/my-project/locations/my-location/aclPolicies/my-aclPolicie',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "etag": "my_etag",
+     *   //   "name": "my_name",
+     *   //   "rules": [],
+     *   //   "state": "my_state",
+     *   //   "version": "my_version"
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    get(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Get,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    get(
+      params?: Params$Resource$Projects$Locations$Aclpolicies$Get,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$AclPolicy>>;
+    get(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Get,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    get(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Get,
+      options: MethodOptions | BodyResponseCallback<Schema$AclPolicy>,
+      callback: BodyResponseCallback<Schema$AclPolicy>
+    ): void;
+    get(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Get,
+      callback: BodyResponseCallback<Schema$AclPolicy>
+    ): void;
+    get(callback: BodyResponseCallback<Schema$AclPolicy>): void;
+    get(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Aclpolicies$Get
+        | BodyResponseCallback<Schema$AclPolicy>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$AclPolicy>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$AclPolicy>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$AclPolicy>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Aclpolicies$Get;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Aclpolicies$Get;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$AclPolicy>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$AclPolicy>(parameters);
+      }
+    }
+
+    /**
+     * Lists all ACL Policies owned by a project in either the specified location (region) or all locations. The location should have the following format: * `projects/{project_id\}/locations/{location_id\}` If `location_id` is specified as `-` (wildcard), then all regions available to the project are queried, and the results are aggregated.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await redis.projects.locations.aclPolicies.list({
+     *     // Optional. The maximum number of items to return. If not specified, a default value of 1000 will be used by the service. Regardless of the page_size value, the response may include a partial list and a caller should only rely on response's `next_page_token` to determine if there are more ACL policies left to be queried. The maximum value is 1000; values above 1000 will be coerced to 1000.
+     *     pageSize: 'placeholder-value',
+     *     // Optional. The `next_page_token` value returned from a previous `ListAclPolicies` request, if any.
+     *     pageToken: 'placeholder-value',
+     *     // Required. The resource name of the cluster location using the form: `projects/{project_id\}/locations/{location_id\}` where `location_id` refers to a Google Cloud region.
+     *     parent: 'projects/my-project/locations/my-location',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "aclPolicies": [],
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "unreachable": []
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    list(
+      params: Params$Resource$Projects$Locations$Aclpolicies$List,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    list(
+      params?: Params$Resource$Projects$Locations$Aclpolicies$List,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$ListAclPoliciesResponse>>;
+    list(
+      params: Params$Resource$Projects$Locations$Aclpolicies$List,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    list(
+      params: Params$Resource$Projects$Locations$Aclpolicies$List,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$ListAclPoliciesResponse>,
+      callback: BodyResponseCallback<Schema$ListAclPoliciesResponse>
+    ): void;
+    list(
+      params: Params$Resource$Projects$Locations$Aclpolicies$List,
+      callback: BodyResponseCallback<Schema$ListAclPoliciesResponse>
+    ): void;
+    list(callback: BodyResponseCallback<Schema$ListAclPoliciesResponse>): void;
+    list(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Aclpolicies$List
+        | BodyResponseCallback<Schema$ListAclPoliciesResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$ListAclPoliciesResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$ListAclPoliciesResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$ListAclPoliciesResponse>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Aclpolicies$List;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Aclpolicies$List;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+parent}/aclPolicies').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['parent'],
+        pathParams: ['parent'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$ListAclPoliciesResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$ListAclPoliciesResponse>(parameters);
+      }
+    }
+
+    /**
+     * Updates the ACL policy. The operation applies the updated ACL policy to all of the linked clusters. If Memorystore can apply the policy to all clusters, then the operation returns a SUCCESS status. If Memorystore can't apply the policy to all clusters, then to ensure eventual consistency, Memorystore uses reconciliation to apply the policy to the failed clusters. Completed longrunning.Operation will contain the new ACL Policy object in the response field.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await redis.projects.locations.aclPolicies.patch({
+     *     // Identifier. Full resource path of the ACL policy.
+     *     name: 'projects/my-project/locations/my-location/aclPolicies/my-aclPolicie',
+     *     // Optional. Idempotent request UUID.
+     *     requestId: 'placeholder-value',
+     *     // Optional. Mask of fields to be updated. At least one path must be supplied in this field. The elements of the repeated paths field may only include these fields from `AclPolicy`: * `rules`
+     *     updateMask: 'placeholder-value',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "etag": "my_etag",
+     *       //   "name": "my_name",
+     *       //   "rules": [],
+     *       //   "state": "my_state",
+     *       //   "version": "my_version"
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    patch(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Patch,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    patch(
+      params?: Params$Resource$Projects$Locations$Aclpolicies$Patch,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    patch(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Patch,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    patch(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Patch,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    patch(
+      params: Params$Resource$Projects$Locations$Aclpolicies$Patch,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    patch(callback: BodyResponseCallback<Schema$Operation>): void;
+    patch(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Aclpolicies$Patch
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Aclpolicies$Patch;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Aclpolicies$Patch;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'PATCH',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
+    }
+  }
+
+  export interface Params$Resource$Projects$Locations$Aclpolicies$Create extends StandardParameters {
+    /**
+     * Required. The logical name of the ACL Policy in the customer project with the following restrictions: * Must contain only lowercase letters, numbers, and hyphens. * Must start with a letter. * Must be between 1-63 characters. * Must end with a number or a letter. * Must be unique within the customer project / location
+     */
+    aclPolicyId?: string;
+    /**
+     * Required. The resource name of the cluster location using the form: `projects/{project_id\}/locations/{location_id\}` where `location_id` refers to a Google Cloud region.
+     */
+    parent?: string;
+    /**
+     * Optional. Idempotent request UUID. .
+     */
+    requestId?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$AclPolicy;
+  }
+  export interface Params$Resource$Projects$Locations$Aclpolicies$Delete extends StandardParameters {
+    /**
+     * Optional. Etag of the ACL policy. If this is different from the server's etag, the request will fail with an ABORTED error.
+     */
+    etag?: string;
+    /**
+     * Required. Redis ACL Policy resource name using the form: `projects/{project_id\}/locations/{location_id\}/aclPolicies/{acl_policy_id\}` where `location_id` refers to a GCP region.
+     */
+    name?: string;
+    /**
+     * Optional. Idempotent request UUID.
+     */
+    requestId?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Aclpolicies$Get extends StandardParameters {
+    /**
+     * Required. Redis ACL Policy resource name using the form: `projects/{project_id\}/locations/{location_id\}/aclPolicies/{acl_policy_id\}` where `location_id` refers to a GCP region.
+     */
+    name?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Aclpolicies$List extends StandardParameters {
+    /**
+     * Optional. The maximum number of items to return. If not specified, a default value of 1000 will be used by the service. Regardless of the page_size value, the response may include a partial list and a caller should only rely on response's `next_page_token` to determine if there are more ACL policies left to be queried. The maximum value is 1000; values above 1000 will be coerced to 1000.
+     */
+    pageSize?: number;
+    /**
+     * Optional. The `next_page_token` value returned from a previous `ListAclPolicies` request, if any.
+     */
+    pageToken?: string;
+    /**
+     * Required. The resource name of the cluster location using the form: `projects/{project_id\}/locations/{location_id\}` where `location_id` refers to a Google Cloud region.
+     */
+    parent?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Aclpolicies$Patch extends StandardParameters {
+    /**
+     * Identifier. Full resource path of the ACL policy.
+     */
+    name?: string;
+    /**
+     * Optional. Idempotent request UUID.
+     */
+    requestId?: string;
+    /**
+     * Optional. Mask of fields to be updated. At least one path must be supplied in this field. The elements of the repeated paths field may only include these fields from `AclPolicy`: * `rules`
+     */
+    updateMask?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$AclPolicy;
   }
 
   export class Resource$Projects$Locations$Backupcollections {
@@ -2804,7 +3826,11 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-only',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -2946,7 +3972,11 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-only',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -3124,7 +4154,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -3265,7 +4298,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -3412,7 +4448,11 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-only',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -3561,7 +4601,11 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-only',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -3729,8 +4773,164 @@ export namespace redis_v1 {
 
   export class Resource$Projects$Locations$Clusters {
     context: APIRequestContext;
+    tokenAuthUsers: Resource$Projects$Locations$Clusters$Tokenauthusers;
     constructor(context: APIRequestContext) {
       this.context = context;
+      this.tokenAuthUsers =
+        new Resource$Projects$Locations$Clusters$Tokenauthusers(this.context);
+    }
+
+    /**
+     * Adds a token auth user for a token based auth enabled cluster.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await redis.projects.locations.clusters.addTokenAuthUser({
+     *     // Required. The cluster resource that this token auth user will be added for. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}
+     *     cluster: 'projects/my-project/locations/my-location/clusters/my-cluster',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "tokenAuthUser": "my_tokenAuthUser"
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    addTokenAuthUser(
+      params: Params$Resource$Projects$Locations$Clusters$Addtokenauthuser,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    addTokenAuthUser(
+      params?: Params$Resource$Projects$Locations$Clusters$Addtokenauthuser,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    addTokenAuthUser(
+      params: Params$Resource$Projects$Locations$Clusters$Addtokenauthuser,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    addTokenAuthUser(
+      params: Params$Resource$Projects$Locations$Clusters$Addtokenauthuser,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    addTokenAuthUser(
+      params: Params$Resource$Projects$Locations$Clusters$Addtokenauthuser,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    addTokenAuthUser(callback: BodyResponseCallback<Schema$Operation>): void;
+    addTokenAuthUser(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Clusters$Addtokenauthuser
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Clusters$Addtokenauthuser;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Clusters$Addtokenauthuser;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+cluster}:addTokenAuthUser').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['cluster'],
+        pathParams: ['cluster'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
     }
 
     /**
@@ -3755,7 +4955,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -3902,7 +5105,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -3922,6 +5128,8 @@ export namespace redis_v1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "aclPolicy": "my_aclPolicy",
+     *       //   "aclPolicyInSync": false,
      *       //   "allowFewerZonesDeployment": false,
      *       //   "asyncClusterEndpointsDeletionEnabled": false,
      *       //   "authorizationMode": "my_authorizationMode",
@@ -4097,7 +5305,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -4237,7 +5448,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -4253,6 +5467,8 @@ export namespace redis_v1 {
      *
      *   // Example response
      *   // {
+     *   //   "aclPolicy": "my_aclPolicy",
+     *   //   "aclPolicyInSync": false,
      *   //   "allowFewerZonesDeployment": false,
      *   //   "asyncClusterEndpointsDeletionEnabled": false,
      *   //   "authorizationMode": "my_authorizationMode",
@@ -4413,7 +5629,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -4553,7 +5772,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -4564,7 +5786,7 @@ export namespace redis_v1 {
      *   const res = await redis.projects.locations.clusters.list({
      *     // The maximum number of items to return. If not specified, a default value of 1000 will be used by the service. Regardless of the page_size value, the response may include a partial list and a caller should only rely on response's `next_page_token` to determine if there are more clusters left to be queried.
      *     pageSize: 'placeholder-value',
-     *     // The `next_page_token` value returned from a previous ListClusters request, if any.
+     *     // The `next_page_token` value returned from a previous `ListClusters` request, if any.
      *     pageToken: 'placeholder-value',
      *     // Required. The resource name of the cluster location using the form: `projects/{project_id\}/locations/{location_id\}` where `location_id` refers to a Google Cloud region.
      *     parent: 'projects/my-project/locations/my-location',
@@ -4698,7 +5920,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -4718,6 +5943,8 @@ export namespace redis_v1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "aclPolicy": "my_aclPolicy",
+     *       //   "aclPolicyInSync": false,
      *       //   "allowFewerZonesDeployment": false,
      *       //   "asyncClusterEndpointsDeletionEnabled": false,
      *       //   "authorizationMode": "my_authorizationMode",
@@ -4890,7 +6117,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5023,6 +6253,17 @@ export namespace redis_v1 {
     }
   }
 
+  export interface Params$Resource$Projects$Locations$Clusters$Addtokenauthuser extends StandardParameters {
+    /**
+     * Required. The cluster resource that this token auth user will be added for. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}
+     */
+    cluster?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$AddTokenAuthUserRequest;
+  }
   export interface Params$Resource$Projects$Locations$Clusters$Backup extends StandardParameters {
     /**
      * Required. Redis cluster resource name using the form: `projects/{project_id\}/locations/{location_id\}/clusters/{cluster_id\}` where `location_id` refers to a Google Cloud region.
@@ -5081,7 +6322,7 @@ export namespace redis_v1 {
      */
     pageSize?: number;
     /**
-     * The `next_page_token` value returned from a previous ListClusters request, if any.
+     * The `next_page_token` value returned from a previous `ListClusters` request, if any.
      */
     pageToken?: string;
     /**
@@ -5120,6 +6361,1149 @@ export namespace redis_v1 {
     requestBody?: Schema$RescheduleClusterMaintenanceRequest;
   }
 
+  export class Resource$Projects$Locations$Clusters$Tokenauthusers {
+    context: APIRequestContext;
+    authTokens: Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+      this.authTokens =
+        new Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens(
+          this.context
+        );
+    }
+
+    /**
+     * Adds a auth token for a user of a token based auth enabled cluster.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await redis.projects.locations.clusters.tokenAuthUsers.addAuthToken({
+     *       // Required. The name of the token auth user resource that this auth token will be added for. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}
+     *       tokenAuthUser:
+     *         'projects/my-project/locations/my-location/clusters/my-cluster/tokenAuthUsers/my-tokenAuthUser',
+     *
+     *       // Request body metadata
+     *       requestBody: {
+     *         // request body parameters
+     *         // {
+     *         //   "authToken": {}
+     *         // }
+     *       },
+     *     });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    addAuthToken(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Addauthtoken,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    addAuthToken(
+      params?: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Addauthtoken,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    addAuthToken(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Addauthtoken,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    addAuthToken(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Addauthtoken,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    addAuthToken(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Addauthtoken,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    addAuthToken(callback: BodyResponseCallback<Schema$Operation>): void;
+    addAuthToken(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Addauthtoken
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Addauthtoken;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Addauthtoken;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+tokenAuthUser}:addAuthToken').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['tokenAuthUser'],
+        pathParams: ['tokenAuthUser'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
+    }
+
+    /**
+     * Deletes a token auth user for a token based auth enabled cluster.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await redis.projects.locations.clusters.tokenAuthUsers.delete({
+     *     // Optional. If set to true, any child auth tokens of this user will also be deleted. Otherwise, the request will only work if the user has no auth tokens.
+     *     force: 'placeholder-value',
+     *     // Required. The name of the token auth user to delete. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}
+     *     name: 'projects/my-project/locations/my-location/clusters/my-cluster/tokenAuthUsers/my-tokenAuthUser',
+     *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes after the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     *     requestId: 'placeholder-value',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    delete(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Delete,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    delete(
+      params?: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Delete,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    delete(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Delete,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    delete(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Delete,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    delete(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Delete,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    delete(callback: BodyResponseCallback<Schema$Operation>): void;
+    delete(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Delete
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Delete;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Delete;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'DELETE',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
+    }
+
+    /**
+     * Gets a specific token auth user for a basic auth enabled cluster.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await redis.projects.locations.clusters.tokenAuthUsers.get({
+     *     // Required. The name of token auth user for a token based auth enabled cluster. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}
+     *     name: 'projects/my-project/locations/my-location/clusters/my-cluster/tokenAuthUsers/my-tokenAuthUser',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "name": "my_name",
+     *   //   "state": "my_state"
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    get(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Get,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    get(
+      params?: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Get,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$TokenAuthUser>>;
+    get(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Get,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    get(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Get,
+      options: MethodOptions | BodyResponseCallback<Schema$TokenAuthUser>,
+      callback: BodyResponseCallback<Schema$TokenAuthUser>
+    ): void;
+    get(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Get,
+      callback: BodyResponseCallback<Schema$TokenAuthUser>
+    ): void;
+    get(callback: BodyResponseCallback<Schema$TokenAuthUser>): void;
+    get(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Get
+        | BodyResponseCallback<Schema$TokenAuthUser>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$TokenAuthUser>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$TokenAuthUser>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$TokenAuthUser>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Get;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Get;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$TokenAuthUser>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$TokenAuthUser>(parameters);
+      }
+    }
+
+    /**
+     * Lists all the token auth users for a token based auth enabled cluster.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await redis.projects.locations.clusters.tokenAuthUsers.list({
+     *     // Optional. Expression for filtering results.
+     *     filter: 'placeholder-value',
+     *     // Optional. Sort results by a defined order.
+     *     orderBy: 'placeholder-value',
+     *     // Optional. The maximum number of items to return. If not specified, a default value of 1000 will be used by the service. Regardless of the page_size value, the response may include a partial list and a caller should only rely on response's The maximum value is 1000; values above 1000 will be coerced to 1000. `next_page_token` to determine if there are more clusters left to be queried.
+     *     pageSize: 'placeholder-value',
+     *     // Optional. The `next_page_token` value returned from a previous [ListTokenAuthUsers] request, if any.
+     *     pageToken: 'placeholder-value',
+     *     // Required. The parent resource that this token based auth user will be listed for. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}
+     *     parent: 'projects/my-project/locations/my-location/clusters/my-cluster',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "tokenAuthUsers": [],
+     *   //   "unreachable": []
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    list(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$List,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    list(
+      params?: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$List,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$ListTokenAuthUsersResponse>>;
+    list(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$List,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    list(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$List,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$ListTokenAuthUsersResponse>,
+      callback: BodyResponseCallback<Schema$ListTokenAuthUsersResponse>
+    ): void;
+    list(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$List,
+      callback: BodyResponseCallback<Schema$ListTokenAuthUsersResponse>
+    ): void;
+    list(
+      callback: BodyResponseCallback<Schema$ListTokenAuthUsersResponse>
+    ): void;
+    list(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Clusters$Tokenauthusers$List
+        | BodyResponseCallback<Schema$ListTokenAuthUsersResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$ListTokenAuthUsersResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$ListTokenAuthUsersResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$ListTokenAuthUsersResponse>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$List;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$List;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+parent}/tokenAuthUsers').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['parent'],
+        pathParams: ['parent'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$ListTokenAuthUsersResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$ListTokenAuthUsersResponse>(parameters);
+      }
+    }
+  }
+
+  export interface Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Addauthtoken extends StandardParameters {
+    /**
+     * Required. The name of the token auth user resource that this auth token will be added for. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}
+     */
+    tokenAuthUser?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$AddAuthTokenRequest;
+  }
+  export interface Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Delete extends StandardParameters {
+    /**
+     * Optional. If set to true, any child auth tokens of this user will also be deleted. Otherwise, the request will only work if the user has no auth tokens.
+     */
+    force?: boolean;
+    /**
+     * Required. The name of the token auth user to delete. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}
+     */
+    name?: string;
+    /**
+     * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes after the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     */
+    requestId?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Get extends StandardParameters {
+    /**
+     * Required. The name of token auth user for a token based auth enabled cluster. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}
+     */
+    name?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Clusters$Tokenauthusers$List extends StandardParameters {
+    /**
+     * Optional. Expression for filtering results.
+     */
+    filter?: string;
+    /**
+     * Optional. Sort results by a defined order.
+     */
+    orderBy?: string;
+    /**
+     * Optional. The maximum number of items to return. If not specified, a default value of 1000 will be used by the service. Regardless of the page_size value, the response may include a partial list and a caller should only rely on response's The maximum value is 1000; values above 1000 will be coerced to 1000. `next_page_token` to determine if there are more clusters left to be queried.
+     */
+    pageSize?: number;
+    /**
+     * Optional. The `next_page_token` value returned from a previous [ListTokenAuthUsers] request, if any.
+     */
+    pageToken?: string;
+    /**
+     * Required. The parent resource that this token based auth user will be listed for. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}
+     */
+    parent?: string;
+  }
+
+  export class Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens {
+    context: APIRequestContext;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+    }
+
+    /**
+     * Removes a auth token for a user of a token based auth enabled instance.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await redis.projects.locations.clusters.tokenAuthUsers.authTokens.delete({
+     *       // Required. The name of the token auth user resource that this auth token will be deleted from. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}/authTokens/{auth_token\}
+     *       name: 'projects/my-project/locations/my-location/clusters/my-cluster/tokenAuthUsers/my-tokenAuthUser/authTokens/my-authToken',
+     *     });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    delete(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Delete,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    delete(
+      params?: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Delete,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    delete(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Delete,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    delete(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Delete,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    delete(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Delete,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    delete(callback: BodyResponseCallback<Schema$Operation>): void;
+    delete(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Delete
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Delete;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Delete;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'DELETE',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
+    }
+
+    /**
+     * Gets a specific auth token for a specific token auth user.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await redis.projects.locations.clusters.tokenAuthUsers.authTokens.get({
+     *       // Required. The name of auth token for a token based auth enabled cluster. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}/authTokens/{auth_token\}
+     *       name: 'projects/my-project/locations/my-location/clusters/my-cluster/tokenAuthUsers/my-tokenAuthUser/authTokens/my-authToken',
+     *     });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "createTime": "my_createTime",
+     *   //   "name": "my_name",
+     *   //   "state": "my_state",
+     *   //   "token": "my_token"
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    get(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Get,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    get(
+      params?: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Get,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$AuthToken>>;
+    get(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Get,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    get(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Get,
+      options: MethodOptions | BodyResponseCallback<Schema$AuthToken>,
+      callback: BodyResponseCallback<Schema$AuthToken>
+    ): void;
+    get(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Get,
+      callback: BodyResponseCallback<Schema$AuthToken>
+    ): void;
+    get(callback: BodyResponseCallback<Schema$AuthToken>): void;
+    get(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Get
+        | BodyResponseCallback<Schema$AuthToken>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$AuthToken>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$AuthToken>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$AuthToken>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Get;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Get;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$AuthToken>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$AuthToken>(parameters);
+      }
+    }
+
+    /**
+     * Lists all the auth tokens for a specific token auth user.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/redis.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const redis = google.redis('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await redis.projects.locations.clusters.tokenAuthUsers.authTokens.list({
+     *       // Optional. Expression for filtering results.
+     *       filter: 'placeholder-value',
+     *       // Optional. Sort results by a defined order.
+     *       orderBy: 'placeholder-value',
+     *       // Optional. The maximum number of items to return. The maximum value is 1000; values above 1000 will be coerced to 1000. If not specified, a default value of 1000 will be used by the service. Regardless of the page_size value, the response may include a partial list and a caller should only rely on response's `next_page_token` to determine if there are more clusters left to be queried.
+     *       pageSize: 'placeholder-value',
+     *       // Optional. The `next_page_token` value returned from a previous [ListTokenAuthUsers] request, if any.
+     *       pageToken: 'placeholder-value',
+     *       // Required. The parent resource that this auth token will be listed for. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}
+     *       parent:
+     *         'projects/my-project/locations/my-location/clusters/my-cluster/tokenAuthUsers/my-tokenAuthUser',
+     *     });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "authTokens": [],
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "unreachable": []
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    list(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$List,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    list(
+      params?: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$List,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$ListAuthTokensResponse>>;
+    list(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$List,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    list(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$List,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$ListAuthTokensResponse>,
+      callback: BodyResponseCallback<Schema$ListAuthTokensResponse>
+    ): void;
+    list(
+      params: Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$List,
+      callback: BodyResponseCallback<Schema$ListAuthTokensResponse>
+    ): void;
+    list(callback: BodyResponseCallback<Schema$ListAuthTokensResponse>): void;
+    list(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$List
+        | BodyResponseCallback<Schema$ListAuthTokensResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$ListAuthTokensResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$ListAuthTokensResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$ListAuthTokensResponse>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$List;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$List;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://redis.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+parent}/authTokens').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['parent'],
+        pathParams: ['parent'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$ListAuthTokensResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$ListAuthTokensResponse>(parameters);
+      }
+    }
+  }
+
+  export interface Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Delete extends StandardParameters {
+    /**
+     * Required. The name of the token auth user resource that this auth token will be deleted from. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}/authTokens/{auth_token\}
+     */
+    name?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$Get extends StandardParameters {
+    /**
+     * Required. The name of auth token for a token based auth enabled cluster. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}/authTokens/{auth_token\}
+     */
+    name?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Clusters$Tokenauthusers$Authtokens$List extends StandardParameters {
+    /**
+     * Optional. Expression for filtering results.
+     */
+    filter?: string;
+    /**
+     * Optional. Sort results by a defined order.
+     */
+    orderBy?: string;
+    /**
+     * Optional. The maximum number of items to return. The maximum value is 1000; values above 1000 will be coerced to 1000. If not specified, a default value of 1000 will be used by the service. Regardless of the page_size value, the response may include a partial list and a caller should only rely on response's `next_page_token` to determine if there are more clusters left to be queried.
+     */
+    pageSize?: number;
+    /**
+     * Optional. The `next_page_token` value returned from a previous [ListTokenAuthUsers] request, if any.
+     */
+    pageToken?: string;
+    /**
+     * Required. The parent resource that this auth token will be listed for. Format: projects/{project\}/locations/{location\}/clusters/{cluster\}/tokenAuthUsers/{token_auth_user\}
+     */
+    parent?: string;
+  }
+
   export class Resource$Projects$Locations$Instances {
     context: APIRequestContext;
     constructor(context: APIRequestContext) {
@@ -5148,7 +7532,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5336,7 +7723,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5474,7 +7864,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5620,7 +8013,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5769,7 +8165,11 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-only',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5940,7 +8340,11 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-only',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -6080,7 +8484,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -6226,7 +8633,11 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-only',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -6371,7 +8782,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -6556,7 +8970,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -6709,7 +9126,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -6983,7 +9403,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -7115,7 +9538,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -7247,7 +9673,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -7385,7 +9814,10 @@ export namespace redis_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/redis.read-write',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
