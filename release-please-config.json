@@ -323,6 +323,9 @@
     "src/apis/appsmarket": {},
     "src/apis/threatintelligence": {},
     "src/apis/hypercomputecluster": {},
-    "src/apis/ces": {}
+    "src/apis/ces": {},
+    "src/apis/agentregistry": {},
+    "src/apis/developerknowledge": {},
+    "src/apis/health": {}
   }
 }
