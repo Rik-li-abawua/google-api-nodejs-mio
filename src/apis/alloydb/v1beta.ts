@@ -790,6 +790,19 @@ export namespace alloydb_v1beta {
     time?: Schema$GoogleTypeTimeOfDay;
   }
   /**
+   * The DNS config for the endpoint, containing the DNS record name, type and targets.
+   */
+  export interface Schema$DNSConfig {
+    /**
+     * The fully qualified domain name (FQDN) of the DNS record, e.g., ".location.alloydb-psa.goog".
+     */
+    dnsName?: string | null;
+    /**
+     * The type of the DNS record, e.g., "A", "AAAA", "CNAME".
+     */
+    dnsRecordType?: string | null;
+  }
+  /**
    * A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); \}
    */
   export interface Schema$Empty {}
@@ -814,6 +827,67 @@ export namespace alloydb_v1beta {
      * Output only. Cloud KMS key versions that are being used to protect the database or the backup.
      */
     kmsKeyVersions?: string[] | null;
+  }
+  /**
+   * Endpoint resource.
+   */
+  export interface Schema$Endpoint {
+    /**
+     * Annotations to allow client tools to store small amount of arbitrary data. This is distinct from labels. https://google.aip.dev/128
+     */
+    annotations?: {[key: string]: string} | null;
+    /**
+     * Output only. Create time stamp
+     */
+    createTime?: string | null;
+    /**
+     * Output only. Delete time stamp
+     */
+    deleteTime?: string | null;
+    /**
+     * User-settable and human-readable display name for the Endpoint.
+     */
+    displayName?: string | null;
+    /**
+     * Output only. The DNS config for the endpoint. Each endpoint is associated with a specific DNS name and the DNS type. The DNS targets are the IP addresses of the target instances. The dns_type is the type of the DNS record, eg. Type "A" or Type "CNAME". This field is not configurable by the user, and it is updated when user specifies the target instances.
+     */
+    dnsConfig?: Schema$DNSConfig;
+    /**
+     * Output only. The effective target instances that the endpoint is associated with. This is a list of target instance names, e.g. projects/{project_number\}/locations/{location\}/clusters/{cluster_id\}/instances/{instance_id\} For write endpoint, there is only one effective target instance which has to be a primary instance. Effective target instances are only different from target instances after a switchover or cross-region failover operation. Otherwise, effective_target_instances are the same as target_instances. Note that after a cross-region failover operation, the effective_target_instances can be stale until the operation to update the endpoint is complete.
+     */
+    effectiveTargetInstances?: string[] | null;
+    /**
+     * The type of the endpoint, either write or read.
+     */
+    endpointType?: string | null;
+    /**
+     * For Resource freshness validation (https://google.aip.dev/154)
+     */
+    etag?: string | null;
+    /**
+     * Output only. Identifier. The name of the endpoint resource with the format: * projects/{project\}/locations/{region\}/endpoints/{endpoint_id\} where the endpoint ID segment should satisfy the regex expression `[a-z0-9-]+`. For more details see https://google.aip.dev/122. The prefix of the endpoint resource name is the name of the parent resource: * projects/{project\}/locations/{region\}
+     */
+    name?: string | null;
+    /**
+     * Output only. Reconciling (https://google.aip.dev/128#reconciliation). Set to true if the current state of Endpoint does not match the user's intended state, and the service is actively updating the Endpoint to reconcile them. This can happen due to user-triggered updates or system actions like failover or maintenance.
+     */
+    reconciling?: boolean | null;
+    /**
+     * Output only. The state of the endpoint.
+     */
+    state?: string | null;
+    /**
+     * The names of the target instances for the endpoint, should be of format projects/{project\}/locations/{region\}/clusters/{cluster\}/instances/{instance\}. For write endpoint, there is only one target instance which has to be a primary instance. For read endpoint, there can be multiple target instances which can be read or secondary instances. After a cross-region failover or switchover operation, the endpoint will be associated with a different target instance. This change will be reflected in the effective_target_instances field.
+     */
+    targetInstances?: string[] | null;
+    /**
+     * Output only. The system-generated UID of the resource. The UID is assigned when the resource is created, and it is retained until it is deleted.
+     */
+    uid?: string | null;
+    /**
+     * Output only. Update time stamp
+     */
+    updateTime?: string | null;
   }
   /**
    * Export cluster request.
@@ -1238,6 +1312,23 @@ export namespace alloydb_v1beta {
     unreachable?: string[] | null;
   }
   /**
+   * Message for response to listing Endpoints
+   */
+  export interface Schema$ListEndpointsResponse {
+    /**
+     * The list of Endpoints
+     */
+    endpoints?: Schema$Endpoint[];
+    /**
+     * A token identifying a page of results the server should return.
+     */
+    nextPageToken?: string | null;
+    /**
+     * Locations that could not be reached.
+     */
+    unreachable?: string[] | null;
+  }
+  /**
    * Message for response to listing Instances
    */
   export interface Schema$ListInstancesResponse {
@@ -1392,6 +1483,10 @@ export namespace alloydb_v1beta {
      */
     ip?: string | null;
     /**
+     * Output only. Indicates whether the node set up to be configured as a hot standby.
+     */
+    isHotStandby?: boolean | null;
+    /**
      * Output only. Determined by state of the compute VM and postgres-service health. Compute VM state can have values listed in https://cloud.google.com/compute/docs/instances/instance-life-cycle and postgres-service health can have values: HEALTHY and UNHEALTHY.
      */
     state?: string | null;
@@ -1432,6 +1527,10 @@ export namespace alloydb_v1beta {
      * Track actively running queries on the instance. If not set, this flag is "off" by default.
      */
     trackActiveQueries?: boolean | null;
+    /**
+     * Indicates whether to track active query plans for an instance. If not set, the default value is "off". Can only be enabled if track_active_queries is enabled.
+     */
+    trackActiveQueryPlan?: boolean | null;
     /**
      * Track client address for an instance. If not set, default value is "off".
      */
@@ -1545,6 +1644,10 @@ export namespace alloydb_v1beta {
      * Optional. The current etag of the Cluster. If an etag is provided and does not match the current etag of the Cluster, deletion will be blocked and an ABORTED error will be returned.
      */
     etag?: string | null;
+    /**
+     * Optional. If set, the promote operation will attempt to recreate the original primary cluster as a secondary cluster when it comes back online. Otherwise, the promoted cluster will be a standalone cluster. Currently only supported when there is a single secondary cluster.
+     */
+    failover?: boolean | null;
     /**
      * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server ignores the request if it has already been completed. The server guarantees that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      */
@@ -2174,7 +2277,7 @@ export namespace alloydb_v1beta {
     uniqueId?: string | null;
   }
   /**
-   * Common model for database resource instance metadata. Next ID: 31
+   * Common model for database resource instance metadata. Next ID: 32
    */
   export interface Schema$StorageDatabasecenterPartnerapiV1mainDatabaseResourceMetadata {
     /**
@@ -2245,6 +2348,10 @@ export namespace alloydb_v1beta {
      * Optional. Maintenance info for the resource.
      */
     maintenanceInfo?: Schema$StorageDatabasecenterPartnerapiV1mainResourceMaintenanceInfo;
+    /**
+     * Optional. The modes of the database resource.
+     */
+    modes?: string[] | null;
     /**
      * Identifier for this resource's immediate parent/primary resource if the current resource is a replica or derived form of another Database resource. Else it would be NULL. REQUIRED if the immediate parent exists when first time resource is getting ingested, otherwise optional.
      */
@@ -2328,9 +2435,13 @@ export namespace alloydb_v1beta {
     signalType?: string | null;
   }
   /**
-   * Database resource signal data. This is used to send signals to Condor which are based on the DB/Instance/Fleet level configurations. These will be used to send signals for all inventory types. Next ID: 7
+   * Database resource signal data. This is used to send signals to Condor which are based on the DB/Instance/Fleet level configurations. These will be used to send signals for all inventory types. Next ID: 10
    */
   export interface Schema$StorageDatabasecenterPartnerapiV1mainDatabaseResourceSignalData {
+    /**
+     * Deprecated: Use signal_metadata_list instead.
+     */
+    backupRun?: Schema$StorageDatabasecenterPartnerapiV1mainBackupRun;
     /**
      * Required. Full Resource name of the source resource.
      */
@@ -2340,13 +2451,21 @@ export namespace alloydb_v1beta {
      */
     lastRefreshTime?: string | null;
     /**
+     * Required. Resource location.
+     */
+    location?: string | null;
+    /**
      * Database resource id.
      */
     resourceId?: Schema$StorageDatabasecenterPartnerapiV1mainDatabaseResourceId;
     /**
-     * Signal data for boolean signals.
+     * Deprecated: Use signal_metadata_list instead.
      */
     signalBoolValue?: boolean | null;
+    /**
+     * This will support array of OneOf signal metadata information for a given signal type.
+     */
+    signalMetadataList?: Schema$StorageDatabasecenterPartnerapiV1mainSignalMetadata[];
     /**
      * Required. Output only. Signal state of the signal
      */
@@ -2561,6 +2680,19 @@ export namespace alloydb_v1beta {
      * Timestamp based retention period i.e. 2024-05-01T00:00:00Z
      */
     timestampBasedRetentionTime?: string | null;
+  }
+  /**
+   * SignalMetadata contains one of the signal metadata proto messages associated with a SignalType. This proto will be mapped to SignalMetadata message in storage.proto. Next ID: 3
+   */
+  export interface Schema$StorageDatabasecenterPartnerapiV1mainSignalMetadata {
+    /**
+     * Signal data for backup runs.
+     */
+    backupRun?: Schema$StorageDatabasecenterPartnerapiV1mainBackupRun;
+    /**
+     * Signal data for boolean signals.
+     */
+    signalBoolValue?: boolean | null;
   }
   /**
    * Message type for storing tags. Tags provide a way to create annotations for resources, and in some cases conditionally allow or deny policies based on whether a resource has a specific tag.
@@ -2867,12 +2999,14 @@ export namespace alloydb_v1beta {
     context: APIRequestContext;
     backups: Resource$Projects$Locations$Backups;
     clusters: Resource$Projects$Locations$Clusters;
+    endpoints: Resource$Projects$Locations$Endpoints;
     operations: Resource$Projects$Locations$Operations;
     supportedDatabaseFlags: Resource$Projects$Locations$Supporteddatabaseflags;
     constructor(context: APIRequestContext) {
       this.context = context;
       this.backups = new Resource$Projects$Locations$Backups(this.context);
       this.clusters = new Resource$Projects$Locations$Clusters(this.context);
+      this.endpoints = new Resource$Projects$Locations$Endpoints(this.context);
       this.operations = new Resource$Projects$Locations$Operations(
         this.context
       );
@@ -3023,7 +3157,7 @@ export namespace alloydb_v1beta {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -3053,7 +3187,7 @@ export namespace alloydb_v1beta {
      *
      *   // Do the magic
      *   const res = await alloydb.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -3187,7 +3321,7 @@ export namespace alloydb_v1beta {
   }
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
@@ -5537,6 +5671,7 @@ export namespace alloydb_v1beta {
      *       // request body parameters
      *       // {
      *       //   "etag": "my_etag",
+     *       //   "failover": false,
      *       //   "requestId": "my_requestId",
      *       //   "validateOnly": false
      *       // }
@@ -9113,6 +9248,885 @@ export namespace alloydb_v1beta {
      * Request body metadata
      */
     requestBody?: Schema$User;
+  }
+
+  export class Resource$Projects$Locations$Endpoints {
+    context: APIRequestContext;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+    }
+
+    /**
+     * Creates a new Endpoint in a given project and location.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/alloydb.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const alloydb = google.alloydb('v1beta');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await alloydb.projects.locations.endpoints.create({
+     *     // Required. ID of the requesting object.
+     *     endpointId: 'placeholder-value',
+     *     // Required. The location of the new endpoint. For the required format, see the comment on the Endpoint.name field.
+     *     parent: 'projects/my-project/locations/my-location',
+     *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server ignores the request if it has already been completed. The server guarantees that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, ignores the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     *     requestId: 'placeholder-value',
+     *     // Optional. If set, the backend validates the request, but doesn't actually execute it.
+     *     validateOnly: 'placeholder-value',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "annotations": {},
+     *       //   "createTime": "my_createTime",
+     *       //   "deleteTime": "my_deleteTime",
+     *       //   "displayName": "my_displayName",
+     *       //   "dnsConfig": {},
+     *       //   "effectiveTargetInstances": [],
+     *       //   "endpointType": "my_endpointType",
+     *       //   "etag": "my_etag",
+     *       //   "name": "my_name",
+     *       //   "reconciling": false,
+     *       //   "state": "my_state",
+     *       //   "targetInstances": [],
+     *       //   "uid": "my_uid",
+     *       //   "updateTime": "my_updateTime"
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    create(
+      params: Params$Resource$Projects$Locations$Endpoints$Create,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    create(
+      params?: Params$Resource$Projects$Locations$Endpoints$Create,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    create(
+      params: Params$Resource$Projects$Locations$Endpoints$Create,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    create(
+      params: Params$Resource$Projects$Locations$Endpoints$Create,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    create(
+      params: Params$Resource$Projects$Locations$Endpoints$Create,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    create(callback: BodyResponseCallback<Schema$Operation>): void;
+    create(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Endpoints$Create
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Endpoints$Create;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Endpoints$Create;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://alloydb.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta/{+parent}/endpoints').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['parent'],
+        pathParams: ['parent'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
+    }
+
+    /**
+     * Deletes a single Endpoint.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/alloydb.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const alloydb = google.alloydb('v1beta');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await alloydb.projects.locations.endpoints.delete({
+     *     // Optional. The current etag of the Endpoint. If an etag is provided and does not match the current etag of the Endpoint, deletion will be blocked and an ABORTED error will be returned.
+     *     etag: 'placeholder-value',
+     *     // Required. The name of the resource. For the required format, see the comment on the Endpoint.name field.
+     *     name: 'projects/my-project/locations/my-location/endpoints/my-endpoint',
+     *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server ignores the request if it has already been completed. The server guarantees that for at least 60 minutes after the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, ignores the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     *     requestId: 'placeholder-value',
+     *     // Optional. If set, the backend validates the request, but doesn't actually execute it.
+     *     validateOnly: 'placeholder-value',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    delete(
+      params: Params$Resource$Projects$Locations$Endpoints$Delete,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    delete(
+      params?: Params$Resource$Projects$Locations$Endpoints$Delete,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    delete(
+      params: Params$Resource$Projects$Locations$Endpoints$Delete,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    delete(
+      params: Params$Resource$Projects$Locations$Endpoints$Delete,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    delete(
+      params: Params$Resource$Projects$Locations$Endpoints$Delete,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    delete(callback: BodyResponseCallback<Schema$Operation>): void;
+    delete(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Endpoints$Delete
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Endpoints$Delete;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Endpoints$Delete;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://alloydb.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'DELETE',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
+    }
+
+    /**
+     * Gets details of a single Endpoint.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/alloydb.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const alloydb = google.alloydb('v1beta');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await alloydb.projects.locations.endpoints.get({
+     *     // Required. The name of the resource. For the required format, see the comment on the Endpoint.name field.
+     *     name: 'projects/my-project/locations/my-location/endpoints/my-endpoint',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "annotations": {},
+     *   //   "createTime": "my_createTime",
+     *   //   "deleteTime": "my_deleteTime",
+     *   //   "displayName": "my_displayName",
+     *   //   "dnsConfig": {},
+     *   //   "effectiveTargetInstances": [],
+     *   //   "endpointType": "my_endpointType",
+     *   //   "etag": "my_etag",
+     *   //   "name": "my_name",
+     *   //   "reconciling": false,
+     *   //   "state": "my_state",
+     *   //   "targetInstances": [],
+     *   //   "uid": "my_uid",
+     *   //   "updateTime": "my_updateTime"
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    get(
+      params: Params$Resource$Projects$Locations$Endpoints$Get,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    get(
+      params?: Params$Resource$Projects$Locations$Endpoints$Get,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Endpoint>>;
+    get(
+      params: Params$Resource$Projects$Locations$Endpoints$Get,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    get(
+      params: Params$Resource$Projects$Locations$Endpoints$Get,
+      options: MethodOptions | BodyResponseCallback<Schema$Endpoint>,
+      callback: BodyResponseCallback<Schema$Endpoint>
+    ): void;
+    get(
+      params: Params$Resource$Projects$Locations$Endpoints$Get,
+      callback: BodyResponseCallback<Schema$Endpoint>
+    ): void;
+    get(callback: BodyResponseCallback<Schema$Endpoint>): void;
+    get(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Endpoints$Get
+        | BodyResponseCallback<Schema$Endpoint>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Endpoint>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Endpoint>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Endpoint>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Endpoints$Get;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Endpoints$Get;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://alloydb.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Endpoint>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Endpoint>(parameters);
+      }
+    }
+
+    /**
+     * Lists Endpoints in a given project and location.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/alloydb.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const alloydb = google.alloydb('v1beta');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await alloydb.projects.locations.endpoints.list({
+     *     // Optional. Filtering results. This field is currently not supported, its value will be ignored if passed.
+     *     filter: 'placeholder-value',
+     *     // Optional. Hint for how to order the results
+     *     orderBy: 'placeholder-value',
+     *     // Optional. Requested page size. Server may return fewer items than requested. If unspecified, server will pick an appropriate default.
+     *     pageSize: 'placeholder-value',
+     *     // Optional. A page token, received from a previous `ListEndpoints` call. This should be provided to retrieve the subsequent page. This field is currently not supported, its value will be ignored if passed.
+     *     pageToken: 'placeholder-value',
+     *     // Required. The name of the parent resource. For the required format, see the comment on the Endpoint.name field. Additionally, you can perform an aggregated list operation by specifying a value with the following format: * projects/{project\}/locations/-
+     *     parent: 'projects/my-project/locations/my-location',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "endpoints": [],
+     *   //   "nextPageToken": "my_nextPageToken",
+     *   //   "unreachable": []
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    list(
+      params: Params$Resource$Projects$Locations$Endpoints$List,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    list(
+      params?: Params$Resource$Projects$Locations$Endpoints$List,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$ListEndpointsResponse>>;
+    list(
+      params: Params$Resource$Projects$Locations$Endpoints$List,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    list(
+      params: Params$Resource$Projects$Locations$Endpoints$List,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$ListEndpointsResponse>,
+      callback: BodyResponseCallback<Schema$ListEndpointsResponse>
+    ): void;
+    list(
+      params: Params$Resource$Projects$Locations$Endpoints$List,
+      callback: BodyResponseCallback<Schema$ListEndpointsResponse>
+    ): void;
+    list(callback: BodyResponseCallback<Schema$ListEndpointsResponse>): void;
+    list(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Endpoints$List
+        | BodyResponseCallback<Schema$ListEndpointsResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$ListEndpointsResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$ListEndpointsResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$ListEndpointsResponse>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Endpoints$List;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Endpoints$List;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://alloydb.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta/{+parent}/endpoints').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['parent'],
+        pathParams: ['parent'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$ListEndpointsResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$ListEndpointsResponse>(parameters);
+      }
+    }
+
+    /**
+     * Updates the parameters of a single Endpoint.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/alloydb.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const alloydb = google.alloydb('v1beta');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await alloydb.projects.locations.endpoints.patch({
+     *     // Optional. If set to true, update succeeds even if endpoint is not found. In that case, a new endpoint is created and `update_mask` is ignored.
+     *     allowMissing: 'placeholder-value',
+     *     // Output only. Identifier. The name of the endpoint resource with the format: * projects/{project\}/locations/{region\}/endpoints/{endpoint_id\} where the endpoint ID segment should satisfy the regex expression `[a-z0-9-]+`. For more details see https://google.aip.dev/122. The prefix of the endpoint resource name is the name of the parent resource: * projects/{project\}/locations/{region\}
+     *     name: 'projects/my-project/locations/my-location/endpoints/my-endpoint',
+     *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server ignores the request if it has already been completed. The server guarantees that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, ignores the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     *     requestId: 'placeholder-value',
+     *     // Optional. Field mask is used to specify the fields to be overwritten in the Endpoint resource by the update. The fields specified in the update_mask are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
+     *     updateMask: 'placeholder-value',
+     *     // Optional. If set, the backend validates the request, but doesn't actually execute it.
+     *     validateOnly: 'placeholder-value',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "annotations": {},
+     *       //   "createTime": "my_createTime",
+     *       //   "deleteTime": "my_deleteTime",
+     *       //   "displayName": "my_displayName",
+     *       //   "dnsConfig": {},
+     *       //   "effectiveTargetInstances": [],
+     *       //   "endpointType": "my_endpointType",
+     *       //   "etag": "my_etag",
+     *       //   "name": "my_name",
+     *       //   "reconciling": false,
+     *       //   "state": "my_state",
+     *       //   "targetInstances": [],
+     *       //   "uid": "my_uid",
+     *       //   "updateTime": "my_updateTime"
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    patch(
+      params: Params$Resource$Projects$Locations$Endpoints$Patch,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    patch(
+      params?: Params$Resource$Projects$Locations$Endpoints$Patch,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    patch(
+      params: Params$Resource$Projects$Locations$Endpoints$Patch,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    patch(
+      params: Params$Resource$Projects$Locations$Endpoints$Patch,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    patch(
+      params: Params$Resource$Projects$Locations$Endpoints$Patch,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    patch(callback: BodyResponseCallback<Schema$Operation>): void;
+    patch(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Endpoints$Patch
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Endpoints$Patch;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Endpoints$Patch;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://alloydb.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'PATCH',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
+    }
+  }
+
+  export interface Params$Resource$Projects$Locations$Endpoints$Create extends StandardParameters {
+    /**
+     * Required. ID of the requesting object.
+     */
+    endpointId?: string;
+    /**
+     * Required. The location of the new endpoint. For the required format, see the comment on the Endpoint.name field.
+     */
+    parent?: string;
+    /**
+     * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server ignores the request if it has already been completed. The server guarantees that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, ignores the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     */
+    requestId?: string;
+    /**
+     * Optional. If set, the backend validates the request, but doesn't actually execute it.
+     */
+    validateOnly?: boolean;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$Endpoint;
+  }
+  export interface Params$Resource$Projects$Locations$Endpoints$Delete extends StandardParameters {
+    /**
+     * Optional. The current etag of the Endpoint. If an etag is provided and does not match the current etag of the Endpoint, deletion will be blocked and an ABORTED error will be returned.
+     */
+    etag?: string;
+    /**
+     * Required. The name of the resource. For the required format, see the comment on the Endpoint.name field.
+     */
+    name?: string;
+    /**
+     * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server ignores the request if it has already been completed. The server guarantees that for at least 60 minutes after the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, ignores the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     */
+    requestId?: string;
+    /**
+     * Optional. If set, the backend validates the request, but doesn't actually execute it.
+     */
+    validateOnly?: boolean;
+  }
+  export interface Params$Resource$Projects$Locations$Endpoints$Get extends StandardParameters {
+    /**
+     * Required. The name of the resource. For the required format, see the comment on the Endpoint.name field.
+     */
+    name?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Endpoints$List extends StandardParameters {
+    /**
+     * Optional. Filtering results. This field is currently not supported, its value will be ignored if passed.
+     */
+    filter?: string;
+    /**
+     * Optional. Hint for how to order the results
+     */
+    orderBy?: string;
+    /**
+     * Optional. Requested page size. Server may return fewer items than requested. If unspecified, server will pick an appropriate default.
+     */
+    pageSize?: number;
+    /**
+     * Optional. A page token, received from a previous `ListEndpoints` call. This should be provided to retrieve the subsequent page. This field is currently not supported, its value will be ignored if passed.
+     */
+    pageToken?: string;
+    /**
+     * Required. The name of the parent resource. For the required format, see the comment on the Endpoint.name field. Additionally, you can perform an aggregated list operation by specifying a value with the following format: * projects/{project\}/locations/-
+     */
+    parent?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Endpoints$Patch extends StandardParameters {
+    /**
+     * Optional. If set to true, update succeeds even if endpoint is not found. In that case, a new endpoint is created and `update_mask` is ignored.
+     */
+    allowMissing?: boolean;
+    /**
+     * Output only. Identifier. The name of the endpoint resource with the format: * projects/{project\}/locations/{region\}/endpoints/{endpoint_id\} where the endpoint ID segment should satisfy the regex expression `[a-z0-9-]+`. For more details see https://google.aip.dev/122. The prefix of the endpoint resource name is the name of the parent resource: * projects/{project\}/locations/{region\}
+     */
+    name?: string;
+    /**
+     * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server ignores the request if it has already been completed. The server guarantees that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, ignores the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     */
+    requestId?: string;
+    /**
+     * Optional. Field mask is used to specify the fields to be overwritten in the Endpoint resource by the update. The fields specified in the update_mask are relative to the resource, not the full request. A field will be overwritten if it is in the mask. If the user does not provide a mask then all fields will be overwritten.
+     */
+    updateMask?: string;
+    /**
+     * Optional. If set, the backend validates the request, but doesn't actually execute it.
+     */
+    validateOnly?: boolean;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$Endpoint;
   }
 
   export class Resource$Projects$Locations$Operations {

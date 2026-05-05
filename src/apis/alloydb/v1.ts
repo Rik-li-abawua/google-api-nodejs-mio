@@ -1333,6 +1333,10 @@ export namespace alloydb_v1 {
      */
     ip?: string | null;
     /**
+     * Output only. Indicates whether the node set up to be configured as a hot standby.
+     */
+    isHotStandby?: boolean | null;
+    /**
      * Output only. Determined by state of the compute VM and postgres-service health. Compute VM state can have values listed in https://cloud.google.com/compute/docs/instances/instance-life-cycle and postgres-service health can have values: HEALTHY and UNHEALTHY.
      */
     state?: string | null;
@@ -2049,7 +2053,7 @@ export namespace alloydb_v1 {
     uniqueId?: string | null;
   }
   /**
-   * Common model for database resource instance metadata. Next ID: 31
+   * Common model for database resource instance metadata. Next ID: 32
    */
   export interface Schema$StorageDatabasecenterPartnerapiV1mainDatabaseResourceMetadata {
     /**
@@ -2120,6 +2124,10 @@ export namespace alloydb_v1 {
      * Optional. Maintenance info for the resource.
      */
     maintenanceInfo?: Schema$StorageDatabasecenterPartnerapiV1mainResourceMaintenanceInfo;
+    /**
+     * Optional. The modes of the database resource.
+     */
+    modes?: string[] | null;
     /**
      * Identifier for this resource's immediate parent/primary resource if the current resource is a replica or derived form of another Database resource. Else it would be NULL. REQUIRED if the immediate parent exists when first time resource is getting ingested, otherwise optional.
      */
@@ -2203,9 +2211,13 @@ export namespace alloydb_v1 {
     signalType?: string | null;
   }
   /**
-   * Database resource signal data. This is used to send signals to Condor which are based on the DB/Instance/Fleet level configurations. These will be used to send signals for all inventory types. Next ID: 7
+   * Database resource signal data. This is used to send signals to Condor which are based on the DB/Instance/Fleet level configurations. These will be used to send signals for all inventory types. Next ID: 10
    */
   export interface Schema$StorageDatabasecenterPartnerapiV1mainDatabaseResourceSignalData {
+    /**
+     * Deprecated: Use signal_metadata_list instead.
+     */
+    backupRun?: Schema$StorageDatabasecenterPartnerapiV1mainBackupRun;
     /**
      * Required. Full Resource name of the source resource.
      */
@@ -2215,13 +2227,21 @@ export namespace alloydb_v1 {
      */
     lastRefreshTime?: string | null;
     /**
+     * Resource location.
+     */
+    location?: string | null;
+    /**
      * Database resource id.
      */
     resourceId?: Schema$StorageDatabasecenterPartnerapiV1mainDatabaseResourceId;
     /**
-     * Signal data for boolean signals.
+     * Deprecated: Use signal_metadata_list instead.
      */
     signalBoolValue?: boolean | null;
+    /**
+     * This will support array of OneOf signal metadata information for a given signal type.
+     */
+    signalMetadataList?: Schema$StorageDatabasecenterPartnerapiV1mainSignalMetadata[];
     /**
      * Required. Output only. Signal state of the signal
      */
@@ -2436,6 +2456,19 @@ export namespace alloydb_v1 {
      * Timestamp based retention period i.e. 2024-05-01T00:00:00Z
      */
     timestampBasedRetentionTime?: string | null;
+  }
+  /**
+   * SignalMetadata contains one of the signal metadata proto messages associated with a SignalType. This proto will be mapped to SignalMetadata message in storage.proto. Next ID: 3
+   */
+  export interface Schema$StorageDatabasecenterPartnerapiV1mainSignalMetadata {
+    /**
+     * Signal data for backup runs.
+     */
+    backupRun?: Schema$StorageDatabasecenterPartnerapiV1mainBackupRun;
+    /**
+     * Signal data for boolean signals.
+     */
+    signalBoolValue?: boolean | null;
   }
   /**
    * Message type for storing tags. Tags provide a way to create annotations for resources, and in some cases conditionally allow or deny policies based on whether a resource has a specific tag.
@@ -2889,7 +2922,7 @@ export namespace alloydb_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the [ListLocationsRequest.name] field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
