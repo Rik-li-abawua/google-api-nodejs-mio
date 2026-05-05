@@ -125,6 +125,31 @@ export namespace connectors_v1 {
   }
 
   /**
+   * * AdminFilters defines a set of filters that can be applied to a connection. These are currently used by Gemini Enterprise connections.
+   */
+  export interface Schema$AdminFilters {
+    /**
+     * Required. Unique name for the filter, e.g., "SharePointSiteURL", "DocumentType", "ChatSpaceName".
+     */
+    filterKey?: string | null;
+    /**
+     * Required. Type of the filter.
+     */
+    filterType?: string | null;
+    /**
+     * Optional. A single integer value.
+     */
+    intValue?: string | null;
+    /**
+     * Optional. List of string values.
+     */
+    stringListValues?: Schema$StringListValues;
+    /**
+     * Optional. A single string value.
+     */
+    stringValue?: string | null;
+  }
+  /**
    * Specifies the audit configuration for a service. The configuration determines which permission types are logged, and what identities, if any, are exempted from logging. An AuditConfig must have one or more AuditLogConfigs. If there are AuditConfigs for both `allServices` and a specific service, the union of the two AuditConfigs is used for that service: the log_types specified in each AuditConfig are enabled, and the exempted_members in each AuditLogConfig are exempted. Example Policy with multiple AuditConfigs: { "audit_configs": [ { "service": "allServices", "audit_log_configs": [ { "log_type": "DATA_READ", "exempted_members": [ "user:jose@example.com" ] \}, { "log_type": "DATA_WRITE" \}, { "log_type": "ADMIN_READ" \} ] \}, { "service": "sampleservice.googleapis.com", "audit_log_configs": [ { "log_type": "DATA_READ" \}, { "log_type": "DATA_WRITE", "exempted_members": [ "user:aliya@example.com" ] \} ] \} ] \} For sampleservice, this policy enables DATA_READ, DATA_WRITE and ADMIN_READ logging. It also exempts `jose@example.com` from DATA_READ logging, and `aliya@example.com` from DATA_WRITE logging.
    */
   export interface Schema$AuditConfig {
@@ -376,15 +401,15 @@ export namespace connectors_v1 {
    */
   export interface Schema$ConfigVariable {
     /**
-     * Value is a bool.
+     * Optional. Value is a bool.
      */
     boolValue?: boolean | null;
     /**
-     * Value is a Encryption Key.
+     * Optional. Value is a Encryption Key.
      */
     encryptionKeyValue?: Schema$EncryptionKey;
     /**
-     * Value is an integer
+     * Optional. Value is an integer
      */
     intValue?: string | null;
     /**
@@ -392,11 +417,11 @@ export namespace connectors_v1 {
      */
     key?: string | null;
     /**
-     * Value is a secret.
+     * Optional. Value is a secret.
      */
     secretValue?: Schema$Secret;
     /**
-     * Value is a string.
+     * Optional. Value is a string.
      */
     stringValue?: string | null;
   }
@@ -469,6 +494,10 @@ export namespace connectors_v1 {
    * Connection represents an instance of connector.
    */
   export interface Schema$Connection {
+    /**
+     * Optional. Admin filters for the connection. These are used by Gemini Enterprise.
+     */
+    adminFilters?: Schema$AdminFilters[];
     /**
      * Optional. Async operations enabled for the connection. If Async Operations is enabled, Connection allows the customers to initiate async long running operations using the actions API.
      */
@@ -1165,7 +1194,7 @@ export namespace connectors_v1 {
      */
     host?: string | null;
     /**
-     * The port is the target port number that is accepted by the destination.
+     * Optional. The port is the target port number that is accepted by the destination.
      */
     port?: number | null;
     /**
@@ -1178,11 +1207,11 @@ export namespace connectors_v1 {
    */
   export interface Schema$DestinationConfig {
     /**
-     * The destinations for the key.
+     * Optional. The destinations for the key.
      */
     destinations?: Schema$Destination[];
     /**
-     * The key is the destination identifier that is supported by the Connector.
+     * Optional. The key is the destination identifier that is supported by the Connector.
      */
     key?: string | null;
   }
@@ -1286,7 +1315,7 @@ export namespace connectors_v1 {
      */
     kmsKeyName?: string | null;
     /**
-     * Type.
+     * Optional. Specifies the type of the encryption key.
      */
     type?: string | null;
   }
@@ -1690,13 +1719,17 @@ export namespace connectors_v1 {
     secretVersion?: string | null;
   }
   /**
-   * Eventing Configuration of a connection next: 19
+   * Eventing Configuration of a connection next: 21
    */
   export interface Schema$EventingConfig {
     /**
      * Optional. Additional eventing related field values
      */
     additionalVariables?: Schema$ConfigVariable[];
+    /**
+     * Optional. List of allowed event types for the connection.
+     */
+    allowedEventTypes?: string[] | null;
     /**
      * Optional. Auth details for the webhook adapter.
      */
@@ -1714,9 +1747,13 @@ export namespace connectors_v1 {
      */
     enrichmentEnabled?: boolean | null;
     /**
-     * Optional. Ingress endpoint of the event listener. This is used only when private connectivity is enabled.
+     * Output only. Ingress endpoint of the event listener. This is used only when private connectivity is enabled.
      */
     eventsListenerIngressEndpoint?: string | null;
+    /**
+     * Optional. Filter to be applied on the events to be received by the connection.
+     */
+    globalEventFilter?: string | null;
     /**
      * Optional. Auth details for the event listener.
      */
@@ -1832,6 +1869,10 @@ export namespace connectors_v1 {
      */
     searchTags?: string[] | null;
     /**
+     * The webhook model supported by this connector.
+     */
+    subscriptionType?: string | null;
+    /**
      * Output only. The type of the event listener for a specific connector.
      */
     type?: string | null;
@@ -1890,6 +1931,10 @@ export namespace connectors_v1 {
      * Optional. Event type id of the event of current EventSubscription.
      */
     eventTypeId?: string | null;
+    /**
+     * Optional. Filter for the event subscription. Incoming events are filtered based on the filter expression.
+     */
+    filter?: string | null;
     /**
      * Optional. JMS is the source for the event listener.
      */
@@ -2049,6 +2094,24 @@ export namespace connectors_v1 {
      * JSON schema of the AuthSchemas. This is only populated if the view is JSON_SCHEMA. The schema is in draft-07 format.
      */
     jsonSchema?: Schema$JsonAuthSchema;
+  }
+  /**
+   * Request message for FetchConnectionToolspecOverride API.
+   */
+  export interface Schema$FetchConnectionToolspecOverrideRequest {
+    /**
+     * Required. List of tools for which the tool spec override is to be generated.
+     */
+    toolNames?: Schema$ToolName[];
+  }
+  /**
+   * Response message for FetchConnectionToolspecOverride API.
+   */
+  export interface Schema$FetchConnectionToolspecOverrideResponse {
+    /**
+     * Toolspec overrides for the connection.
+     */
+    toolspecOverride?: Schema$ToolspecOverride;
   }
   /**
    * Metadata of an entity field.
@@ -2299,25 +2362,105 @@ export namespace connectors_v1 {
    */
   export interface Schema$JsonSchema {
     /**
+     * A comment on the schema.
+     */
+    $comment?: string | null;
+    /**
+     * Definitions for the schema.
+     */
+    $defs?: {[key: string]: Schema$JsonSchema} | null;
+    /**
+     * The URI defining the core schema meta-schema.
+     */
+    $id?: string | null;
+    /**
+     * A reference to another schema.
+     */
+    $ref?: string | null;
+    /**
+     * The URI defining the schema.
+     */
+    $schema?: string | null;
+    /**
      * Additional details apart from standard json schema fields, this gives flexibility to store metadata about the schema
      */
     additionalDetails?: {[key: string]: any} | null;
+    /**
+     * Schema for additional items.
+     */
+    additionalItems?: Schema$JsonSchema;
+    /**
+     * Schema for additional properties.
+     */
+    additionalProperties?: Schema$JsonSchema;
+    /**
+     * Schema that must be valid against all of the sub-schemas.
+     */
+    allOf?: Schema$JsonSchema[];
+    /**
+     * Schema that must be valid against at least one of the sub-schemas.
+     */
+    anyOf?: Schema$JsonSchema[];
+    /**
+     * Const value that the data must match.
+     */
+    const?: any | null;
+    /**
+     * Schema that applies to at least one item in an array.
+     */
+    contains?: Schema$JsonSchema;
+    /**
+     * Encoding of the content.
+     */
+    contentEncoding?: string | null;
+    /**
+     * Media type of the content.
+     */
+    contentMediaType?: string | null;
     /**
      * The default value of the field or object described by this schema.
      */
     default?: any | null;
     /**
+     * Definitions for the schema.
+     */
+    definitions?: {[key: string]: Schema$JsonSchema} | null;
+    /**
+     * Dependencies for the schema.
+     */
+    dependencies?: {[key: string]: any} | null;
+    /**
      * A description of this schema.
      */
     description?: string | null;
+    /**
+     * Schema that must be valid if the "if" schema is invalid.
+     */
+    else?: Schema$JsonSchema;
     /**
      * Possible values for an enumeration. This works in conjunction with `type` to represent types with a fixed set of legal values
      */
     enum?: any[] | null;
     /**
+     * Examples of the value.
+     */
+    examples?: any[] | null;
+    /**
+     * Whether the maximum number value is exclusive.
+     */
+    exclusiveMaximum?: any | null;
+    /**
+     * Whether the minimum number value is exclusive.
+     */
+    exclusiveMinimum?: any | null;
+    /**
      * Format of the value as per https://json-schema.org/understanding-json-schema/reference/string.html#format
      */
     format?: string | null;
+    /**
+     * Schema that must be valid if the "if" schema is valid.
+     */
+    if?: Schema$JsonSchema;
     /**
      * Schema that applies to array values, applicable only if this is of type `array`.
      */
@@ -2327,17 +2470,93 @@ export namespace connectors_v1 {
      */
     jdbcType?: string | null;
     /**
+     * Maximum value of the number field.
+     */
+    maximum?: any | null;
+    /**
+     * Maximum number of items in the array field.
+     */
+    maxItems?: number | null;
+    /**
+     * Maximum length of the string field.
+     */
+    maxLength?: number | null;
+    /**
+     * Maximum number of properties.
+     */
+    maxProperties?: number | null;
+    /**
+     * Minimum value of the number field.
+     */
+    minimum?: any | null;
+    /**
+     * Minimum number of items in the array field.
+     */
+    minItems?: number | null;
+    /**
+     * Minimum length of the string field.
+     */
+    minLength?: number | null;
+    /**
+     * Minimum number of properties.
+     */
+    minProperties?: number | null;
+    /**
+     * Number must be a multiple of this value.
+     */
+    multipleOf?: number | null;
+    /**
+     * Schema that must not be valid.
+     */
+    not?: Schema$JsonSchema;
+    /**
+     * Schema that must be valid against at least one of the sub-schemas.
+     */
+    oneOf?: Schema$JsonSchema[];
+    /**
+     * Regex pattern of the string field. This is a string value that describes the regular expression that the string value should match.
+     */
+    pattern?: string | null;
+    /**
+     * Pattern properties for the schema.
+     */
+    patternProperties?: {[key: string]: Schema$JsonSchema} | null;
+    /**
      * The child schemas, applicable only if this is of type `object`. The key is the name of the property and the value is the json schema that describes that property
      */
     properties?: {[key: string]: Schema$JsonSchema} | null;
+    /**
+     * Schema for property names.
+     */
+    propertyNames?: Schema$JsonSchema;
+    /**
+     * Whether the value is read-only.
+     */
+    readOnly?: boolean | null;
     /**
      * Whether this property is required.
      */
     required?: string[] | null;
     /**
+     * Schema that must be valid if the "if" schema is valid.
+     */
+    then?: Schema$JsonSchema;
+    /**
+     * A title of the schema.
+     */
+    title?: string | null;
+    /**
      * JSON Schema Validation: A Vocabulary for Structural Validation of JSON
      */
     type?: string[] | null;
+    /**
+     * Whether the items in the array field are unique.
+     */
+    uniqueItems?: boolean | null;
+    /**
+     * Whether the value is write-only.
+     */
+    writeOnly?: boolean | null;
   }
   /**
    * JWT claims used for the jwt-bearer authorization grant.
@@ -3340,6 +3559,10 @@ export namespace connectors_v1 {
    */
   export interface Schema$RegionalSettings {
     /**
+     * Optional. Client type for the regional settings.
+     */
+    client?: string | null;
+    /**
      * Optional. Regional encryption config to hold CMEK details.
      */
     encryptionConfig?: Schema$EncryptionConfig;
@@ -3841,6 +4064,15 @@ export namespace connectors_v1 {
     message?: string | null;
   }
   /**
+   * StringListValues is a message to store a list of string values.
+   */
+  export interface Schema$StringListValues {
+    /**
+     * Required. The list of string values.
+     */
+    listValues?: string[] | null;
+  }
+  /**
    * Supported runtime features of a connector version.
    */
   export interface Schema$SupportedRuntimeFeatures {
@@ -3922,6 +4154,10 @@ export namespace connectors_v1 {
    */
   export interface Schema$ToolspecOverride {
     /**
+     * Required. Represents the base version of the toolspec for which admin has added overrides.
+     */
+    baseVersion?: string | null;
+    /**
      * Output only. Created time.
      */
     createTime?: string | null;
@@ -3939,7 +4175,7 @@ export namespace connectors_v1 {
    */
   export interface Schema$TrafficShapingConfig {
     /**
-     * Required. * The duration over which the API call quota limits are calculated. This duration is used to define the time window for evaluating if the number of API calls made by a user is within the allowed quota limits. For example: - To define a quota sampled over 16 seconds, set `seconds` to 16 - To define a quota sampled over 5 minutes, set `seconds` to 300 (5 * 60) - To define a quota sampled over 1 day, set `seconds` to 86400 (24 * 60 * 60) and so on. It is important to note that this duration is not the time the quota is valid for, but rather the time window over which the quota is evaluated. For example, if the quota is 100 calls per 10 seconds, then this duration field would be set to 10 seconds.
+     * Required. Specifies the duration over which the API call quota limits are calculated. This duration is used to define the time window for evaluating if the number of API calls made by a user is within the allowed quota limits. For example: - To define a quota sampled over 16 seconds, set `seconds` to 16 - To define a quota sampled over 5 minutes, set `seconds` to 300 (5 * 60) - To define a quota sampled over 1 day, set `seconds` to 86400 (24 * 60 * 60) and so on. It is important to note that this duration is not the time the quota is valid for, but rather the time window over which the quota is evaluated. For example, if the quota is 100 calls per 10 seconds, then this duration field would be set to 10 seconds.
      */
     duration?: string | null;
     /**
@@ -4028,6 +4264,14 @@ export namespace connectors_v1 {
      * Output only. Timestamp when the webhook was created.
      */
     createTime?: string | null;
+    /**
+     * Output only. List of event subscriptions which are using the webhook.
+     */
+    eventSubscriptions?: string[] | null;
+    /**
+     * Output only. List of event types for the webhook. This is the event types subscribed by the current webhook.
+     */
+    eventTypes?: string[] | null;
     /**
      * Output only. ID to uniquely identify webhook.
      */
@@ -4278,6 +4522,7 @@ export namespace connectors_v1 {
      *
      *   // Example response
      *   // {
+     *   //   "client": "my_client",
      *   //   "encryptionConfig": {},
      *   //   "name": "my_name",
      *   //   "networkConfig": {},
@@ -4525,7 +4770,7 @@ export namespace connectors_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -4555,7 +4800,7 @@ export namespace connectors_v1 {
      *
      *   // Do the magic
      *   const res = await connectors.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -4712,6 +4957,7 @@ export namespace connectors_v1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "client": "my_client",
      *       //   "encryptionConfig": {},
      *       //   "name": "my_name",
      *       //   "networkConfig": {},
@@ -4847,7 +5093,7 @@ export namespace connectors_v1 {
   }
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
@@ -4954,6 +5200,7 @@ export namespace connectors_v1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "adminFilters": [],
      *       //   "asyncOperationsEnabled": false,
      *       //   "authConfig": {},
      *       //   "authOverrideEnabled": false,
@@ -5240,6 +5487,163 @@ export namespace connectors_v1 {
     }
 
     /**
+     * Fetches Toolspec Override for a connection for the given list of tools. Returns results from the db if the tool is already present.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/connectors.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const connectors = google.connectors('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await connectors.projects.locations.connections.fetchToolspecOverride({
+     *       // Required. Resource name format: projects/{project\}/locations/{location\}/connections/{connection\}
+     *       name: 'projects/my-project/locations/my-location/connections/my-connection',
+     *
+     *       // Request body metadata
+     *       requestBody: {
+     *         // request body parameters
+     *         // {
+     *         //   "toolNames": []
+     *         // }
+     *       },
+     *     });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "toolspecOverride": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    fetchToolspecOverride(
+      params: Params$Resource$Projects$Locations$Connections$Fetchtoolspecoverride,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    fetchToolspecOverride(
+      params?: Params$Resource$Projects$Locations$Connections$Fetchtoolspecoverride,
+      options?: MethodOptions
+    ): Promise<
+      GaxiosResponseWithHTTP2<Schema$FetchConnectionToolspecOverrideResponse>
+    >;
+    fetchToolspecOverride(
+      params: Params$Resource$Projects$Locations$Connections$Fetchtoolspecoverride,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    fetchToolspecOverride(
+      params: Params$Resource$Projects$Locations$Connections$Fetchtoolspecoverride,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$FetchConnectionToolspecOverrideResponse>,
+      callback: BodyResponseCallback<Schema$FetchConnectionToolspecOverrideResponse>
+    ): void;
+    fetchToolspecOverride(
+      params: Params$Resource$Projects$Locations$Connections$Fetchtoolspecoverride,
+      callback: BodyResponseCallback<Schema$FetchConnectionToolspecOverrideResponse>
+    ): void;
+    fetchToolspecOverride(
+      callback: BodyResponseCallback<Schema$FetchConnectionToolspecOverrideResponse>
+    ): void;
+    fetchToolspecOverride(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Connections$Fetchtoolspecoverride
+        | BodyResponseCallback<Schema$FetchConnectionToolspecOverrideResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$FetchConnectionToolspecOverrideResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$FetchConnectionToolspecOverrideResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<
+          GaxiosResponseWithHTTP2<Schema$FetchConnectionToolspecOverrideResponse>
+        >
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Connections$Fetchtoolspecoverride;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Connections$Fetchtoolspecoverride;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://connectors.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+name}:fetchToolspecOverride').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$FetchConnectionToolspecOverrideResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$FetchConnectionToolspecOverrideResponse>(
+          parameters
+        );
+      }
+    }
+
+    /**
      * Generates Toolspec Override for a connection for the given list of entityTypes and operations. Returns results from the db if the entityType and operation are already present.
      * @example
      * ```js
@@ -5436,6 +5840,7 @@ export namespace connectors_v1 {
      *
      *   // Example response
      *   // {
+     *   //   "adminFilters": [],
      *   //   "asyncOperationsEnabled": false,
      *   //   "authConfig": {},
      *   //   "authOverrideEnabled": false,
@@ -6353,6 +6758,7 @@ export namespace connectors_v1 {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "adminFilters": [],
      *       //   "asyncOperationsEnabled": false,
      *       //   "authConfig": {},
      *       //   "authOverrideEnabled": false,
@@ -7260,6 +7666,17 @@ export namespace connectors_v1 {
      * Required. Resource name of the form: `projects/x/locations/x/connections/x`
      */
     name?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Connections$Fetchtoolspecoverride extends StandardParameters {
+    /**
+     * Required. Resource name format: projects/{project\}/locations/{location\}/connections/{connection\}
+     */
+    name?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$FetchConnectionToolspecOverrideRequest;
   }
   export interface Params$Resource$Projects$Locations$Connections$Generatetoolspecoverride extends StandardParameters {
     /**
@@ -9167,6 +9584,7 @@ export namespace connectors_v1 {
      *         //   "createTime": "my_createTime",
      *         //   "destinations": {},
      *         //   "eventTypeId": "my_eventTypeId",
+     *         //   "filter": "my_filter",
      *         //   "jms": {},
      *         //   "name": "my_name",
      *         //   "status": {},
@@ -9467,6 +9885,7 @@ export namespace connectors_v1 {
      *   //   "createTime": "my_createTime",
      *   //   "destinations": {},
      *   //   "eventTypeId": "my_eventTypeId",
+     *   //   "filter": "my_filter",
      *   //   "jms": {},
      *   //   "name": "my_name",
      *   //   "status": {},
@@ -9770,6 +10189,7 @@ export namespace connectors_v1 {
      *         //   "createTime": "my_createTime",
      *         //   "destinations": {},
      *         //   "eventTypeId": "my_eventTypeId",
+     *         //   "filter": "my_filter",
      *         //   "jms": {},
      *         //   "name": "my_name",
      *         //   "status": {},
