@@ -1,4 +1,4 @@
-// Copyright 2026 Google LLC
+// Copyright 2020 Google LLC
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
@@ -298,6 +298,27 @@ export namespace ces_v1beta {
     respectResponseInterruptionSettings?: boolean | null;
   }
   /**
+   * Represents a tool that allows the agent to call another agent.
+   */
+  export interface Schema$AgentTool {
+    /**
+     * Optional. The resource name of the agent that is the entry point of the tool. Format: `projects/{project\}/locations/{location\}/agents/{agent\}`
+     */
+    agent?: string | null;
+    /**
+     * Optional. Description of the tool's purpose.
+     */
+    description?: string | null;
+    /**
+     * Required. The name of the agent tool.
+     */
+    name?: string | null;
+    /**
+     * Optional. Deprecated: Use `agent` instead. The resource name of the root agent that is the entry point of the tool. Format: `projects/{project\}/locations/{location\}/agents/{agent\}`
+     */
+    rootAgent?: string | null;
+  }
+  /**
    * Represents an event indicating the transfer of a conversation to a different agent.
    */
   export interface Schema$AgentTransfer {
@@ -546,6 +567,10 @@ export namespace ces_v1beta {
      */
     displayName?: string | null;
     /**
+     * Optional. Error handling settings of the app.
+     */
+    errorHandlingSettings?: Schema$ErrorHandlingSettings;
+    /**
      * Output only. Etag used to ensure the object hasn't changed during a read-modify-write operation. If the etag is empty, the update will overwrite any concurrent changes.
      */
     etag?: string | null;
@@ -790,7 +815,7 @@ export namespace ces_v1beta {
    */
   export interface Schema$BigQueryExportSettings {
     /**
-     * Optional. The BigQuery dataset to export the data to.
+     * Optional. The BigQuery **dataset ID** to export the data to.
      */
     dataset?: string | null;
     /**
@@ -798,7 +823,7 @@ export namespace ces_v1beta {
      */
     enabled?: boolean | null;
     /**
-     * Optional. The project ID of the BigQuery dataset to export the data to. Note: If the BigQuery dataset is in a different project from the app, you should grant `roles/bigquery.admin` role to the CES service agent `service-@gcp-sa-ces.iam.gserviceaccount.com`.
+     * Optional. The **project ID** of the BigQuery dataset to export the data to. Note: If the BigQuery dataset is in a different project from the app, you should grant `roles/bigquery.admin` role to the CES service agent `service-@gcp-sa-ces.iam.gserviceaccount.com`.
      */
     project?: string | null;
   }
@@ -985,6 +1010,10 @@ export namespace ces_v1beta {
      * Optional. Agent transfer event.
      */
     agentTransfer?: Schema$AgentTransfer;
+    /**
+     * Optional. Blob data.
+     */
+    blob?: Schema$Blob;
     /**
      * A struct represents default variables at the start of the conversation, keyed by variable names.
      */
@@ -1207,6 +1236,10 @@ export namespace ces_v1beta {
      * Optional. Whether to disable conversation logging for the sessions.
      */
     disableConversationLogging?: boolean | null;
+    /**
+     * Optional. Controls the retention window for the conversation. If not set, the conversation will be retained for 365 days.
+     */
+    retentionWindow?: string | null;
   }
   /**
    * All information about a single turn in the conversation.
@@ -1502,7 +1535,7 @@ export namespace ces_v1beta {
    */
   export interface Schema$Deployment {
     /**
-     * Required. The resource name of the app version to deploy. Format: projects/{project\}/locations/{location\}/apps/{app\}/versions/{version\}
+     * Optional. The resource name of the app version to deploy. Format: `projects/{project\}/locations/{location\}/apps/{app\}/versions/{version\}` Use `projects/{project\}/locations/{location\}/apps/{app\}/versions/-` to use the draft app.
      */
     appVersion?: string | null;
     /**
@@ -1522,7 +1555,11 @@ export namespace ces_v1beta {
      */
     etag?: string | null;
     /**
-     * Identifier. The resource name of the deployment. Format: projects/{project\}/locations/{location\}/apps/{app\}/deployments/{deployment\}
+     * Optional. Experiment configuration for the deployment.
+     */
+    experimentConfig?: Schema$ExperimentConfig;
+    /**
+     * Identifier. The resource name of the deployment. Format: `projects/{project\}/locations/{location\}/apps/{app\}/deployments/{deployment\}`
      */
     name?: string | null;
     /**
@@ -1534,6 +1571,19 @@ export namespace ces_v1beta {
    * A generic empty message that you can re-use to avoid defining duplicated empty messages in your APIs. A typical example is to use it as the request or the response type of an API method. For instance: service Foo { rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty); \}
    */
   export interface Schema$Empty {}
+  /**
+   * Defines project/location level endpoint control policy.
+   */
+  export interface Schema$EndpointControlPolicy {
+    /**
+     * Optional. The allowed HTTP(s) origins that tools in the App are able to directly call. The enforcement depends on the value of enforcement_scope and the VPC-SC status of the project. If a port number is not provided, all ports will be allowed. Otherwise, the port number must match exactly. For example, "https://example.com" will match "https://example.com:443" and any other port. "https://example.com:443" will only match "https://example.com:443".
+     */
+    allowedOrigins?: string[] | null;
+    /**
+     * Optional. The scope in which this policy's allowed_origins list is enforced.
+     */
+    enforcementScope?: string | null;
+  }
   /**
    * Indicates the session has terminated, due to either successful completion (e.g. user says "Good bye!" ) or an agent escalation. The agent will not process any further inputs after session is terminated and the client should half-close and disconnect after receiving all remaining responses from the agent.
    */
@@ -1581,6 +1631,45 @@ export namespace ces_v1beta {
      * Required. Subject parameter name to pass through. Must be in the format `$context.variables.`.
      */
     subject?: string | null;
+  }
+  /**
+   * Settings to describe how errors should be handled in the app.
+   */
+  export interface Schema$ErrorHandlingSettings {
+    /**
+     * Optional. Configuration for ending the session in case of system errors (e.g. LLM errors).
+     */
+    endSessionConfig?: Schema$ErrorHandlingSettingsEndSessionConfig;
+    /**
+     * Optional. The strategy to use for error handling.
+     */
+    errorHandlingStrategy?: string | null;
+    /**
+     * Optional. Configuration for handling fallback responses.
+     */
+    fallbackResponseConfig?: Schema$ErrorHandlingSettingsFallbackResponseConfig;
+  }
+  /**
+   * Configuration for ending the session in case of system errors (e.g. LLM errors).
+   */
+  export interface Schema$ErrorHandlingSettingsEndSessionConfig {
+    /**
+     * Optional. Whether to escalate the session in EndSession. If session is escalated, metadata in EndSession will contain `session_escalated = true`. See https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps/deploy/google-telephony-platform#transfer_a_call_to_a_human_agent for details.
+     */
+    escalateSession?: boolean | null;
+  }
+  /**
+   * Configuration for handling fallback responses.
+   */
+  export interface Schema$ErrorHandlingSettingsFallbackResponseConfig {
+    /**
+     * Optional. The fallback messages in case of system errors (e.g. LLM errors), mapped by [supported language code](https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps/reference/language).
+     */
+    customFallbackMessages?: {[key: string]: string} | null;
+    /**
+     * Optional. The maximum number of fallback attempts to make before the agent emitting EndSession Signal.
+     */
+    maxFallbackAttempts?: number | null;
   }
   /**
    * An evaluation represents all of the information needed to simulate and evaluate an agent.
@@ -2749,6 +2838,14 @@ export namespace ces_v1beta {
      */
     args?: {[key: string]: any} | null;
     /**
+     * Optional. The [ToolCallContext](https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps/tool/python#environment for details) to be passed to the Python tool.
+     */
+    context?: {[key: string]: any} | null;
+    /**
+     * Optional. Mock configuration for the tool execution. If this field is set, tools that call other tools will be mocked based on the provided patterns and responses.
+     */
+    mockConfig?: Schema$MockConfig;
+    /**
      * Optional. The name of the tool to execute. Format: projects/{project\}/locations/{location\}/apps/{app\}/tools/{tool\}
      */
     tool?: string | null;
@@ -2783,9 +2880,52 @@ export namespace ces_v1beta {
     variables?: {[key: string]: any} | null;
   }
   /**
+   * Experiment for the deployment.
+   */
+  export interface Schema$ExperimentConfig {
+    /**
+     * Optional. Version release for the experiment.
+     */
+    versionRelease?: Schema$ExperimentConfigVersionRelease;
+  }
+  /**
+   * Version release for the experiment.
+   */
+  export interface Schema$ExperimentConfigVersionRelease {
+    /**
+     * Optional. State of the version release.
+     */
+    state?: string | null;
+    /**
+     * Optional. Traffic allocations for the version release.
+     */
+    trafficAllocations?: Schema$ExperimentConfigVersionReleaseTrafficAllocation[];
+  }
+  /**
+   * Traffic allocation for the version release.
+   */
+  export interface Schema$ExperimentConfigVersionReleaseTrafficAllocation {
+    /**
+     * Optional. App version of the traffic allocation. Format: `projects/{project\}/locations/{location\}/apps/{app\}/versions/{version\}`
+     */
+    appVersion?: string | null;
+    /**
+     * Optional. Id of the traffic allocation. Free format string, up to 128 characters.
+     */
+    id?: string | null;
+    /**
+     * Optional. Traffic percentage of the traffic allocation. Must be between 0 and 100.
+     */
+    trafficPercentage?: number | null;
+  }
+  /**
    * Request message for AgentService.ExportApp.
    */
   export interface Schema$ExportAppRequest {
+    /**
+     * Optional. The resource name of the app version to export. Format: `projects/{project\}/locations/{location\}/apps/{app\}/versions/{version\}`.
+     */
+    appVersion?: string | null;
     /**
      * Required. The format to export the app in.
      */
@@ -2809,6 +2949,83 @@ export namespace ces_v1beta {
     appUri?: string | null;
   }
   /**
+   * Response message for EvaluationService.ExportEvaluationResults.
+   */
+  export interface Schema$ExportEvaluationResultsResponse {
+    /**
+     * The content of the exported Evaluation Results. This will be populated if gcs_uri was not specified in the request.
+     */
+    evaluationResultsContent?: string | null;
+    /**
+     * The Google Cloud Storage URI folder where the exported Evaluation Results were written. This will be populated if gcs_uri was specified in the request.
+     */
+    evaluationResultsUri?: string | null;
+  }
+  /**
+   * Response message for EvaluationService.ExportEvaluationRuns.
+   */
+  export interface Schema$ExportEvaluationRunsResponse {
+    /**
+     * The content of the exported Evaluation Runs. This will be populated if gcs_uri was not specified in the request.
+     */
+    evaluationRunsContent?: string | null;
+    /**
+     * The Google Cloud Storage URI folder where the exported Evaluation Runs were written. This will be populated if gcs_uri was specified in the request.
+     */
+    evaluationRunsUri?: string | null;
+  }
+  /**
+   * Request message for EvaluationService.ExportEvaluations.
+   */
+  export interface Schema$ExportEvaluationsRequest {
+    /**
+     * Optional. The export options for the evaluations.
+     */
+    exportOptions?: Schema$ExportOptions;
+    /**
+     * Optional. Includes evaluation results in the export. At least one of include_evaluation_results or include_evaluations must be set.
+     */
+    includeEvaluationResults?: boolean | null;
+    /**
+     * Optional. Includes evaluations in the export. At least one of include_evaluation_results or include_evaluations must be set.
+     */
+    includeEvaluations?: boolean | null;
+    /**
+     * Required. The resource names of the evaluations to export.
+     */
+    names?: string[] | null;
+  }
+  /**
+   * Response message for EvaluationService.ExportEvaluations.
+   */
+  export interface Schema$ExportEvaluationsResponse {
+    /**
+     * The content of the exported Evaluations. This will be populated if gcs_uri was not specified in the request.
+     */
+    evaluationsContent?: string | null;
+    /**
+     * The Google Cloud Storage URI folder where the exported evaluations were written. This will be populated if gcs_uri was specified in the request.
+     */
+    evaluationsUri?: string | null;
+    /**
+     * Output only. A map of evaluation resource names that could not be exported, to the reason why they failed.
+     */
+    failedEvaluations?: {[key: string]: string} | null;
+  }
+  /**
+   * Options for exporting CES evaluation resources.
+   */
+  export interface Schema$ExportOptions {
+    /**
+     * Optional. The format to export the evaluation results in. Defaults to JSON if not specified.
+     */
+    exportFormat?: string | null;
+    /**
+     * Optional. The Google Cloud Storage URI to write the exported Evaluation Results to.
+     */
+    gcsUri?: string | null;
+  }
+  /**
    * Expression condition based on session state.
    */
   export interface Schema$ExpressionCondition {
@@ -2816,6 +3033,32 @@ export namespace ces_v1beta {
      * Required. The string representation of cloud.api.Expression condition.
      */
     expression?: string | null;
+  }
+  /**
+   * Files to be used as context. Files can be provided as raw bytes.
+   */
+  export interface Schema$FileContext {
+    /**
+     * Optional. File provided as raw bytes.
+     */
+    fileBytes?: Schema$FileContextFileBytes;
+  }
+  /**
+   * File provided as raw bytes.
+   */
+  export interface Schema$FileContextFileBytes {
+    /**
+     * Required. Raw bytes of the file.
+     */
+    data?: string | null;
+    /**
+     * Required. The name of the file provided as raw bytes.
+     */
+    fileName?: string | null;
+    /**
+     * Required. The IANA standard MIME type of the source data.
+     */
+    mimeType?: string | null;
   }
   /**
    * The file search tool allows the agent to search across the files uploaded by the app/agent developer. It has presets to give relatively good quality search over the uploaded files and summarization of the retrieved results.
@@ -2837,6 +3080,179 @@ export namespace ces_v1beta {
      * Required. The tool name.
      */
     name?: string | null;
+  }
+  /**
+   * Request message for AgentService.GenerateAppResource.
+   */
+  export interface Schema$GenerateAppResourceRequest {
+    /**
+     * The agent resource to be used by the LLM assistant, can be empty for generating a new agent.
+     */
+    agent?: Schema$Agent;
+    /**
+     * Optional. The configuration to be used to generate the agents and tools.
+     */
+    appGenerationConfig?: Schema$GenerateAppResourceRequestAppGenerationConfig;
+    /**
+     * Optional. The configuration to be used to generate the evaluations.
+     */
+    evaluationGenerationConfig?: Schema$GenerateAppResourceRequestEvaluationGenerationConfig;
+    /**
+     * Optional. The configuration to be used to generate the evaluation personas.
+     */
+    evaluationPersonasGenerationConfig?: Schema$GenerateAppResourceRequestEvaluationPersonasGenerationConfig;
+    /**
+     * Optional. The configuration to be used for hill climbing fixes.
+     */
+    hillClimbingFixConfig?: Schema$GenerateAppResourceRequestHillClimbingFixConfig;
+    /**
+     * Optional. The configuration to be used for quality report generation.
+     */
+    qualityReportGenerationConfig?: Schema$GenerateAppResourceRequestQualityReportGenerationConfig;
+    /**
+     * Optional. List of refine instructions to be used to refine the resource.
+     */
+    refineInstructions?: Schema$GenerateAppResourceRequestRefineInstructions[];
+    /**
+     * The tool resource to be used by the LLM assistant, can be empty for generating a new tool.
+     */
+    tool?: Schema$Tool;
+    /**
+     * Optional. The configuration to be used to generate the tool.
+     */
+    toolGenerationConfig?: Schema$GenerateAppResourceRequestToolGenerationConfig;
+    /**
+     * The toolset resource to be used by the LLM assistant, can be empty for generating a new toolset.
+     */
+    toolset?: Schema$Toolset;
+  }
+  /**
+   * The configuration to be used to generate the app.
+   */
+  export interface Schema$GenerateAppResourceRequestAppGenerationConfig {
+    /**
+     * Optional. The context which describes the requirements of the agents & tools to be generated.
+     */
+    context?: string | null;
+    /**
+     * Optional. The insights dataset to be used to fetch conversation data for generating the agents & tools. Format: `projects/{project\}/locations/{location\}/datasets/{dataset\}`.
+     */
+    datasetId?: string | null;
+    /**
+     * Optional. The files to be used as context.
+     */
+    fileContexts?: Schema$FileContext[];
+    /**
+     * Optional. The Cloud Storage location to store the generated question answer data to be used by the Datastore tool. This data is generated only when using conversation data as an input source. The location must be in the same project as the app. Format: `gs://...`.
+     */
+    gcsLocation?: string | null;
+    /**
+     * Optional. Whether to generate the evaluations for the app. If true, the provided context will be used to generate the evaluations data.
+     */
+    generateEvaluations?: boolean | null;
+  }
+  /**
+   * The configuration to be used to generate the evaluations.
+   */
+  export interface Schema$GenerateAppResourceRequestEvaluationGenerationConfig {
+    /**
+     * Optional. The insights dataset to be used to fetch conversation data for generating the evaluations. Format: `projects/{project\}/locations/{location\}/datasets/{dataset\}`.
+     */
+    datasetId?: string | null;
+  }
+  /**
+   * The configuration to be used to generate the evaluation personas.
+   */
+  export interface Schema$GenerateAppResourceRequestEvaluationPersonasGenerationConfig {}
+  /**
+   * The configuration to be used for hill climbing fixes.
+   */
+  export interface Schema$GenerateAppResourceRequestHillClimbingFixConfig {
+    /**
+     * Required. The quality report used to inform the instruction following fix.
+     */
+    qualityReport?: Schema$QualityReport;
+  }
+  /**
+   * The configuration to be used for quality report generation.
+   */
+  export interface Schema$GenerateAppResourceRequestQualityReportGenerationConfig {
+    /**
+     * Required. The evaluation run used to inform quality report analysis.
+     */
+    evaluationRun?: string | null;
+  }
+  /**
+   * The instructions to be used to refine a part of the resource. The part of the resource can be specified with a start index, end index and a field mask. For example, if you want to refine a part of the agent instructions you can specify the index of the first character of the instructions, the index of the last character of the instructions and the field mask as "instructions".
+   */
+  export interface Schema$GenerateAppResourceRequestRefineInstructions {
+    /**
+     * Required. The last character (inclusive) of the text to refine.
+     */
+    endIndex?: string | null;
+    /**
+     * Required. The field of the resource being refined. Only one field is allowed per RefineInstructions. If refining agent instructions, the field mask should be "instructions".
+     */
+    fieldMask?: string | null;
+    /**
+     * Required. The instructions to refine the resource.
+     */
+    instructions?: string | null;
+    /**
+     * Required. The first character (inclusive) of the text to refine.
+     */
+    startIndex?: string | null;
+  }
+  /**
+   * The configuration to be used to generate a tool.
+   */
+  export interface Schema$GenerateAppResourceRequestToolGenerationConfig {
+    /**
+     * Optional. The context which describes the tool to be generated. This can be empty if the tool request & response are provided.
+     */
+    context?: string | null;
+    /**
+     * Optional. The files to be used as context.
+     */
+    fileContexts?: Schema$FileContext[];
+    /**
+     * Optional. The configuration to be used to generate an Open API schema.
+     */
+    openApiToolsetGenerationConfig?: Schema$GenerateAppResourceRequestToolGenerationConfigOpenApiToolsetGenerationConfig;
+  }
+  /**
+   * The configuration to be used to generate an Open API schema.
+   */
+  export interface Schema$GenerateAppResourceRequestToolGenerationConfigOpenApiToolsetGenerationConfig {
+    /**
+     * Required. The list of operations to be added to the Open API schema.
+     */
+    operationGenerationConfigs?: Schema$GenerateAppResourceRequestToolGenerationConfigOpenApiToolsetGenerationConfigOperationGenerationConfig[];
+    /**
+     * Required. The base uri of the tool.
+     */
+    uri?: string | null;
+  }
+  /**
+   * The configuration to be used to generate an operation in the Open API schema.
+   */
+  export interface Schema$GenerateAppResourceRequestToolGenerationConfigOpenApiToolsetGenerationConfigOperationGenerationConfig {
+    /**
+     * Required. The uri of the tool. This should include query and path parameters if any.
+     */
+    method?: string | null;
+    /**
+     * Required. The path of the tool to be appended to the base uri. This should include query and path parameters if any.
+     */
+    path?: string | null;
+    /**
+     * Required. A sample request to the tool in JSON format. Skip if the tool does not support request body.
+     */
+    requestJson?: string | null;
+    /**
+     * Required. A sample response from the tool in JSON format.
+     */
+    responseJson?: string | null;
   }
   /**
    * Response message for AgentService.GenerateAppResource.
@@ -2862,6 +3278,10 @@ export namespace ces_v1beta {
      * Additional information about the generated result.
      */
     generateResultInfo?: Schema$GenerateAppResourceResponseGenerateResultInfo;
+    /**
+     * The quality report generated by the LLM assistant.
+     */
+    qualityReport?: Schema$QualityReport;
     /**
      * The list of tools generated by the LLM assistant.
      */
@@ -2919,6 +3339,10 @@ export namespace ces_v1beta {
      * Required. The deployment of the app to use for the session. Format: projects/{project\}/locations/{location\}/apps/{app\}/deployments/{deployment\}
      */
     deployment?: string | null;
+    /**
+     * Optional. Indicates if live handoff is enabled for the session.
+     */
+    liveHandoffEnabled?: boolean | null;
     /**
      * Optional. The reCAPTCHA token generated by the client-side chat widget.
      */
@@ -3314,11 +3738,27 @@ export namespace ces_v1beta {
      */
     errorMessages?: string[] | null;
     /**
+     * The number of evaluation results that either failed to import entirely or completed import with one or more errors.
+     */
+    evaluationResultImportFailureCount?: number | null;
+    /**
+     * The list of evaluation results that were imported into the app.
+     */
+    evaluationResults?: Schema$EvaluationResult[];
+    /**
+     * The number of evaluation runs that either failed to import entirely or completed import with one or more errors.
+     */
+    evaluationRunImportFailureCount?: number | null;
+    /**
+     * The list of evaluation runs that were imported into the app.
+     */
+    evaluationRuns?: Schema$EvaluationRun[];
+    /**
      * The list of evaluations that were imported into the app.
      */
     evaluations?: Schema$Evaluation[];
     /**
-     * The number of evaluations that were not imported due to errors.
+     * The number of evaluations that either failed to import entirely or completed import with one or more errors.
      */
     importFailureCount?: number | null;
   }
@@ -3352,7 +3792,7 @@ export namespace ces_v1beta {
      */
     enableMultilingualSupport?: boolean | null;
     /**
-     * Optional. The action to perform when an agent receives input in an unsupported language. This can be a predefined action or a custom tool call. Valid values are: - A tool's full resource name, which triggers a specific tool execution. - A predefined system action, such as "escalate" or "exit", which triggers an EndSession signal with corresponding metadata to terminate the conversation.
+     * Optional. Deprecated: This feature is no longer supported. Use `enable_multilingual_support` instead to improve handling of multilingual input. The action to perform when an agent receives input in an unsupported language. This can be a predefined action or a custom tool call. Valid values are: - A tool's full resource name, which triggers a specific tool execution. - A predefined system action, such as "escalate" or "exit", which triggers an EndSession signal with corresponding metadata to terminate the conversation.
      */
     fallbackAction?: string | null;
     /**
@@ -3769,6 +4209,10 @@ export namespace ces_v1beta {
      * Optional. Configuration for how sensitive data should be redacted.
      */
     redactionConfig?: Schema$RedactionConfig;
+    /**
+     * Optional. Configures recording of unredacted audio. Use this to maintain a raw backup with restricted access when audio redaction is enabled, typically for auditing or monitoring purposes.
+     */
+    unredactedAudioRecordingConfig?: Schema$AudioRecordingConfig;
   }
   /**
    * An MCP tool. See https://modelcontextprotocol.io/specification/2025-06-18/server/tools for more details.
@@ -3778,6 +4222,10 @@ export namespace ces_v1beta {
      * Optional. Authentication information required to execute the tool against the MCP server. For bearer token authentication, the token applies only to tool execution, not to listing tools. This requires that tools can be listed without authentication.
      */
     apiAuthentication?: Schema$ApiAuthentication;
+    /**
+     * Optional. The custom headers to send in the request to the MCP server. The values must be in the format `$context.variables.` and can be set in the session variables. See https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps/tool/open-api#openapi-injection for more details.
+     */
+    customHeaders?: {[key: string]: string} | null;
     /**
      * Optional. The description of the MCP tool.
      */
@@ -3816,6 +4264,10 @@ export namespace ces_v1beta {
      */
     apiAuthentication?: Schema$ApiAuthentication;
     /**
+     * Optional. The custom headers to send in the request to the MCP server. The values must be in the format `$context.variables.` and can be set in the session variables. See https://docs.cloud.google.com/customer-engagement-ai/conversational-agents/ps/tool/open-api#openapi-injection for more details.
+     */
+    customHeaders?: {[key: string]: string} | null;
+    /**
      * Required. The address of the MCP server, for example, "https://example.com/mcp/". If the server is built with the MCP SDK, the url should be suffixed with "/mcp/". Only Streamable HTTP transport based servers are supported. See https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http for more details.
      */
     serverAddress?: string | null;
@@ -3853,6 +4305,44 @@ export namespace ces_v1beta {
      * Optional. Whether to collect conversation data for llm analysis metrics. If true, conversation data will not be collected for llm analysis metrics; otherwise, conversation data will be collected.
      */
     llmMetricsOptedOut?: boolean | null;
+  }
+  /**
+   * Mock tool calls configuration for the session.
+   */
+  export interface Schema$MockConfig {
+    /**
+     * Optional. All tool calls to mock for the duration of the session.
+     */
+    mockedToolCalls?: Schema$MockedToolCall[];
+    /**
+     * Required. Beavhior for tool calls that don't match any args patterns in mocked_tool_calls.
+     */
+    unmatchedToolCallBehavior?: string | null;
+  }
+  /**
+   * A mocked tool call. Expresses the target tool + a pattern to match against that tool's args / inputs. If the pattern matches, then the mock response will be returned.
+   */
+  export interface Schema$MockedToolCall {
+    /**
+     * Required. A pattern to match against the args / inputs of all dispatched tool calls. If the tool call inputs match this pattern, then mock output will be returned.
+     */
+    expectedArgsPattern?: {[key: string]: any} | null;
+    /**
+     * Optional. The mock response / output to return if the tool call args / inputs match the pattern.
+     */
+    mockResponse?: {[key: string]: any} | null;
+    /**
+     * Optional. Deprecated. Use tool_identifier instead.
+     */
+    tool?: string | null;
+    /**
+     * Optional. The name of the tool to mock. Format: `projects/{project\}/locations/{location\}/apps/{app\}/tools/{tool\}`
+     */
+    toolId?: string | null;
+    /**
+     * Optional. The toolset to mock.
+     */
+    toolset?: Schema$ToolsetTool;
   }
   /**
    * Model settings contains various configurations for the LLM model.
@@ -4232,6 +4722,53 @@ export namespace ces_v1beta {
     pythonCode?: string | null;
   }
   /**
+   * The report describing any identified quality issues in the app.
+   */
+  export interface Schema$QualityReport {
+    /**
+     * Optional. A list of evaluation runs used to generate the quality report. Format: `projects/{project\}/locations/{location\}/evaluationRuns/{evaluationRun\}`.
+     */
+    evaluationRuns?: string[] | null;
+    /**
+     * Optional. General issues not specific to any agent.
+     */
+    generalIssues?: Schema$QualityReportIssue[];
+    /**
+     * Optional. The issues grouped by agent.
+     */
+    issues?: Schema$QualityReportAgentIssues[];
+  }
+  /**
+   * Issues identified for a single agent.
+   */
+  export interface Schema$QualityReportAgentIssues {
+    /**
+     * Optional. The name of the agent to which the issues are related. Format: `projects/{project\}/locations/{location\}/apps/{app\}/agents/{agent\}`
+     */
+    agent?: string | null;
+    /**
+     * Optional. List of issues found for this agent.
+     */
+    issues?: Schema$QualityReportIssue[];
+  }
+  /**
+   * The issue identified.
+   */
+  export interface Schema$QualityReportIssue {
+    /**
+     * Optional. Description of the issue found.
+     */
+    description?: string | null;
+    /**
+     * Optional. How many times this issue occurred.
+     */
+    occurrenceCount?: number | null;
+    /**
+     * Optional. Proposed solution to fix the issue by modifying instructions or tools.
+     */
+    proposedSolution?: string | null;
+  }
+  /**
    * Configuration to instruct how sensitive data should be handled.
    */
   export interface Schema$RedactionConfig {
@@ -4539,6 +5076,31 @@ export namespace ces_v1beta {
     uniqueItems?: boolean | null;
   }
   /**
+   * Project/Location level security settings for CES.
+   */
+  export interface Schema$SecuritySettings {
+    /**
+     * Output only. Create time of the security settings.
+     */
+    createTime?: string | null;
+    /**
+     * Optional. Endpoint control related settings.
+     */
+    endpointControlPolicy?: Schema$EndpointControlPolicy;
+    /**
+     * Output only. Etag of the security settings.
+     */
+    etag?: string | null;
+    /**
+     * Identifier. The unique identifier of the security settings. Format: `projects/{project\}/locations/{location\}/securitySettings`
+     */
+    name?: string | null;
+    /**
+     * Output only. Last update time of the security settings.
+     */
+    updateTime?: string | null;
+  }
+  /**
    * Configurations for authentication using a custom service account.
    */
   export interface Schema$ServiceAccountAuthConfig {
@@ -4573,7 +5135,11 @@ export namespace ces_v1beta {
      */
     deployment?: string | null;
     /**
-     * Optional. The entry agent to handle the session. If not specified, the session will be handled by the root agent of the app. Format: `projects/{project\}/locations/{location\}/agents/{agent\}`
+     * Optional. Whether to enable streaming text outputs from the model. By default, text outputs from the model are collected before sending to the client. NOTE: This is only supported for text (non-voice) sessions via StreamRunSession or BidiRunSession.
+     */
+    enableTextStreaming?: boolean | null;
+    /**
+     * Optional. The entry agent to handle the session. If not specified, the session will be handled by the root agent of the app. Format: `projects/{project\}/locations/{location\}/apps/{app\}/agents/{agent\}`
      */
     entryAgent?: string | null;
     /**
@@ -4596,6 +5162,10 @@ export namespace ces_v1beta {
      * Optional. The time zone of the user. If provided, the agent will use the time zone for date and time related variables. Otherwise, the agent will use the time zone specified in the App.time_zone_settings. The format is the IANA Time Zone Database time zone, e.g. "America/Los_Angeles".
      */
     timeZone?: string | null;
+    /**
+     * Optional. Whether to use tool fakes for the session. If this field is set, the agent will attempt use tool fakes instead of calling the real tools.
+     */
+    useToolFakes?: boolean | null;
   }
   /**
    * [QueryParameters](https://cloud.google.com/dialogflow/cx/docs/reference/rpc/google.cloud.dialogflow.cx.v3#queryparameters) to send to the remote [Dialogflow](https://cloud.google.com/dialogflow/cx/docs/concept/console-conversational-agents) agent when the session control is transferred to the remote agent.
@@ -4830,7 +5400,7 @@ export namespace ces_v1beta {
    */
   export interface Schema$TlsConfigCaCert {
     /**
-     * Required. The allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, CES will use Google's default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with "subject alt name". For instance a certificate can be self-signed using the following command, openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile <(printf "\nsubjectAltName='DNS:www.example.com'")
+     * Required. The allowed custom CA certificates (in DER format) for HTTPS verification. This overrides the default SSL trust store. If this is empty or unspecified, CES will use Google's default trust store to verify certificates. N.B. Make sure the HTTPS server certificates are signed with "subject alt name". For instance a certificate can be self-signed using the following command: ``` openssl x509 -req -days 200 -in example.com.csr \ -signkey example.com.key \ -out example.com.crt \ -extfile <(printf "\nsubjectAltName='DNS:www.example.com'") ```
      */
     cert?: string | null;
     /**
@@ -4842,6 +5412,10 @@ export namespace ces_v1beta {
    * A tool represents an action that the CES agent can take to achieve certain goals.
    */
   export interface Schema$Tool {
+    /**
+     * Optional. The agent tool.
+     */
+    agentTool?: Schema$AgentTool;
     /**
      * Optional. The client function.
      */
@@ -4887,7 +5461,7 @@ export namespace ces_v1beta {
      */
     mcpTool?: Schema$McpTool;
     /**
-     * Identifier. The unique identifier of the tool. Format: - `projects/{project\}/locations/{location\}/apps/{app\}/tools/{tool\}` for ## standalone tools. `projects/{project\}/locations/{location\}/apps/{app\}/toolsets/{toolset\}/tools/{tool\}` for tools retrieved from a toolset. These tools are dynamic and output-only, they cannot be referenced directly where a tool is expected.
+     * Identifier. The resource name of the tool. Format: * `projects/{project\}/locations/{location\}/apps/{app\}/tools/{tool\}` for standalone tools. * `projects/{project\}/locations/{location\}/apps/{app\}/toolsets/{toolset\}/tools/{tool\}` for tools retrieved from a toolset. These tools are dynamic and output-only; they cannot be referenced directly where a tool is expected.
      */
     name?: string | null;
     /**
@@ -5159,6 +5733,36 @@ export namespace ces_v1beta {
     agent?: string | null;
   }
   /**
+   * Request message for EvaluationService.UploadEvaluationAudio.
+   */
+  export interface Schema$UploadEvaluationAudioRequest {
+    /**
+     * Required. The raw audio bytes. The format of the audio must be single-channel LINEAR16 with a sample rate of 16kHz (default InputAudioConfig).
+     */
+    audioContent?: string | null;
+    /**
+     * Optional. The Google Cloud Storage URI of the previously uploaded audio file to be deleted. Format: `gs:///`
+     */
+    previousAudioGcsUri?: string | null;
+  }
+  /**
+   * Response message for EvaluationService.UploadEvaluationAudio.
+   */
+  export interface Schema$UploadEvaluationAudioResponse {
+    /**
+     * The Google Cloud Storage URI where the uploaded audio file is stored. Format: `gs:///`
+     */
+    audioGcsUri?: string | null;
+    /**
+     * The duration of the audio.
+     */
+    duration?: string | null;
+    /**
+     * The transcript of the audio, generated by Cloud Speech-to-Text.
+     */
+    transcript?: string | null;
+  }
+  /**
    * Represents a single web search query and its associated search uri.
    */
   export interface Schema$WebSearchQuery {
@@ -5176,6 +5780,10 @@ export namespace ces_v1beta {
    */
   export interface Schema$WidgetTool {
     /**
+     * Optional. The mapping that defines how data from a source tool is mapped to the widget's input parameters.
+     */
+    dataMapping?: Schema$WidgetToolDataMapping;
+    /**
      * Optional. The description of the widget tool.
      */
     description?: string | null;
@@ -5188,9 +5796,59 @@ export namespace ces_v1beta {
      */
     parameters?: Schema$Schema;
     /**
+     * Optional. Configuration for always-included text responses.
+     */
+    textResponseConfig?: Schema$WidgetToolTextResponseConfig;
+    /**
+     * Optional. Configuration for rendering the widget.
+     */
+    uiConfig?: {[key: string]: any} | null;
+    /**
      * Optional. The type of the widget tool. If not specified, the default type will be CUSTOMIZED.
      */
     widgetType?: string | null;
+  }
+  /**
+   * Configuration for mapping data from a source tool to the widget's input parameters.
+   */
+  export interface Schema$WidgetToolDataMapping {
+    /**
+     * Optional. A map of widget input parameter fields to the corresponding output fields of the source tool.
+     */
+    fieldMappings?: {[key: string]: string} | null;
+    /**
+     * Optional. The mode of the data mapping.
+     */
+    mode?: string | null;
+    /**
+     * Optional. Configuration for a Python function used to transform the source tool's output into the widget's input format.
+     */
+    pythonFunction?: Schema$PythonFunction;
+    /**
+     * Deprecated: Use `python_function` instead.
+     */
+    pythonScript?: string | null;
+    /**
+     * Optional. The resource name of the tool that provides the data for the widget (e.g., a search tool or a custom function). Format: `projects/{project\}/locations/{location\}/agents/{agent\}/tools/{tool\}`
+     */
+    sourceToolName?: string | null;
+  }
+  /**
+   * Configuration for the text response returned with the widget.
+   */
+  export interface Schema$WidgetToolTextResponseConfig {
+    /**
+     * Optional. The static text response to return when type is STATIC.
+     */
+    staticText?: string | null;
+    /**
+     * Optional. Instruction for the LLM on how to generate the text response. Used as the description for the text response parameter if type is LLM_GENERATED.
+     */
+    textResponseInstruction?: string | null;
+    /**
+     * Optional. The strategy for providing the text response.
+     */
+    type?: string | null;
   }
 
   export class Resource$Projects {
@@ -5356,7 +6014,150 @@ export namespace ces_v1beta {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Retrieves the security settings for the project and location.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/ces.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const ces = google.ces('v1beta');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/ces',
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await ces.projects.locations.getSecuritySettings({
+     *     // Required. The resource name of the security settings to retrieve. Format: `projects/{project\}/locations/{location\}/securitySettings`
+     *     name: 'projects/my-project/locations/my-location/securitySettings',
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "createTime": "my_createTime",
+     *   //   "endpointControlPolicy": {},
+     *   //   "etag": "my_etag",
+     *   //   "name": "my_name",
+     *   //   "updateTime": "my_updateTime"
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    getSecuritySettings(
+      params: Params$Resource$Projects$Locations$Getsecuritysettings,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    getSecuritySettings(
+      params?: Params$Resource$Projects$Locations$Getsecuritysettings,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$SecuritySettings>>;
+    getSecuritySettings(
+      params: Params$Resource$Projects$Locations$Getsecuritysettings,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    getSecuritySettings(
+      params: Params$Resource$Projects$Locations$Getsecuritysettings,
+      options: MethodOptions | BodyResponseCallback<Schema$SecuritySettings>,
+      callback: BodyResponseCallback<Schema$SecuritySettings>
+    ): void;
+    getSecuritySettings(
+      params: Params$Resource$Projects$Locations$Getsecuritysettings,
+      callback: BodyResponseCallback<Schema$SecuritySettings>
+    ): void;
+    getSecuritySettings(
+      callback: BodyResponseCallback<Schema$SecuritySettings>
+    ): void;
+    getSecuritySettings(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Getsecuritysettings
+        | BodyResponseCallback<Schema$SecuritySettings>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$SecuritySettings>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$SecuritySettings>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$SecuritySettings>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Getsecuritysettings;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Getsecuritysettings;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://ces.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$SecuritySettings>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$SecuritySettings>(parameters);
+      }
+    }
+
+    /**
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -5389,7 +6190,7 @@ export namespace ces_v1beta {
      *
      *   // Do the magic
      *   const res = await ces.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -5505,6 +6306,164 @@ export namespace ces_v1beta {
         return createAPIRequest<Schema$ListLocationsResponse>(parameters);
       }
     }
+
+    /**
+     * Updates the security settings for the project and location.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/ces.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const ces = google.ces('v1beta');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/ces',
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await ces.projects.locations.updateSecuritySettings({
+     *     // Identifier. The unique identifier of the security settings. Format: `projects/{project\}/locations/{location\}/securitySettings`
+     *     name: 'projects/my-project/locations/my-location/securitySettings',
+     *     // Optional. Field mask is used to control which fields get updated. If the mask is not present, all fields will be updated.
+     *     updateMask: 'placeholder-value',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "createTime": "my_createTime",
+     *       //   "endpointControlPolicy": {},
+     *       //   "etag": "my_etag",
+     *       //   "name": "my_name",
+     *       //   "updateTime": "my_updateTime"
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "createTime": "my_createTime",
+     *   //   "endpointControlPolicy": {},
+     *   //   "etag": "my_etag",
+     *   //   "name": "my_name",
+     *   //   "updateTime": "my_updateTime"
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    updateSecuritySettings(
+      params: Params$Resource$Projects$Locations$Updatesecuritysettings,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    updateSecuritySettings(
+      params?: Params$Resource$Projects$Locations$Updatesecuritysettings,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$SecuritySettings>>;
+    updateSecuritySettings(
+      params: Params$Resource$Projects$Locations$Updatesecuritysettings,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    updateSecuritySettings(
+      params: Params$Resource$Projects$Locations$Updatesecuritysettings,
+      options: MethodOptions | BodyResponseCallback<Schema$SecuritySettings>,
+      callback: BodyResponseCallback<Schema$SecuritySettings>
+    ): void;
+    updateSecuritySettings(
+      params: Params$Resource$Projects$Locations$Updatesecuritysettings,
+      callback: BodyResponseCallback<Schema$SecuritySettings>
+    ): void;
+    updateSecuritySettings(
+      callback: BodyResponseCallback<Schema$SecuritySettings>
+    ): void;
+    updateSecuritySettings(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Updatesecuritysettings
+        | BodyResponseCallback<Schema$SecuritySettings>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$SecuritySettings>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$SecuritySettings>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$SecuritySettings>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Updatesecuritysettings;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Updatesecuritysettings;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://ces.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta/{+name}').replace(/([^:]\/)\/+/g, '$1'),
+            method: 'PATCH',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$SecuritySettings>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$SecuritySettings>(parameters);
+      }
+    }
   }
 
   export interface Params$Resource$Projects$Locations$Get extends StandardParameters {
@@ -5513,9 +6472,15 @@ export namespace ces_v1beta {
      */
     name?: string;
   }
+  export interface Params$Resource$Projects$Locations$Getsecuritysettings extends StandardParameters {
+    /**
+     * Required. The resource name of the security settings to retrieve. Format: `projects/{project\}/locations/{location\}/securitySettings`
+     */
+    name?: string;
+  }
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
@@ -5534,6 +6499,21 @@ export namespace ces_v1beta {
      * A page token received from the `next_page_token` field in the response. Send that page token to receive the subsequent page.
      */
     pageToken?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Updatesecuritysettings extends StandardParameters {
+    /**
+     * Identifier. The unique identifier of the security settings. Format: `projects/{project\}/locations/{location\}/securitySettings`
+     */
+    name?: string;
+    /**
+     * Optional. Field mask is used to control which fields get updated. If the mask is not present, all fields will be updated.
+     */
+    updateMask?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$SecuritySettings;
   }
 
   export class Resource$Projects$Locations$Apps {
@@ -5650,6 +6630,7 @@ export namespace ces_v1beta {
      *       //   "deploymentCount": 0,
      *       //   "description": "my_description",
      *       //   "displayName": "my_displayName",
+     *       //   "errorHandlingSettings": {},
      *       //   "etag": "my_etag",
      *       //   "evaluationMetricsThresholds": {},
      *       //   "evaluationPersonas": [],
@@ -5964,6 +6945,8 @@ export namespace ces_v1beta {
      *       // request body parameters
      *       // {
      *       //   "args": {},
+     *       //   "context": {},
+     *       //   "mockConfig": {},
      *       //   "tool": "my_tool",
      *       //   "toolsetTool": {},
      *       //   "variables": {}
@@ -6119,6 +7102,7 @@ export namespace ces_v1beta {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "appVersion": "my_appVersion",
      *       //   "exportFormat": "my_exportFormat",
      *       //   "gcsUri": "my_gcsUri"
      *       // }
@@ -6232,6 +7216,168 @@ export namespace ces_v1beta {
     }
 
     /**
+     * Generates specific resources (e.g. agent) in the app using LLM assistant.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/ces.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const ces = google.ces('v1beta');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/ces',
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await ces.projects.locations.apps.generateAppResource({
+     *     // Required. The resource name of the app to generate the resource for.
+     *     parent: 'projects/my-project/locations/my-location/apps/my-app',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "agent": {},
+     *       //   "appGenerationConfig": {},
+     *       //   "evaluationGenerationConfig": {},
+     *       //   "evaluationPersonasGenerationConfig": {},
+     *       //   "hillClimbingFixConfig": {},
+     *       //   "qualityReportGenerationConfig": {},
+     *       //   "refineInstructions": [],
+     *       //   "tool": {},
+     *       //   "toolGenerationConfig": {},
+     *       //   "toolset": {}
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    generateAppResource(
+      params: Params$Resource$Projects$Locations$Apps$Generateappresource,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    generateAppResource(
+      params?: Params$Resource$Projects$Locations$Apps$Generateappresource,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    generateAppResource(
+      params: Params$Resource$Projects$Locations$Apps$Generateappresource,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    generateAppResource(
+      params: Params$Resource$Projects$Locations$Apps$Generateappresource,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    generateAppResource(
+      params: Params$Resource$Projects$Locations$Apps$Generateappresource,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    generateAppResource(callback: BodyResponseCallback<Schema$Operation>): void;
+    generateAppResource(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Apps$Generateappresource
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Apps$Generateappresource;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Apps$Generateappresource;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://ces.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta/{+parent}:generateAppResource').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['parent'],
+        pathParams: ['parent'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
+    }
+
+    /**
      * Gets details of the specified app.
      * @example
      * ```js
@@ -6280,6 +7426,7 @@ export namespace ces_v1beta {
      *   //   "deploymentCount": 0,
      *   //   "description": "my_description",
      *   //   "displayName": "my_displayName",
+     *   //   "errorHandlingSettings": {},
      *   //   "etag": "my_etag",
      *   //   "evaluationMetricsThresholds": {},
      *   //   "evaluationPersonas": [],
@@ -6908,6 +8055,7 @@ export namespace ces_v1beta {
      *       //   "deploymentCount": 0,
      *       //   "description": "my_description",
      *       //   "displayName": "my_displayName",
+     *       //   "errorHandlingSettings": {},
      *       //   "etag": "my_etag",
      *       //   "evaluationMetricsThresholds": {},
      *       //   "evaluationPersonas": [],
@@ -6942,6 +8090,7 @@ export namespace ces_v1beta {
      *   //   "deploymentCount": 0,
      *   //   "description": "my_description",
      *   //   "displayName": "my_displayName",
+     *   //   "errorHandlingSettings": {},
      *   //   "etag": "my_etag",
      *   //   "evaluationMetricsThresholds": {},
      *   //   "evaluationPersonas": [],
@@ -7576,6 +8725,17 @@ export namespace ces_v1beta {
      * Request body metadata
      */
     requestBody?: Schema$ExportAppRequest;
+  }
+  export interface Params$Resource$Projects$Locations$Apps$Generateappresource extends StandardParameters {
+    /**
+     * Required. The resource name of the app to generate the resource for.
+     */
+    parent?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$GenerateAppResourceRequest;
   }
   export interface Params$Resource$Projects$Locations$Apps$Get extends StandardParameters {
     /**
@@ -9800,6 +10960,7 @@ export namespace ces_v1beta {
      *       //   "createTime": "my_createTime",
      *       //   "displayName": "my_displayName",
      *       //   "etag": "my_etag",
+     *       //   "experimentConfig": {},
      *       //   "name": "my_name",
      *       //   "updateTime": "my_updateTime"
      *       // }
@@ -9814,6 +10975,7 @@ export namespace ces_v1beta {
      *   //   "createTime": "my_createTime",
      *   //   "displayName": "my_displayName",
      *   //   "etag": "my_etag",
+     *   //   "experimentConfig": {},
      *   //   "name": "my_name",
      *   //   "updateTime": "my_updateTime"
      *   // }
@@ -10099,6 +11261,7 @@ export namespace ces_v1beta {
      *   //   "createTime": "my_createTime",
      *   //   "displayName": "my_displayName",
      *   //   "etag": "my_etag",
+     *   //   "experimentConfig": {},
      *   //   "name": "my_name",
      *   //   "updateTime": "my_updateTime"
      *   // }
@@ -10379,7 +11542,7 @@ export namespace ces_v1beta {
      *
      *   // Do the magic
      *   const res = await ces.projects.locations.apps.deployments.patch({
-     *     // Identifier. The resource name of the deployment. Format: projects/{project\}/locations/{location\}/apps/{app\}/deployments/{deployment\}
+     *     // Identifier. The resource name of the deployment. Format: `projects/{project\}/locations/{location\}/apps/{app\}/deployments/{deployment\}`
      *     name: 'projects/my-project/locations/my-location/apps/my-app/deployments/my-deployment',
      *     // Optional. The list of fields to update.
      *     updateMask: 'placeholder-value',
@@ -10393,6 +11556,7 @@ export namespace ces_v1beta {
      *       //   "createTime": "my_createTime",
      *       //   "displayName": "my_displayName",
      *       //   "etag": "my_etag",
+     *       //   "experimentConfig": {},
      *       //   "name": "my_name",
      *       //   "updateTime": "my_updateTime"
      *       // }
@@ -10407,6 +11571,7 @@ export namespace ces_v1beta {
      *   //   "createTime": "my_createTime",
      *   //   "displayName": "my_displayName",
      *   //   "etag": "my_etag",
+     *   //   "experimentConfig": {},
      *   //   "name": "my_name",
      *   //   "updateTime": "my_updateTime"
      *   // }
@@ -10557,7 +11722,7 @@ export namespace ces_v1beta {
   }
   export interface Params$Resource$Projects$Locations$Apps$Deployments$Patch extends StandardParameters {
     /**
-     * Identifier. The resource name of the deployment. Format: projects/{project\}/locations/{location\}/apps/{app\}/deployments/{deployment\}
+     * Identifier. The resource name of the deployment. Format: `projects/{project\}/locations/{location\}/apps/{app\}/deployments/{deployment\}`
      */
     name?: string;
     /**
@@ -13098,6 +14263,162 @@ export namespace ces_v1beta {
     }
 
     /**
+     * Exports evaluations.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/ces.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const ces = google.ces('v1beta');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/ces',
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await ces.projects.locations.apps.evaluations.export({
+     *     // Required. The resource name of the app to export evaluations from. Format: `projects/{project\}/locations/{location\}/apps/{app\}`
+     *     parent: 'projects/my-project/locations/my-location/apps/my-app',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "exportOptions": {},
+     *       //   "includeEvaluationResults": false,
+     *       //   "includeEvaluations": false,
+     *       //   "names": []
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    export(
+      params: Params$Resource$Projects$Locations$Apps$Evaluations$Export,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    export(
+      params?: Params$Resource$Projects$Locations$Apps$Evaluations$Export,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    export(
+      params: Params$Resource$Projects$Locations$Apps$Evaluations$Export,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    export(
+      params: Params$Resource$Projects$Locations$Apps$Evaluations$Export,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    export(
+      params: Params$Resource$Projects$Locations$Apps$Evaluations$Export,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    export(callback: BodyResponseCallback<Schema$Operation>): void;
+    export(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Apps$Evaluations$Export
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Apps$Evaluations$Export;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Apps$Evaluations$Export;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://ces.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta/{+parent}/evaluations:export').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['parent'],
+        pathParams: ['parent'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
+    }
+
+    /**
      * Gets details of the specified evaluation.
      * @example
      * ```js
@@ -13586,6 +14907,165 @@ export namespace ces_v1beta {
         return createAPIRequest<Schema$Evaluation>(parameters);
       }
     }
+
+    /**
+     * Uploads audio for use in Golden Evaluations. Stores the audio in the Cloud Storage bucket defined in 'App.logging_settings.evaluation_audio_recording_config.gcs_bucket' and returns a transcript.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/ces.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const ces = google.ces('v1beta');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/ces',
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await ces.projects.locations.apps.evaluations.uploadEvaluationAudio({
+     *       // Required. The resource name of the Evaluation for which to upload the evaluation audio. Format: `projects/{project\}/locations/{location\}/apps/{app\}/evaluations/{evaluation\}`
+     *       name: 'projects/my-project/locations/my-location/apps/my-app/evaluations/my-evaluation',
+     *
+     *       // Request body metadata
+     *       requestBody: {
+     *         // request body parameters
+     *         // {
+     *         //   "audioContent": "my_audioContent",
+     *         //   "previousAudioGcsUri": "my_previousAudioGcsUri"
+     *         // }
+     *       },
+     *     });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "audioGcsUri": "my_audioGcsUri",
+     *   //   "duration": "my_duration",
+     *   //   "transcript": "my_transcript"
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    uploadEvaluationAudio(
+      params: Params$Resource$Projects$Locations$Apps$Evaluations$Uploadevaluationaudio,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    uploadEvaluationAudio(
+      params?: Params$Resource$Projects$Locations$Apps$Evaluations$Uploadevaluationaudio,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$UploadEvaluationAudioResponse>>;
+    uploadEvaluationAudio(
+      params: Params$Resource$Projects$Locations$Apps$Evaluations$Uploadevaluationaudio,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    uploadEvaluationAudio(
+      params: Params$Resource$Projects$Locations$Apps$Evaluations$Uploadevaluationaudio,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$UploadEvaluationAudioResponse>,
+      callback: BodyResponseCallback<Schema$UploadEvaluationAudioResponse>
+    ): void;
+    uploadEvaluationAudio(
+      params: Params$Resource$Projects$Locations$Apps$Evaluations$Uploadevaluationaudio,
+      callback: BodyResponseCallback<Schema$UploadEvaluationAudioResponse>
+    ): void;
+    uploadEvaluationAudio(
+      callback: BodyResponseCallback<Schema$UploadEvaluationAudioResponse>
+    ): void;
+    uploadEvaluationAudio(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Apps$Evaluations$Uploadevaluationaudio
+        | BodyResponseCallback<Schema$UploadEvaluationAudioResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$UploadEvaluationAudioResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$UploadEvaluationAudioResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$UploadEvaluationAudioResponse>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Apps$Evaluations$Uploadevaluationaudio;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Apps$Evaluations$Uploadevaluationaudio;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://ces.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta/{+name}:uploadEvaluationAudio').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$UploadEvaluationAudioResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$UploadEvaluationAudioResponse>(
+          parameters
+        );
+      }
+    }
   }
 
   export interface Params$Resource$Projects$Locations$Apps$Evaluations$Create extends StandardParameters {
@@ -13616,6 +15096,17 @@ export namespace ces_v1beta {
      * Required. The resource name of the evaluation to delete.
      */
     name?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Apps$Evaluations$Export extends StandardParameters {
+    /**
+     * Required. The resource name of the app to export evaluations from. Format: `projects/{project\}/locations/{location\}/apps/{app\}`
+     */
+    parent?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$ExportEvaluationsRequest;
   }
   export interface Params$Resource$Projects$Locations$Apps$Evaluations$Get extends StandardParameters {
     /**
@@ -13671,6 +15162,17 @@ export namespace ces_v1beta {
      * Request body metadata
      */
     requestBody?: Schema$Evaluation;
+  }
+  export interface Params$Resource$Projects$Locations$Apps$Evaluations$Uploadevaluationaudio extends StandardParameters {
+    /**
+     * Required. The resource name of the Evaluation for which to upload the evaluation audio. Format: `projects/{project\}/locations/{location\}/apps/{app\}/evaluations/{evaluation\}`
+     */
+    name?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$UploadEvaluationAudioRequest;
   }
 
   export class Resource$Projects$Locations$Apps$Evaluations$Results {
@@ -16796,6 +18298,7 @@ export namespace ces_v1beta {
      *       // request body parameters
      *       // {
      *       //   "deployment": "my_deployment",
+     *       //   "liveHandoffEnabled": false,
      *       //   "recaptchaToken": "my_recaptchaToken"
      *       // }
      *     },
@@ -16910,7 +18413,7 @@ export namespace ces_v1beta {
     }
 
     /**
-     * Initiates a single turn interaction with the CES agent within a session.
+     * Initiates a single-turn interaction with the CES agent within a session.
      * @example
      * ```js
      * // Before running the sample:
@@ -17059,6 +18562,159 @@ export namespace ces_v1beta {
         return createAPIRequest<Schema$RunSessionResponse>(parameters);
       }
     }
+
+    /**
+     * Initiates a single-turn interaction with the CES agent. Uses server-side streaming to deliver incremental results and partial responses as they are generated. By default, complete responses (e.g., messages from callbacks or full LLM responses) are sent to the client as soon as they are available. To enable streaming individual text chunks directly from the model, set enable_text_streaming to true.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/ces.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const ces = google.ces('v1beta');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/ces',
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await ces.projects.locations.apps.sessions.streamRunSession({
+     *     // Required. The unique identifier of the session. Format: `projects/{project\}/locations/{location\}/apps/{app\}/sessions/{session\}`
+     *     session:
+     *       'projects/my-project/locations/my-location/apps/my-app/sessions/my-session',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "config": {},
+     *       //   "inputs": []
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "outputs": []
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    streamRunSession(
+      params: Params$Resource$Projects$Locations$Apps$Sessions$Streamrunsession,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    streamRunSession(
+      params?: Params$Resource$Projects$Locations$Apps$Sessions$Streamrunsession,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$RunSessionResponse>>;
+    streamRunSession(
+      params: Params$Resource$Projects$Locations$Apps$Sessions$Streamrunsession,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    streamRunSession(
+      params: Params$Resource$Projects$Locations$Apps$Sessions$Streamrunsession,
+      options: MethodOptions | BodyResponseCallback<Schema$RunSessionResponse>,
+      callback: BodyResponseCallback<Schema$RunSessionResponse>
+    ): void;
+    streamRunSession(
+      params: Params$Resource$Projects$Locations$Apps$Sessions$Streamrunsession,
+      callback: BodyResponseCallback<Schema$RunSessionResponse>
+    ): void;
+    streamRunSession(
+      callback: BodyResponseCallback<Schema$RunSessionResponse>
+    ): void;
+    streamRunSession(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Apps$Sessions$Streamrunsession
+        | BodyResponseCallback<Schema$RunSessionResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$RunSessionResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$RunSessionResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$RunSessionResponse>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Apps$Sessions$Streamrunsession;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Apps$Sessions$Streamrunsession;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://ces.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta/{+session}:streamRunSession').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['session'],
+        pathParams: ['session'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$RunSessionResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$RunSessionResponse>(parameters);
+      }
+    }
   }
 
   export interface Params$Resource$Projects$Locations$Apps$Sessions$Generatechattoken extends StandardParameters {
@@ -17073,6 +18729,17 @@ export namespace ces_v1beta {
     requestBody?: Schema$GenerateChatTokenRequest;
   }
   export interface Params$Resource$Projects$Locations$Apps$Sessions$Runsession extends StandardParameters {
+    /**
+     * Required. The unique identifier of the session. Format: `projects/{project\}/locations/{location\}/apps/{app\}/sessions/{session\}`
+     */
+    session?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$RunSessionRequest;
+  }
+  export interface Params$Resource$Projects$Locations$Apps$Sessions$Streamrunsession extends StandardParameters {
     /**
      * Required. The unique identifier of the session. Format: `projects/{project\}/locations/{location\}/apps/{app\}/sessions/{session\}`
      */
@@ -17133,6 +18800,7 @@ export namespace ces_v1beta {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "agentTool": {},
      *       //   "clientFunction": {},
      *       //   "connectorTool": {},
      *       //   "createTime": "my_createTime",
@@ -17158,6 +18826,7 @@ export namespace ces_v1beta {
      *
      *   // Example response
      *   // {
+     *   //   "agentTool": {},
      *   //   "clientFunction": {},
      *   //   "connectorTool": {},
      *   //   "createTime": "my_createTime",
@@ -17454,6 +19123,7 @@ export namespace ces_v1beta {
      *
      *   // Example response
      *   // {
+     *   //   "agentTool": {},
      *   //   "clientFunction": {},
      *   //   "connectorTool": {},
      *   //   "createTime": "my_createTime",
@@ -17750,7 +19420,7 @@ export namespace ces_v1beta {
      *
      *   // Do the magic
      *   const res = await ces.projects.locations.apps.tools.patch({
-     *     // Identifier. The unique identifier of the tool. Format: - `projects/{project\}/locations/{location\}/apps/{app\}/tools/{tool\}` for ## standalone tools. `projects/{project\}/locations/{location\}/apps/{app\}/toolsets/{toolset\}/tools/{tool\}` for tools retrieved from a toolset. These tools are dynamic and output-only, they cannot be referenced directly where a tool is expected.
+     *     // Identifier. The resource name of the tool. Format: * `projects/{project\}/locations/{location\}/apps/{app\}/tools/{tool\}` for standalone tools. * `projects/{project\}/locations/{location\}/apps/{app\}/toolsets/{toolset\}/tools/{tool\}` for tools retrieved from a toolset. These tools are dynamic and output-only; they cannot be referenced directly where a tool is expected.
      *     name: 'projects/my-project/locations/my-location/apps/my-app/tools/my-tool',
      *     // Optional. Field mask is used to control which fields get updated. If the mask is not present, all fields will be updated.
      *     updateMask: 'placeholder-value',
@@ -17759,6 +19429,7 @@ export namespace ces_v1beta {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "agentTool": {},
      *       //   "clientFunction": {},
      *       //   "connectorTool": {},
      *       //   "createTime": "my_createTime",
@@ -17784,6 +19455,7 @@ export namespace ces_v1beta {
      *
      *   // Example response
      *   // {
+     *   //   "agentTool": {},
      *   //   "clientFunction": {},
      *   //   "connectorTool": {},
      *   //   "createTime": "my_createTime",
@@ -17957,7 +19629,7 @@ export namespace ces_v1beta {
   }
   export interface Params$Resource$Projects$Locations$Apps$Tools$Patch extends StandardParameters {
     /**
-     * Identifier. The unique identifier of the tool. Format: - `projects/{project\}/locations/{location\}/apps/{app\}/tools/{tool\}` for ## standalone tools. `projects/{project\}/locations/{location\}/apps/{app\}/toolsets/{toolset\}/tools/{tool\}` for tools retrieved from a toolset. These tools are dynamic and output-only, they cannot be referenced directly where a tool is expected.
+     * Identifier. The resource name of the tool. Format: * `projects/{project\}/locations/{location\}/apps/{app\}/tools/{tool\}` for standalone tools. * `projects/{project\}/locations/{location\}/apps/{app\}/toolsets/{toolset\}/tools/{tool\}` for tools retrieved from a toolset. These tools are dynamic and output-only; they cannot be referenced directly where a tool is expected.
      */
     name?: string;
     /**
