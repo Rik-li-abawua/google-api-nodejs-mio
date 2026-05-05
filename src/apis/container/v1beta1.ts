@@ -154,6 +154,15 @@ export namespace container_v1beta1 {
     maxTimeSharedClientsPerGpu?: string | null;
   }
   /**
+   * AccurateTimeConfig contains configuration for the accurate time synchronization feature.
+   */
+  export interface Schema$AccurateTimeConfig {
+    /**
+     * Enables enhanced time synchronization using PTP-KVM.
+     */
+    enablePtpKvmTimeSync?: boolean | null;
+  }
+  /**
    * AdditionalIPRangesConfig is the configuration for individual additional subnetwork attached to the cluster
    */
   export interface Schema$AdditionalIPRangesConfig {
@@ -222,6 +231,10 @@ export namespace container_v1beta1 {
    */
   export interface Schema$AddonsConfig {
     /**
+     * Optional. Configuration for the AgentSandbox addon.
+     */
+    agentSandboxConfig?: Schema$AgentSandboxConfig;
+    /**
      * Configuration for the Cloud Run addon. The `IstioConfig` addon must be enabled in order to enable Cloud Run addon. This option can only be enabled at cluster creation time.
      */
     cloudRunConfig?: Schema$CloudRunConfig;
@@ -282,6 +295,10 @@ export namespace container_v1beta1 {
      */
     networkPolicyConfig?: Schema$NetworkPolicyConfig;
     /**
+     * Optional. Configuration for NodeReadinessController add-on.
+     */
+    nodeReadinessConfig?: Schema$NodeReadinessConfig;
+    /**
      * Configuration for the Cloud Storage Parallelstore CSI driver.
      */
     parallelstoreCsiDriverConfig?: Schema$ParallelstoreCsiDriverConfig;
@@ -297,6 +314,10 @@ export namespace container_v1beta1 {
      * Optional. Configuration for the slice controller add-on.
      */
     sliceControllerConfig?: Schema$SliceControllerConfig;
+    /**
+     * Configuration for the Slurm Operator.
+     */
+    slurmOperatorConfig?: Schema$SlurmOperatorConfig;
     /**
      * Optional. Configuration for the StatefulHA add-on.
      */
@@ -335,6 +356,15 @@ export namespace container_v1beta1 {
      * The number of threads per physical core. To disable simultaneous multithreading (SMT) set this to 1. If unset, the maximum number of threads supported per core by the underlying processor is assumed.
      */
     threadsPerCore?: string | null;
+  }
+  /**
+   * Configuration for the AgentSandbox addon.
+   */
+  export interface Schema$AgentSandboxConfig {
+    /**
+     * Optional. Whether AgentSandbox is enabled for this cluster.
+     */
+    enabled?: boolean | null;
   }
   /**
    * AnonymousAuthenticationConfig defines the settings needed to limit endpoints that allow anonymous authentication.
@@ -380,6 +410,10 @@ export namespace container_v1beta1 {
    * Autopilot is the configuration for Autopilot settings on the cluster.
    */
   export interface Schema$Autopilot {
+    /**
+     * ClusterPolicyConfig denotes cluster level policies that are enforced for the cluster.
+     */
+    clusterPolicyConfig?: Schema$ClusterPolicyConfig;
     /**
      * Output only. ConversionStatus shows conversion status.
      */
@@ -427,7 +461,7 @@ export namespace container_v1beta1 {
     subjects?: string[] | null;
   }
   /**
-   * AutopilotConfig contains configuration of autopilot feature for this nodepool.
+   * AutopilotConfig contains configuration of autopilot feature for this node pool.
    */
   export interface Schema$AutopilotConfig {
     /**
@@ -610,7 +644,7 @@ export namespace container_v1beta1 {
     standardRolloutPolicy?: Schema$StandardRolloutPolicy;
   }
   /**
-   * BootDisk specifies the boot disk configuration for nodepools.
+   * BootDisk specifies the boot disk configuration for node pools.
    */
   export interface Schema$BootDisk {
     /**
@@ -669,7 +703,7 @@ export namespace container_v1beta1 {
    */
   export interface Schema$CertificateAuthorityDomainConfig {
     /**
-     * List of fully qualified domain names (FQDN). Specifying port is supported. Wildcards are NOT supported. Examples: - my.customdomain.com - 10.0.1.2:5000
+     * List of fully qualified domain names (FQDN). Specifying port is supported. Wildcards are NOT supported. Examples: - `my.customdomain.com` - `10.0.1.2:5000`
      */
     fqdns?: string[] | null;
     /**
@@ -800,6 +834,10 @@ export namespace container_v1beta1 {
      */
     confidentialNodes?: Schema$ConfidentialNodes;
     /**
+     * Configuration for control plane egress control.
+     */
+    controlPlaneEgress?: Schema$ControlPlaneEgress;
+    /**
      * Configuration for all cluster's control plane endpoints.
      */
     controlPlaneEndpointsConfig?: Schema$ControlPlaneEndpointsConfig;
@@ -928,6 +966,10 @@ export namespace container_v1beta1 {
      */
     maintenancePolicy?: Schema$MaintenancePolicy;
     /**
+     * Configuration for managed machine learning diagnostics.
+     */
+    managedMachineLearningDiagnosticsConfig?: Schema$ManagedMachineLearningDiagnosticsConfig;
+    /**
      * Configuration for Managed OpenTelemetry pipeline.
      */
     managedOpentelemetryConfig?: Schema$ManagedOpenTelemetryConfig;
@@ -996,6 +1038,10 @@ export namespace container_v1beta1 {
      */
     nodePools?: Schema$NodePool[];
     /**
+     * The node pool upgrade concurrency config of the cluster. This field is used for auto upgrade.
+     */
+    nodePoolUpgradeConcurrencyConfig?: Schema$NodePoolUpgradeConcurrencyConfig;
+    /**
      * Notification configuration of the cluster.
      */
     notificationConfig?: Schema$NotificationConfig;
@@ -1051,6 +1097,10 @@ export namespace container_v1beta1 {
      * Output only. Reserved for future use.
      */
     satisfiesPzs?: boolean | null;
+    /**
+     * Optional. Configuration for scheduled upgrades.
+     */
+    scheduleUpgradeConfig?: Schema$ScheduleUpgradeConfig;
     /**
      * Secret CSI driver configuration.
      */
@@ -1163,6 +1213,27 @@ export namespace container_v1beta1 {
     totalEgressBandwidthTier?: string | null;
   }
   /**
+   * ClusterPolicyConfig stores the configuration for cluster wide policies.
+   */
+  export interface Schema$ClusterPolicyConfig {
+    /**
+     * Denotes preventing standard node pools and requiring only autopilot node pools.
+     */
+    noStandardNodePools?: boolean | null;
+    /**
+     * Denotes preventing impersonation and CSRs for GKE System users.
+     */
+    noSystemImpersonation?: boolean | null;
+    /**
+     * Denotes that preventing creation and mutation of resources in GKE managed namespaces and cluster-scoped GKE managed resources .
+     */
+    noSystemMutation?: boolean | null;
+    /**
+     * Denotes preventing unsafe webhooks.
+     */
+    noUnsafeWebhooks?: boolean | null;
+  }
+  /**
    * Telemetry integration for the cluster.
    */
   export interface Schema$ClusterTelemetry {
@@ -1200,6 +1271,10 @@ export namespace container_v1beta1 {
      */
     desiredAutoIpamConfig?: Schema$AutoIpamConfig;
     /**
+     * The desired autopilot cluster policies that to be enforced in the cluster.
+     */
+    desiredAutopilotClusterPolicyConfig?: Schema$ClusterPolicyConfig;
+    /**
      * WorkloadPolicyConfig is the configuration related to GCW workload policy
      */
     desiredAutopilotWorkloadPolicyConfig?: Schema$WorkloadPolicyConfig;
@@ -1223,6 +1298,10 @@ export namespace container_v1beta1 {
      * The desired containerd config for the cluster.
      */
     desiredContainerdConfig?: Schema$ContainerdConfig;
+    /**
+     * The desired control plane egress control config for the cluster.
+     */
+    desiredControlPlaneEgress?: Schema$ControlPlaneEgress;
     /**
      * Control plane endpoints configuration.
      */
@@ -1328,6 +1407,10 @@ export namespace container_v1beta1 {
      */
     desiredLoggingService?: string | null;
     /**
+     * The desired managed machine learning diagnostics configuration.
+     */
+    desiredManagedMachineLearningDiagnosticsConfig?: Schema$ManagedMachineLearningDiagnosticsConfig;
+    /**
      * The desired managed open telemetry configuration.
      */
     desiredManagedOpentelemetryConfig?: Schema$ManagedOpenTelemetryConfig;
@@ -1396,6 +1479,10 @@ export namespace container_v1beta1 {
      */
     desiredNodePoolLoggingConfig?: Schema$NodePoolLoggingConfig;
     /**
+     * The desired node pool upgrade concurrency configuration.
+     */
+    desiredNodePoolUpgradeConcurrencyConfig?: Schema$NodePoolUpgradeConcurrencyConfig;
+    /**
      * The Kubernetes version to change the nodes to (typically an upgrade). Users may specify either explicit versions offered by Kubernetes Engine or version aliases, which have the following behavior: - "latest": picks the highest valid Kubernetes version - "1.X": picks the highest valid patch+gke.N patch in the 1.X version - "1.X.Y": picks the highest valid gke.N patch in the 1.X.Y version - "1.X.Y-gke.N": picks an explicit Kubernetes version - "-": picks the Kubernetes master version
      */
     desiredNodeVersion?: string | null;
@@ -1447,6 +1534,10 @@ export namespace container_v1beta1 {
      * The desired rollback safe upgrade configuration.
      */
     desiredRollbackSafeUpgrade?: Schema$RollbackSafeUpgrade;
+    /**
+     * Optional. The desired scheduled upgrades configuration for the cluster.
+     */
+    desiredScheduleUpgradeConfig?: Schema$ScheduleUpgradeConfig;
     /**
      * Enable/Disable Secret Manager Config.
      */
@@ -1675,6 +1766,15 @@ export namespace container_v1beta1 {
     writableCgroups?: Schema$WritableCgroups;
   }
   /**
+   * ControlPlaneEgress defines the settings needed to enable control plane egress control.
+   */
+  export interface Schema$ControlPlaneEgress {
+    /**
+     * Defines the mode of control plane egress.
+     */
+    mode?: string | null;
+  }
+  /**
    * Configuration for all of the cluster's control plane endpoints.
    */
   export interface Schema$ControlPlaneEndpointsConfig {
@@ -1750,6 +1850,15 @@ export namespace container_v1beta1 {
      * Deprecated. The name of the Google Compute Engine [zone](https://cloud.google.com/compute/docs/zones#available) in which the cluster resides. This field has been deprecated and replaced by the parent field.
      */
     zone?: string | null;
+  }
+  /**
+   * Support for running custom init code while bootstrapping nodes.
+   */
+  export interface Schema$CustomNodeInit {
+    /**
+     * Optional. The init script to be executed on the node.
+     */
+    initScript?: Schema$InitScript;
   }
   /**
    * Time window specified for daily maintenance operations.
@@ -2327,7 +2436,7 @@ export namespace container_v1beta1 {
      */
     header?: Schema$RegistryHeader[];
     /**
-     * Host configures the registry host/mirror. It supports fully qualified domain names (FQDN) and IP addresses: Specifying port is supported. Wildcards are NOT supported. Examples: - my.customdomain.com - 10.0.1.2:5000
+     * Host configures the registry host/mirror. It supports fully qualified domain names (FQDNs) and IP addresses. Specifying scheme, port or path is supported. Scheme can only be http or https. Wildcards are NOT supported. Examples: - `my.customdomain.com` - `https://my.customdomain.com/path` - `10.0.1.2:5000`
      */
     host?: string | null;
     /**
@@ -2404,6 +2513,27 @@ export namespace container_v1beta1 {
      * Enables l4 ILB subsetting for this cluster
      */
     enabled?: boolean | null;
+  }
+  /**
+   * InitScript provide a simply bash script to be executed on the node.
+   */
+  export interface Schema$InitScript {
+    /**
+     * Optional. The optional arguments line to be passed to the init script.
+     */
+    args?: string[] | null;
+    /**
+     * The resource name of the secret manager secret hosting the init script. Both global and regional secrets are supported with format below: Global secret: projects/{project\}/secrets/{secret\}/versions/{version\} Regional secret: projects/{project\}/locations/{location\}/secrets/{secret\}/versions/{version\} Example: projects/1234567890/secrets/script_1/versions/1. Accept version number only, not support version alias. User can't configure both gcp_secret_manager_secret_uri and gcs_uri.
+     */
+    gcpSecretManagerSecretUri?: string | null;
+    /**
+     * The generation of the init script stored in Gloud Storage. This is the required field to identify the version of the init script. User can get the genetaion from `gcloud storage objects describe gs://BUCKET_NAME/OBJECT_NAME --format="value(generation)"` or from the "Version history" tab of the object in the Cloud Console UI.
+     */
+    gcsGeneration?: string | null;
+    /**
+     * The Cloud Storage URI for storing the init script. Format: gs://BUCKET_NAME/OBJECT_NAME The service account on the node pool must have read access to the object. User can't configure both gcs_uri and gcp_secret_manager_secret_uri.
+     */
+    gcsUri?: string | null;
   }
   /**
    * IntraNodeVisibilityConfig contains the desired config of the intra-node visibility on this cluster.
@@ -2643,9 +2773,17 @@ export namespace container_v1beta1 {
    */
   export interface Schema$LinuxNodeConfig {
     /**
+     * Optional. The accurate time configuration for the node pool.
+     */
+    accurateTimeConfig?: Schema$AccurateTimeConfig;
+    /**
      * cgroup_mode specifies the cgroup mode to be used on the node.
      */
     cgroupMode?: string | null;
+    /**
+     * Optional. Allow users to run arbitrary bash script or container on the node.
+     */
+    customNodeInit?: Schema$CustomNodeInit;
     /**
      * Optional. Amounts for 2M and 1G hugepages
      */
@@ -2790,6 +2928,10 @@ export namespace container_v1beta1 {
    */
   export interface Schema$LustreCsiDriverConfig {
     /**
+     * When set to true, this disables multi-NIC support for the Lustre CSI driver. By default, GKE enables multi-NIC support, which allows the Lustre CSI driver to automatically detect and configure all suitable network interfaces on a node to maximize I/O performance for demanding workloads.
+     */
+    disableMultiNic?: boolean | null;
+    /**
      * Whether the Lustre CSI driver is enabled for this cluster.
      */
     enabled?: boolean | null;
@@ -2841,9 +2983,22 @@ export namespace container_v1beta1 {
      */
     maintenanceExclusions?: {[key: string]: Schema$TimeWindow} | null;
     /**
+     * RecurringMaintenanceWindow specifies some number of recurring time periods for maintenance to occur. The time windows may be overlapping. If no maintenance windows are set, maintenance can occur at any time. Alternative to RecurringWindow, with renamed fields.
+     */
+    recurringMaintenanceWindow?: Schema$RecurringMaintenanceWindow;
+    /**
      * RecurringWindow specifies some number of recurring time periods for maintenance to occur. The time windows may be overlapping. If no maintenance windows are set, maintenance can occur at any time.
      */
     recurringWindow?: Schema$RecurringTimeWindow;
+  }
+  /**
+   * ManagedMachineLearningDiagnosticsConfig is the configuration for the GKE Managed Machine Learning Diagnostics pipeline.
+   */
+  export interface Schema$ManagedMachineLearningDiagnosticsConfig {
+    /**
+     * Enable/Disable Managed Machine Learning Diagnostics.
+     */
+    enabled?: boolean | null;
   }
   /**
    * ManagedOpenTelemetryConfig is the configuration for the GKE Managed OpenTelemetry pipeline.
@@ -3232,7 +3387,7 @@ export namespace container_v1beta1 {
      */
     kubeletConfig?: Schema$NodeKubeletConfig;
     /**
-     * The map of Kubernetes labels (key/value pairs) to be applied to each node. These will added in addition to any default label(s) that Kubernetes may apply to the node. In case of conflict in label keys, the applied set may differ depending on the Kubernetes version -- it's best to assume the behavior is undefined and conflicts should be avoided. For more information, including usage and the valid values, see: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+     * The Kubernetes labels (key/value pairs) to apply to each node. The values in this field are added to the set of default labels Kubernetes applies to nodes. This field has the following restrictions: * Labels must use a valid Kubernetes syntax and character set, as defined in https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#syntax-and-character-set. * This field supports up to 1,024 total characters in a single request. Depending on the Kubernetes version, keys in this field might conflict with the keys of the default labels, which might change which of your labels are applied to the nodes. Assume that the behavior is unpredictable and avoid label key conflicts. For more information about the default labels, see: https://kubernetes.io/docs/reference/labels-annotations-taints/
      */
     labels?: {[key: string]: string} | null;
     /**
@@ -3332,6 +3487,10 @@ export namespace container_v1beta1 {
      */
     tags?: string[] | null;
     /**
+     * Optional. The taint configuration for the node pool.
+     */
+    taintConfig?: Schema$TaintConfig;
+    /**
      * List of kubernetes taints to be applied to each node. For more information, including usage and the valid values, see: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
      */
     taints?: Schema$NodeTaint[];
@@ -3370,7 +3529,7 @@ export namespace container_v1beta1 {
     nodeKubeletConfig?: Schema$NodeKubeletConfig;
   }
   /**
-   * NodeDrainConfig contains the node drain related configurations for this nodepool.
+   * NodeDrainConfig contains the node drain related configurations for this node pool.
    */
   export interface Schema$NodeDrainConfig {
     /**
@@ -3543,7 +3702,7 @@ export namespace container_v1beta1 {
      */
     networkTierConfig?: Schema$NetworkTierConfig;
     /**
-     * [PRIVATE FIELD] Pod CIDR size overprovisioning config for the nodepool. Pod CIDR size per node depends on max_pods_per_node. By default, the value of max_pods_per_node is rounded off to next power of 2 and we then double that to get the size of pod CIDR block per node. Example: max_pods_per_node of 30 would result in 64 IPs (/26). This config can disable the doubling of IPs (we still round off to next power of 2) Example: max_pods_per_node of 30 will result in 32 IPs (/27) when overprovisioning is disabled.
+     * [PRIVATE FIELD] Pod CIDR size overprovisioning config for the node pool. Pod CIDR size per node depends on max_pods_per_node. By default, the value of max_pods_per_node is rounded off to next power of 2 and we then double that to get the size of pod CIDR block per node. Example: max_pods_per_node of 30 would result in 64 IPs (/26). This config can disable the doubling of IPs (we still round off to next power of 2) Example: max_pods_per_node of 30 will result in 32 IPs (/27) when overprovisioning is disabled.
      */
     podCidrOverprovisionConfig?: Schema$PodCIDROverprovisionConfig;
     /**
@@ -3694,7 +3853,7 @@ export namespace container_v1beta1 {
      */
     enabled?: boolean | null;
     /**
-     * Location policy used when scaling up a nodepool.
+     * Location policy used when scaling up a node pool.
      */
     locationPolicy?: string | null;
     /**
@@ -3724,7 +3883,7 @@ export namespace container_v1beta1 {
     nodeConfigDefaults?: Schema$NodeConfigDefaults;
   }
   /**
-   * NodePoolLoggingConfig specifies logging configuration for nodepools.
+   * NodePoolLoggingConfig specifies logging configuration for node pools.
    */
   export interface Schema$NodePoolLoggingConfig {
     /**
@@ -3733,7 +3892,16 @@ export namespace container_v1beta1 {
     variantConfig?: Schema$LoggingVariantConfig;
   }
   /**
-   * NodePoolUpgradeInfo contains the upgrade information of a nodepool.
+   * NodePoolUpgradeConcurrencyConfig is the configuration for the node pool auto upgrade concurrency.
+   */
+  export interface Schema$NodePoolUpgradeConcurrencyConfig {
+    /**
+     * If set, no more than max_count node pools can be upgraded concurrently.
+     */
+    maxCount?: string | null;
+  }
+  /**
+   * NodePoolUpgradeInfo contains the upgrade information of a node pool.
    */
   export interface Schema$NodePoolUpgradeInfo {
     /**
@@ -3741,11 +3909,11 @@ export namespace container_v1beta1 {
      */
     autoUpgradeStatus?: string[] | null;
     /**
-     * The nodepool's current minor version's end of extended support timestamp.
+     * The node pool's current minor version's end of extended support timestamp.
      */
     endOfExtendedSupportTimestamp?: string | null;
     /**
-     * The nodepool's current minor version's end of standard support timestamp.
+     * The node pool's current minor version's end of standard support timestamp.
      */
     endOfStandardSupportTimestamp?: string | null;
     /**
@@ -3764,6 +3932,15 @@ export namespace container_v1beta1 {
      * The list of past auto upgrades.
      */
     upgradeDetails?: Schema$UpgradeDetails[];
+  }
+  /**
+   * Configuration for the GKE Node Readiness Controller.
+   */
+  export interface Schema$NodeReadinessConfig {
+    /**
+     * Optional. Whether the GKE Node Readiness Controller is enabled for this cluster.
+     */
+    enabled?: boolean | null;
   }
   /**
    * Kubernetes taint is composed of three fields: key, value, and effect. Effect can only be one of three types: NoSchedule, PreferNoSchedule or NoExecute. See [here](https://kubernetes.io/docs/concepts/configuration/taint-and-toleration) for more information, including usage and the valid values.
@@ -4120,7 +4297,7 @@ export namespace container_v1beta1 {
    */
   export interface Schema$QueuedProvisioning {
     /**
-     * Denotes that this nodepool is QRM specific, meaning nodes can be only obtained through queuing via the Cluster Autoscaler ProvisioningRequest API.
+     * Denotes that this node pool is QRM specific, meaning nodes can be only obtained through queuing via the Cluster Autoscaler ProvisioningRequest API.
      */
     enabled?: boolean | null;
   }
@@ -4186,6 +4363,27 @@ export namespace container_v1beta1 {
     enableInsecureBindingSystemUnauthenticated?: boolean | null;
   }
   /**
+   * Represents an arbitrary window of time that recurs. Alternative to RecurringTimeWindow, with renamed fields.
+   */
+  export interface Schema$RecurringMaintenanceWindow {
+    /**
+     * Optional. Windows will not be scheduled before that day. Depending on the recurrence, this may be the date the first window appears. Days are measured in the UTC timezone. This setting must be used when INTERVAL\>1 or FREQ=WEEKLY/MONTHLY and no BYDAY specified.
+     */
+    delayUntil?: Schema$Date;
+    /**
+     * Required. An RRULE (https://tools.ietf.org/html/rfc5545#section-3.8.5.3) for how this window reccurs. For example, to have something repeat every weekday, you'd use: `FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR` To repeat some window daily (equivalent to the DailyMaintenanceWindow): `FREQ=DAILY` For the first weekend of every month: `FREQ=MONTHLY;BYSETPOS=1;BYDAY=SA,SU` The FREQ values of HOURLY, MINUTELY, and SECONDLY are not supported.
+     */
+    recurrence?: string | null;
+    /**
+     * Required. Duration of the window.
+     */
+    windowDuration?: string | null;
+    /**
+     * Required. Start time of the window on days that it is scheduled, assuming UTC timezone.
+     */
+    windowStartTime?: Schema$TimeOfDay;
+  }
+  /**
    * Represents an arbitrary window of time that recurs.
    */
   export interface Schema$RecurringTimeWindow {
@@ -4220,7 +4418,7 @@ export namespace container_v1beta1 {
      */
     hosts?: Schema$HostConfig[];
     /**
-     * Defines the host name of the registry server, which will be used to create configuration file as /etc/containerd/hosts.d//hosts.toml. It supports fully qualified domain names (FQDN) and IP addresses: Specifying port is supported. Wildcards are NOT supported. Examples: - my.customdomain.com - 10.0.1.2:5000
+     * Defines the host name of the registry server, which will be used to create configuration file as /etc/containerd/hosts.d//hosts.toml. It supports fully qualified domain names (FQDN) and IP addresses: Specifying port is supported, while scheme and path are NOT supported. Wildcards are NOT supported. Examples: - `my.customdomain.com` - `10.0.1.2:5000`
      */
     server?: string | null;
   }
@@ -4407,6 +4605,15 @@ export namespace container_v1beta1 {
      * Type of the sandbox to use for the node.
      */
     type?: string | null;
+  }
+  /**
+   * Configuration for scheduled upgrades on the cluster.
+   */
+  export interface Schema$ScheduleUpgradeConfig {
+    /**
+     * Optional. Whether or not scheduled upgrades are enabled.
+     */
+    enabled?: boolean | null;
   }
   /**
    * SecondaryBootDisk represents a persistent disk attached to a node with special configurations based on its mode.
@@ -4907,6 +5114,15 @@ export namespace container_v1beta1 {
     enabled?: boolean | null;
   }
   /**
+   * Configuration for the Slurm Operator.
+   */
+  export interface Schema$SlurmOperatorConfig {
+    /**
+     * Whether the Slurm Operator is enabled in the cluster.
+     */
+    enabled?: boolean | null;
+  }
+  /**
    * SoleTenantConfig contains the NodeAffinities to specify what shared sole tenant node groups should back the node pool.
    */
   export interface Schema$SoleTenantConfig {
@@ -5041,6 +5257,36 @@ export namespace container_v1beta1 {
      * The interval between two consecutive rotations. Default rotation interval is 2 minutes.
      */
     rotationInterval?: string | null;
+  }
+  /**
+   * TaintConfig contains the configuration for the taints of the node pool.
+   */
+  export interface Schema$TaintConfig {
+    /**
+     * Optional. Controls architecture tainting behavior.
+     */
+    architectureTaintBehavior?: string | null;
+  }
+  /**
+   * Represents a time of day. The date and time zone are either not significant or are specified elsewhere. An API may choose to allow leap seconds. Related types are google.type.Date and `google.protobuf.Timestamp`.
+   */
+  export interface Schema$TimeOfDay {
+    /**
+     * Hours of a day in 24 hour format. Must be greater than or equal to 0 and typically must be less than or equal to 23. An API may choose to allow the value "24:00:00" for scenarios like business closing time.
+     */
+    hours?: number | null;
+    /**
+     * Minutes of an hour. Must be greater than or equal to 0 and less than or equal to 59.
+     */
+    minutes?: number | null;
+    /**
+     * Fractions of seconds, in nanoseconds. Must be greater than or equal to 0 and less than or equal to 999,999,999.
+     */
+    nanos?: number | null;
+    /**
+     * Seconds of a minute. Must be greater than or equal to 0 and typically must be less than or equal to 59. An API may allow the value 60 if it allows leap-seconds.
+     */
+    seconds?: number | null;
   }
   /**
    * Represents an arbitrary window of time.
@@ -5280,6 +5526,10 @@ export namespace container_v1beta1 {
      * The desired network tags to be applied to all nodes in the node pool. If this field is not present, the tags will not be changed. Otherwise, the existing network tags will be *replaced* with the provided tags.
      */
     tags?: Schema$NetworkTags;
+    /**
+     * The taint configuration for the node pool.
+     */
+    taintConfig?: Schema$TaintConfig;
     /**
      * The desired node taints to be applied to all nodes in the node pool. If this field is not present, the taints will not be changed. Otherwise, the existing node taints will be *replaced* with the provided taints.
      */
@@ -7232,6 +7482,7 @@ export namespace container_v1beta1 {
      *   //   "compliancePostureConfig": {},
      *   //   "conditions": [],
      *   //   "confidentialNodes": {},
+     *   //   "controlPlaneEgress": {},
      *   //   "controlPlaneEndpointsConfig": {},
      *   //   "costManagementConfig": {},
      *   //   "createTime": "my_createTime",
@@ -7264,6 +7515,7 @@ export namespace container_v1beta1 {
      *   //   "loggingConfig": {},
      *   //   "loggingService": "my_loggingService",
      *   //   "maintenancePolicy": {},
+     *   //   "managedMachineLearningDiagnosticsConfig": {},
      *   //   "managedOpentelemetryConfig": {},
      *   //   "master": {},
      *   //   "masterAuth": {},
@@ -7280,6 +7532,7 @@ export namespace container_v1beta1 {
      *   //   "nodeIpv4CidrSize": 0,
      *   //   "nodePoolAutoConfig": {},
      *   //   "nodePoolDefaults": {},
+     *   //   "nodePoolUpgradeConcurrencyConfig": {},
      *   //   "nodePools": [],
      *   //   "notificationConfig": {},
      *   //   "parentProductConfig": {},
@@ -7295,6 +7548,7 @@ export namespace container_v1beta1 {
      *   //   "rollbackSafeUpgrade": {},
      *   //   "satisfiesPzi": false,
      *   //   "satisfiesPzs": false,
+     *   //   "scheduleUpgradeConfig": {},
      *   //   "secretManagerConfig": {},
      *   //   "secretSyncConfig": {},
      *   //   "securityPostureConfig": {},
@@ -10367,7 +10621,7 @@ export namespace container_v1beta1 {
     }
 
     /**
-     * Fetch upgrade information of a specific nodepool.
+     * Fetch upgrade information of a specific node pool.
      * @example
      * ```js
      * // Before running the sample:
@@ -10399,7 +10653,7 @@ export namespace container_v1beta1 {
      *   const res =
      *     await container.projects.locations.clusters.nodePools.fetchNodePoolUpgradeInfo(
      *       {
-     *         // Required. The name (project, location, cluster, nodepool) of the nodepool to get. Specified in the format `projects/x/locations/x/clusters/x/nodePools/x` or `projects/x/zones/x/clusters/x/nodePools/x`.
+     *         // Required. The name (project, location, cluster, node pool) of the node pool to get. Specified in the format `projects/x/locations/x/clusters/x/nodePools/x` or `projects/x/zones/x/clusters/x/nodePools/x`.
      *         name: 'projects/my-project/locations/my-location/clusters/my-cluster/nodePools/my-nodePool',
      *         // API request version that initiates this operation.
      *         version: 'placeholder-value',
@@ -11559,6 +11813,7 @@ export namespace container_v1beta1 {
      *       //   "resourceManagerTags": {},
      *       //   "storagePools": [],
      *       //   "tags": {},
+     *       //   "taintConfig": {},
      *       //   "taints": {},
      *       //   "upgradeSettings": {},
      *       //   "windowsNodeConfig": {},
@@ -11729,7 +11984,7 @@ export namespace container_v1beta1 {
   }
   export interface Params$Resource$Projects$Locations$Clusters$Nodepools$Fetchnodepoolupgradeinfo extends StandardParameters {
     /**
-     * Required. The name (project, location, cluster, nodepool) of the nodepool to get. Specified in the format `projects/x/locations/x/clusters/x/nodePools/x` or `projects/x/zones/x/clusters/x/nodePools/x`.
+     * Required. The name (project, location, cluster, node pool) of the node pool to get. Specified in the format `projects/x/locations/x/clusters/x/nodePools/x` or `projects/x/zones/x/clusters/x/nodePools/x`.
      */
     name?: string;
     /**
@@ -13697,6 +13952,7 @@ export namespace container_v1beta1 {
      *   //   "compliancePostureConfig": {},
      *   //   "conditions": [],
      *   //   "confidentialNodes": {},
+     *   //   "controlPlaneEgress": {},
      *   //   "controlPlaneEndpointsConfig": {},
      *   //   "costManagementConfig": {},
      *   //   "createTime": "my_createTime",
@@ -13729,6 +13985,7 @@ export namespace container_v1beta1 {
      *   //   "loggingConfig": {},
      *   //   "loggingService": "my_loggingService",
      *   //   "maintenancePolicy": {},
+     *   //   "managedMachineLearningDiagnosticsConfig": {},
      *   //   "managedOpentelemetryConfig": {},
      *   //   "master": {},
      *   //   "masterAuth": {},
@@ -13745,6 +14002,7 @@ export namespace container_v1beta1 {
      *   //   "nodeIpv4CidrSize": 0,
      *   //   "nodePoolAutoConfig": {},
      *   //   "nodePoolDefaults": {},
+     *   //   "nodePoolUpgradeConcurrencyConfig": {},
      *   //   "nodePools": [],
      *   //   "notificationConfig": {},
      *   //   "parentProductConfig": {},
@@ -13760,6 +14018,7 @@ export namespace container_v1beta1 {
      *   //   "rollbackSafeUpgrade": {},
      *   //   "satisfiesPzi": false,
      *   //   "satisfiesPzs": false,
+     *   //   "scheduleUpgradeConfig": {},
      *   //   "secretManagerConfig": {},
      *   //   "secretSyncConfig": {},
      *   //   "securityPostureConfig": {},
@@ -16699,7 +16958,7 @@ export namespace container_v1beta1 {
     }
 
     /**
-     * Fetch upgrade information of a specific nodepool.
+     * Fetch upgrade information of a specific node pool.
      * @example
      * ```js
      * // Before running the sample:
@@ -16730,7 +16989,7 @@ export namespace container_v1beta1 {
      *   // Do the magic
      *   const res =
      *     await container.projects.zones.clusters.nodePools.fetchNodePoolUpgradeInfo({
-     *       // Required. The name (project, location, cluster, nodepool) of the nodepool to get. Specified in the format `projects/x/locations/x/clusters/x/nodePools/x` or `projects/x/zones/x/clusters/x/nodePools/x`.
+     *       // Required. The name (project, location, cluster, node pool) of the node pool to get. Specified in the format `projects/x/locations/x/clusters/x/nodePools/x` or `projects/x/zones/x/clusters/x/nodePools/x`.
      *       name: 'projects/my-project/zones/my-zone/clusters/my-cluster/nodePools/my-nodePool',
      *       // API request version that initiates this operation.
      *       version: 'placeholder-value',
@@ -17747,6 +18006,7 @@ export namespace container_v1beta1 {
      *       //   "resourceManagerTags": {},
      *       //   "storagePools": [],
      *       //   "tags": {},
+     *       //   "taintConfig": {},
      *       //   "taints": {},
      *       //   "upgradeSettings": {},
      *       //   "windowsNodeConfig": {},
@@ -17939,7 +18199,7 @@ export namespace container_v1beta1 {
   }
   export interface Params$Resource$Projects$Zones$Clusters$Nodepools$Fetchnodepoolupgradeinfo extends StandardParameters {
     /**
-     * Required. The name (project, location, cluster, nodepool) of the nodepool to get. Specified in the format `projects/x/locations/x/clusters/x/nodePools/x` or `projects/x/zones/x/clusters/x/nodePools/x`.
+     * Required. The name (project, location, cluster, node pool) of the node pool to get. Specified in the format `projects/x/locations/x/clusters/x/nodePools/x` or `projects/x/zones/x/clusters/x/nodePools/x`.
      */
     name?: string;
     /**
