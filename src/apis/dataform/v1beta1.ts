@@ -629,6 +629,24 @@ export namespace dataform_v1beta1 {
    */
   export interface Schema$DeleteFile {}
   /**
+   * `DeleteFolderTree` request message.
+   */
+  export interface Schema$DeleteFolderTreeRequest {
+    /**
+     * Optional. If `false` (default): The operation will fail if any Repository within the folder hierarchy has associated Release Configs or Workflow Configs. If `true`: The operation will attempt to delete everything, including any Release Configs and Workflow Configs linked to Repositories within the folder hierarchy. This permanently removes schedules and resources.
+     */
+    force?: boolean | null;
+  }
+  /**
+   * `DeleteTeamFolderTree` request message.
+   */
+  export interface Schema$DeleteTeamFolderTreeRequest {
+    /**
+     * Optional. If `false` (default): The operation will fail if any Repository within the folder hierarchy has associated Release Configs or Workflow Configs. If `true`: The operation will attempt to delete everything, including any Release Configs and Workflow Configs linked to Repositories within the folder hierarchy. This permanently removes schedules and resources.
+     */
+    force?: boolean | null;
+  }
+  /**
    * Represents a single entry in a directory.
    */
   export interface Schema$DirectoryEntry {
@@ -640,6 +658,10 @@ export namespace dataform_v1beta1 {
      * A file in the directory.
      */
     file?: string | null;
+    /**
+     * Entry with metadata.
+     */
+    metadata?: Schema$FilesystemEntryMetadata;
   }
   /**
    * Client-facing representation of a directory entry in search results.
@@ -764,11 +786,24 @@ export namespace dataform_v1beta1 {
     path?: string | null;
   }
   /**
+   * Represents metadata for a single entry in a filesystem.
+   */
+  export interface Schema$FilesystemEntryMetadata {
+    /**
+     * Output only. Provides the size of the entry in bytes. For directories, this will be 0.
+     */
+    sizeBytes?: string | null;
+    /**
+     * Output only. Represents the time of the last modification of the entry.
+     */
+    updateTime?: string | null;
+  }
+  /**
    * Represents a Dataform Folder. This is a resource that is used to organize Files and other Folders and provide hierarchical access controls.
    */
   export interface Schema$Folder {
     /**
-     * Optional. The containing Folder resource name. This should take the format: projects/{project\}/locations/{location\}/folders/{folder\}, projects/{project\}/locations/{location\}/teamFolders/{teamFolder\}, or just projects/{project\}/locations/{location\} if this is a root Folder. This field can only be updated through MoveFolder.
+     * Optional. The containing Folder resource name. This should take the format: projects/{project\}/locations/{location\}/folders/{folder\}, projects/{project\}/locations/{location\}/teamFolders/{teamFolder\}, or just "" if this is a root Folder. This field can only be updated through MoveFolder.
      */
     containingFolder?: string | null;
     /**
@@ -822,7 +857,7 @@ export namespace dataform_v1beta1 {
      */
     authenticationTokenSecretVersion?: string | null;
     /**
-     * Required. The Git remote's default branch name.
+     * Required. The Git remote's default branch name. If not set, `main` will be used and stored for the repository.
      */
     defaultBranch?: string | null;
     /**
@@ -2500,7 +2535,7 @@ export namespace dataform_v1beta1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the [ListLocationsRequest.name] field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -2684,11 +2719,11 @@ export namespace dataform_v1beta1 {
      *
      *   // Do the magic
      *   const res = await dataform.projects.locations.queryUserRootContents({
-     *     // Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: - `filter="display_name="MyFolder""`
+     *     // Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: * `filter="display_name="MyFolder""`
      *     filter: 'placeholder-value',
-     *     // Required. Location of the user root folder whose contents to list. Format: projects/x/locations/x
+     *     // Required. Location of the user root folder to list contents for. Format: projects/x/locations/x
      *     location: 'projects/my-project/locations/my-location',
-     *     // Optional. Field to additionally sort results by. Will order Folders before Repositories, and then by `order_by` in ascending order. Supported keywords: display_name (default), created_at, last_modified_at. Examples: - `orderBy="display_name"` - `orderBy="display_name desc"`
+     *     // Optional. Field to additionally sort results by. Will order Folders before Repositories, and then by `order_by` in ascending order. Supported keywords: display_name (default), created_at, last_modified_at. Examples: * `orderBy="display_name"` * `orderBy="display_name desc"`
      *     orderBy: 'placeholder-value',
      *     // Optional. Maximum number of paths to return. The server may return fewer items than requested. If unspecified, the server will pick an appropriate default.
      *     pageSize: 'placeholder-value',
@@ -2992,15 +3027,15 @@ export namespace dataform_v1beta1 {
   }
   export interface Params$Resource$Projects$Locations$Queryuserrootcontents extends StandardParameters {
     /**
-     * Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: - `filter="display_name="MyFolder""`
+     * Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: * `filter="display_name="MyFolder""`
      */
     filter?: string;
     /**
-     * Required. Location of the user root folder whose contents to list. Format: projects/x/locations/x
+     * Required. Location of the user root folder to list contents for. Format: projects/x/locations/x
      */
     location?: string;
     /**
-     * Optional. Field to additionally sort results by. Will order Folders before Repositories, and then by `order_by` in ascending order. Supported keywords: display_name (default), created_at, last_modified_at. Examples: - `orderBy="display_name"` - `orderBy="display_name desc"`
+     * Optional. Field to additionally sort results by. Will order Folders before Repositories, and then by `order_by` in ascending order. Supported keywords: display_name (default), created_at, last_modified_at. Examples: * `orderBy="display_name"` * `orderBy="display_name desc"`
      */
     orderBy?: string;
     /**
@@ -3068,7 +3103,7 @@ export namespace dataform_v1beta1 {
      *
      *   // Do the magic
      *   const res = await dataform.projects.locations.folders.create({
-     *     // The ID to use for the Folder, which will become the final component of the Folder's resource name.
+     *     // Deprecated: This field is not used. The resource name is generated automatically. The ID to use for the Folder, which will become the final component of the Folder's resource name.
      *     folderId: 'placeholder-value',
      *     // Required. The location in which to create the Folder. Must be in the format `projects/x/locations/x`.
      *     parent: 'projects/my-project/locations/my-location',
@@ -3330,6 +3365,158 @@ export namespace dataform_v1beta1 {
         );
       } else {
         return createAPIRequest<Schema$Empty>(parameters);
+      }
+    }
+
+    /**
+     * Deletes a Folder with its contents (Folders, Repositories, Workspaces, ReleaseConfigs, and WorkflowConfigs).
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/dataform.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const dataform = google.dataform('v1beta1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/bigquery',
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await dataform.projects.locations.folders.deleteTree({
+     *     // Required. The Folder's name. Format: projects/{project\}/locations/{location\}/folders/{folder\}
+     *     name: 'projects/my-project/locations/my-location/folders/my-folder',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "force": false
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    deleteTree(
+      params: Params$Resource$Projects$Locations$Folders$Deletetree,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    deleteTree(
+      params?: Params$Resource$Projects$Locations$Folders$Deletetree,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    deleteTree(
+      params: Params$Resource$Projects$Locations$Folders$Deletetree,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    deleteTree(
+      params: Params$Resource$Projects$Locations$Folders$Deletetree,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    deleteTree(
+      params: Params$Resource$Projects$Locations$Folders$Deletetree,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    deleteTree(callback: BodyResponseCallback<Schema$Operation>): void;
+    deleteTree(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Folders$Deletetree
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Folders$Deletetree;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params = {} as Params$Resource$Projects$Locations$Folders$Deletetree;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://dataform.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta1/{+name}:deleteTree').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
       }
     }
 
@@ -3968,11 +4155,11 @@ export namespace dataform_v1beta1 {
      *
      *   // Do the magic
      *   const res = await dataform.projects.locations.folders.queryFolderContents({
-     *     // Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: - `filter="display_name="MyFolder""`
+     *     // Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: * `filter="display_name="MyFolder""`
      *     filter: 'placeholder-value',
-     *     // Required. Name of the folder whose contents to list. Format: projects/x/locations/x/folders/x
+     *     // Required. Resource name of the Folder to list contents for. Format: projects/x/locations/x/folders/x
      *     folder: 'projects/my-project/locations/my-location/folders/my-folder',
-     *     // Optional. Field to additionally sort results by. Will order Folders before Repositories, and then by `order_by` in ascending order. Supported keywords: display_name (default), create_time, last_modified_time. Examples: - `orderBy="display_name"` - `orderBy="display_name desc"`
+     *     // Optional. Field to additionally sort results by. Will order Folders before Repositories, and then by `order_by` in ascending order. Supported keywords: display_name (default), create_time, last_modified_time. Examples: * `orderBy="display_name"` * `orderBy="display_name desc"`
      *     orderBy: 'placeholder-value',
      *     // Optional. Maximum number of paths to return. The server may return fewer items than requested. If unspecified, the server will pick an appropriate default.
      *     pageSize: 'placeholder-value',
@@ -4394,7 +4581,7 @@ export namespace dataform_v1beta1 {
 
   export interface Params$Resource$Projects$Locations$Folders$Create extends StandardParameters {
     /**
-     * The ID to use for the Folder, which will become the final component of the Folder's resource name.
+     * Deprecated: This field is not used. The resource name is generated automatically. The ID to use for the Folder, which will become the final component of the Folder's resource name.
      */
     folderId?: string;
     /**
@@ -4412,6 +4599,17 @@ export namespace dataform_v1beta1 {
      * Required. The Folder's name.
      */
     name?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Folders$Deletetree extends StandardParameters {
+    /**
+     * Required. The Folder's name. Format: projects/{project\}/locations/{location\}/folders/{folder\}
+     */
+    name?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$DeleteFolderTreeRequest;
   }
   export interface Params$Resource$Projects$Locations$Folders$Get extends StandardParameters {
     /**
@@ -4457,15 +4655,15 @@ export namespace dataform_v1beta1 {
   }
   export interface Params$Resource$Projects$Locations$Folders$Queryfoldercontents extends StandardParameters {
     /**
-     * Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: - `filter="display_name="MyFolder""`
+     * Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: * `filter="display_name="MyFolder""`
      */
     filter?: string;
     /**
-     * Required. Name of the folder whose contents to list. Format: projects/x/locations/x/folders/x
+     * Required. Resource name of the Folder to list contents for. Format: projects/x/locations/x/folders/x
      */
     folder?: string;
     /**
-     * Optional. Field to additionally sort results by. Will order Folders before Repositories, and then by `order_by` in ascending order. Supported keywords: display_name (default), create_time, last_modified_time. Examples: - `orderBy="display_name"` - `orderBy="display_name desc"`
+     * Optional. Field to additionally sort results by. Will order Folders before Repositories, and then by `order_by` in ascending order. Supported keywords: display_name (default), create_time, last_modified_time. Examples: * `orderBy="display_name"` * `orderBy="display_name desc"`
      */
     orderBy?: string;
     /**
@@ -13339,6 +13537,8 @@ export namespace dataform_v1beta1 {
      *         pageToken: 'placeholder-value',
      *         // Optional. The directory's full path including directory name, relative to the workspace root. If left unset, the workspace root is used.
      *         path: 'placeholder-value',
+     *         // Optional. Specifies the metadata to return for each directory entry. If unspecified, the default is `DIRECTORY_CONTENTS_VIEW_BASIC`. Currently the `DIRECTORY_CONTENTS_VIEW_METADATA` view is not supported by CMEK-protected workspaces.
+     *         view: 'placeholder-value',
      *         // Required. The workspace's name.
      *         workspace:
      *           'projects/my-project/locations/my-location/repositories/my-repositorie/workspaces/my-workspace',
@@ -14846,6 +15046,10 @@ export namespace dataform_v1beta1 {
      */
     path?: string;
     /**
+     * Optional. Specifies the metadata to return for each directory entry. If unspecified, the default is `DIRECTORY_CONTENTS_VIEW_BASIC`. Currently the `DIRECTORY_CONTENTS_VIEW_METADATA` view is not supported by CMEK-protected workspaces.
+     */
+    view?: string;
+    /**
      * Required. The workspace's name.
      */
     workspace?: string;
@@ -14991,7 +15195,7 @@ export namespace dataform_v1beta1 {
      *   const res = await dataform.projects.locations.teamFolders.create({
      *     // Required. The location in which to create the TeamFolder. Must be in the format `projects/x/locations/x`.
      *     parent: 'projects/my-project/locations/my-location',
-     *     // The ID to use for the TeamFolder, which will become the final component of the TeamFolder's resource name.
+     *     // Deprecated: This field is not used. The resource name is generated automatically. The ID to use for the TeamFolder, which will become the final component of the TeamFolder's resource name.
      *     teamFolderId: 'placeholder-value',
      *
      *     // Request body metadata
@@ -15247,6 +15451,159 @@ export namespace dataform_v1beta1 {
         );
       } else {
         return createAPIRequest<Schema$Empty>(parameters);
+      }
+    }
+
+    /**
+     * Deletes a TeamFolder with its contents (Folders, Repositories, Workspaces, ReleaseConfigs, and WorkflowConfigs).
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/dataform.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const dataform = google.dataform('v1beta1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/bigquery',
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await dataform.projects.locations.teamFolders.deleteTree({
+     *     // Required. The TeamFolder's name. Format: projects/{project\}/locations/{location\}/teamFolders/{team_folder\}
+     *     name: 'projects/my-project/locations/my-location/teamFolders/my-teamFolder',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "force": false
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    deleteTree(
+      params: Params$Resource$Projects$Locations$Teamfolders$Deletetree,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    deleteTree(
+      params?: Params$Resource$Projects$Locations$Teamfolders$Deletetree,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    deleteTree(
+      params: Params$Resource$Projects$Locations$Teamfolders$Deletetree,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    deleteTree(
+      params: Params$Resource$Projects$Locations$Teamfolders$Deletetree,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    deleteTree(
+      params: Params$Resource$Projects$Locations$Teamfolders$Deletetree,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    deleteTree(callback: BodyResponseCallback<Schema$Operation>): void;
+    deleteTree(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Teamfolders$Deletetree
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Teamfolders$Deletetree;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Teamfolders$Deletetree;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://dataform.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1beta1/{+name}:deleteTree').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
       }
     }
 
@@ -15729,15 +16086,15 @@ export namespace dataform_v1beta1 {
      *
      *   // Do the magic
      *   const res = await dataform.projects.locations.teamFolders.queryContents({
-     *     // Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: - `filter="display_name="MyFolder""`
+     *     // Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: * `filter="display_name="MyFolder""`
      *     filter: 'placeholder-value',
-     *     // Optional. Field to additionally sort results by. Will order Folders before Repositories, and then by `order_by` in ascending order. Supported keywords: `display_name` (default), `create_time`, last_modified_time. Examples: - `orderBy="display_name"` - `orderBy="display_name desc"`
+     *     // Optional. Field to additionally sort results by. Will order Folders before Repositories, and then by `order_by` in ascending order. Supported keywords: `display_name` (default), `create_time`, last_modified_time. Examples: * `orderBy="display_name"` * `orderBy="display_name desc"`
      *     orderBy: 'placeholder-value',
      *     // Optional. Maximum number of paths to return. The server may return fewer items than requested. If unspecified, the server will pick an appropriate default.
      *     pageSize: 'placeholder-value',
      *     // Optional. Page token received from a previous `QueryTeamFolderContents` call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `QueryTeamFolderContents`, with the exception of `page_size`, must match the call that provided the page token.
      *     pageToken: 'placeholder-value',
-     *     // Required. Name of the team_folder whose contents to list. Format: `projects/x/locations/x/teamFolders/x`.
+     *     // Required. Resource name of the TeamFolder to list contents for. Format: `projects/x/locations/x/teamFolders/x`.
      *     teamFolder:
      *       'projects/my-project/locations/my-location/teamFolders/my-teamFolder',
      *   });
@@ -15886,11 +16243,11 @@ export namespace dataform_v1beta1 {
      *
      *   // Do the magic
      *   const res = await dataform.projects.locations.teamFolders.search({
-     *     // Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: - `filter="display_name="MyFolder""`
+     *     // Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: * `filter="display_name="MyFolder""`
      *     filter: 'placeholder-value',
      *     // Required. Location in which to query TeamFolders. Format: `projects/x/locations/x`.
      *     location: 'projects/my-project/locations/my-location',
-     *     // Optional. Field to additionally sort results by. Supported keywords: `display_name` (default), `create_time`, `last_modified_time`. Examples: - `orderBy="display_name"` - `orderBy="display_name desc"`
+     *     // Optional. Field to additionally sort results by. Supported keywords: `display_name` (default), `create_time`, `last_modified_time`. Examples: * `orderBy="display_name"` * `orderBy="display_name desc"`
      *     orderBy: 'placeholder-value',
      *     // Optional. Maximum number of TeamFolders to return. The server may return fewer items than requested. If unspecified, the server will pick an appropriate default.
      *     pageSize: 'placeholder-value',
@@ -16318,7 +16675,7 @@ export namespace dataform_v1beta1 {
      */
     parent?: string;
     /**
-     * The ID to use for the TeamFolder, which will become the final component of the TeamFolder's resource name.
+     * Deprecated: This field is not used. The resource name is generated automatically. The ID to use for the TeamFolder, which will become the final component of the TeamFolder's resource name.
      */
     teamFolderId?: string;
 
@@ -16332,6 +16689,17 @@ export namespace dataform_v1beta1 {
      * Required. The TeamFolder's name.
      */
     name?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Teamfolders$Deletetree extends StandardParameters {
+    /**
+     * Required. The TeamFolder's name. Format: projects/{project\}/locations/{location\}/teamFolders/{team_folder\}
+     */
+    name?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$DeleteTeamFolderTreeRequest;
   }
   export interface Params$Resource$Projects$Locations$Teamfolders$Get extends StandardParameters {
     /**
@@ -16366,11 +16734,11 @@ export namespace dataform_v1beta1 {
   }
   export interface Params$Resource$Projects$Locations$Teamfolders$Querycontents extends StandardParameters {
     /**
-     * Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: - `filter="display_name="MyFolder""`
+     * Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: * `filter="display_name="MyFolder""`
      */
     filter?: string;
     /**
-     * Optional. Field to additionally sort results by. Will order Folders before Repositories, and then by `order_by` in ascending order. Supported keywords: `display_name` (default), `create_time`, last_modified_time. Examples: - `orderBy="display_name"` - `orderBy="display_name desc"`
+     * Optional. Field to additionally sort results by. Will order Folders before Repositories, and then by `order_by` in ascending order. Supported keywords: `display_name` (default), `create_time`, last_modified_time. Examples: * `orderBy="display_name"` * `orderBy="display_name desc"`
      */
     orderBy?: string;
     /**
@@ -16382,13 +16750,13 @@ export namespace dataform_v1beta1 {
      */
     pageToken?: string;
     /**
-     * Required. Name of the team_folder whose contents to list. Format: `projects/x/locations/x/teamFolders/x`.
+     * Required. Resource name of the TeamFolder to list contents for. Format: `projects/x/locations/x/teamFolders/x`.
      */
     teamFolder?: string;
   }
   export interface Params$Resource$Projects$Locations$Teamfolders$Search extends StandardParameters {
     /**
-     * Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: - `filter="display_name="MyFolder""`
+     * Optional. Optional filtering for the returned list. Filtering is currently only supported on the `display_name` field. Example: * `filter="display_name="MyFolder""`
      */
     filter?: string;
     /**
@@ -16396,7 +16764,7 @@ export namespace dataform_v1beta1 {
      */
     location?: string;
     /**
-     * Optional. Field to additionally sort results by. Supported keywords: `display_name` (default), `create_time`, `last_modified_time`. Examples: - `orderBy="display_name"` - `orderBy="display_name desc"`
+     * Optional. Field to additionally sort results by. Supported keywords: `display_name` (default), `create_time`, `last_modified_time`. Examples: * `orderBy="display_name"` * `orderBy="display_name desc"`
      */
     orderBy?: string;
     /**
