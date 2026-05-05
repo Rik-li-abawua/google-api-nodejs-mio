@@ -2934,10 +2934,16 @@ export namespace cloudsearch_v1 {
      */
     source?: Schema$Source;
   }
-  /**
-   * This field does not contain anything as of now and is just used as an indicator that the suggest result was a phrase completion.
-   */
-  export interface Schema$QuerySuggestion {}
+  export interface Schema$QuerySuggestion {
+    /**
+     * Last query time of the suggestion for query history suggestions.
+     */
+    lastQueryTime?: string | null;
+    /**
+     * Source corpus of the suggestion.
+     */
+    sourceCorpus?: string | null;
+  }
   /**
    * Remove Logged Activity Request.
    */
@@ -2976,6 +2982,10 @@ export namespace cloudsearch_v1 {
    * Shared request options for all RPC methods.
    */
   export interface Schema$RequestOptions {
+    /**
+     * The BCP-47 language code, such as "pt" or "en". It represents the user's preferred Display Language.
+     */
+    clientDisplayLanguageCode?: string | null;
     /**
      * Debug options of the request
      */
@@ -3243,7 +3253,7 @@ export namespace cloudsearch_v1 {
     quality?: number | null;
   }
   /**
-   * The search API request. NEXT ID: 24
+   * The search API request. NEXT ID: 25
    */
   export interface Schema$SearchRequest {
     /**
@@ -7757,6 +7767,8 @@ export namespace cloudsearch_v1 {
      *   const res = await cloudsearch.query.sources.list({
      *     // Number of sources to return in the response.
      *     pageToken: 'placeholder-value',
+     *     // The BCP-47 language code, such as "pt" or "en". It represents the user's preferred Display Language.
+     *     'requestOptions.clientDisplayLanguageCode': 'placeholder-value',
      *     // If you are asked by Google to help with debugging, set this field. Otherwise, ignore this field.
      *     'requestOptions.debugOptions.enableDebugging': 'placeholder-value',
      *     // The BCP-47 language code, such as "en-US" or "sr-Latn". For more information, see http://www.unicode.org/reports/tr35/#Unicode_locale_identifier. For translations. Set this field using the language set in browser or for the page. In the event that the user's language preference is known, set this field to the known user language. When specified, the documents in search results are biased towards the specified language. The Suggest API uses this field as a hint to make better third-party autocomplete predictions.
@@ -7875,6 +7887,10 @@ export namespace cloudsearch_v1 {
      * Number of sources to return in the response.
      */
     pageToken?: string;
+    /**
+     * The BCP-47 language code, such as "pt" or "en". It represents the user's preferred Display Language.
+     */
+    'requestOptions.clientDisplayLanguageCode'?: string;
     /**
      * If you are asked by Google to help with debugging, set this field. Otherwise, ignore this field.
      */
