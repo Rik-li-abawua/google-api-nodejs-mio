@@ -424,7 +424,7 @@ export namespace cloudkms_v1 {
      */
     importOnly?: boolean | null;
     /**
-     * Optional. The policy used for Key Access Justifications Policy Enforcement. If this field is present and this key is enrolled in Key Access Justifications Policy Enforcement, the policy will be evaluated in encrypt, decrypt, and sign operations, and the operation will fail if rejected by the policy. The policy is defined by specifying zero or more allowed justification codes. https://cloud.google.com/assured-workloads/key-access-justifications/docs/justification-codes By default, this field is absent, and all justification codes are allowed.
+     * Optional. The policy used for Key Access Justifications Policy Enforcement. If this field is present and this key is enrolled in Key Access Justifications Policy Enforcement, the policy will be evaluated in encrypt, decrypt, and sign operations, and the operation will fail if rejected by the policy. The policy is defined by specifying zero or more allowed justification codes. https://cloud.google.com/assured-workloads/key-access-justifications/docs/justification-codes By default, this field is absent, and all justification codes are allowed. If the `key_access_justifications_policy.allowed_access_reasons` is empty (zero allowed justification code), all encrypt, decrypt, and sign operations will fail.
      */
     keyAccessJustificationsPolicy?: Schema$KeyAccessJustificationsPolicy;
     /**
@@ -890,37 +890,41 @@ export namespace cloudkms_v1 {
     state?: string | null;
   }
   /**
-   * The configuration of a protection level for a project's Key Access Justifications enrollment.
+   * Represents the configuration of a protection level for a project's Key Access Justifications enrollment.
    */
   export interface Schema$KeyAccessJustificationsEnrollmentConfig {
     /**
-     * Whether the project has KAJ logging enabled.
+     * Indicates whether the project has KAJ logging enabled.
      */
     auditLogging?: boolean | null;
     /**
-     * Whether the project is enrolled in KAJ policy enforcement.
+     * Indicates whether the project is enrolled in KAJ policy enforcement.
      */
     policyEnforcement?: boolean | null;
   }
   /**
-   * A KeyAccessJustificationsPolicy specifies zero or more allowed AccessReason values for encrypt, decrypt, and sign operations on a CryptoKey.
+   * A KeyAccessJustificationsPolicy specifies zero or more allowed AccessReason values for encrypt, decrypt, and sign operations on a CryptoKey or KeyAccessJustificationsPolicyConfig (the default Key Access Justifications policy).
    */
   export interface Schema$KeyAccessJustificationsPolicy {
     /**
-     * The list of allowed reasons for access to a CryptoKey. Zero allowed access reasons means all encrypt, decrypt, and sign operations for the CryptoKey associated with this policy will fail.
+     * The list of allowed reasons for access to a CryptoKey. Note that empty allowed_access_reasons has a different meaning depending on where this message appears. If this is under KeyAccessJustificationsPolicyConfig, it means allow-all. If this is under CryptoKey, it means deny-all.
      */
     allowedAccessReasons?: string[] | null;
   }
   /**
-   * A singleton configuration for Key Access Justifications policies.
+   * Represents a singleton configuration for Key Access Justifications policies.
    */
   export interface Schema$KeyAccessJustificationsPolicyConfig {
     /**
-     * Optional. The default key access justification policy used when a CryptoKey is created in this folder. This is only used when a Key Access Justifications policy is not provided in the CreateCryptoKeyRequest. This overrides any default policies in its ancestry.
+     * Optional. Specifies the default key access justifications (KAJ) policy used when a CryptoKey is created in this folder. This is only used when a Key Access Justifications policy is not provided in the CreateCryptoKeyRequest. This overrides any default policies in its ancestry. If this field is unset, or is set but contains an empty allowed_access_reasons list, no default Key Access Justifications (KAJ) policy configuration is active. In this scenario, all newly created keys will default to an "allow-all" policy.
      */
     defaultKeyAccessJustificationPolicy?: Schema$KeyAccessJustificationsPolicy;
     /**
-     * Identifier. The resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
+     * Output only. Indicates whether this parent resource is available to default policy feature. Please consult [the prerequisite of default policy feature](https://cloud.google.com/assured-workloads/key-access-justifications/docs/set-default-policy#before) for more details.
+     */
+    defaultPolicyAvailable?: boolean | null;
+    /**
+     * Identifier. Represents the resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
      */
     name?: string | null;
   }
@@ -1650,28 +1654,28 @@ export namespace cloudkms_v1 {
     keyProject?: string | null;
   }
   /**
-   * Response message for KeyAccessJustificationsConfig.ShowEffectiveKeyAccessJustificationsEnrollmentConfig
+   * Represents a response message for KeyAccessJustificationsConfig.ShowEffectiveKeyAccessJustificationsEnrollmentConfig
    */
   export interface Schema$ShowEffectiveKeyAccessJustificationsEnrollmentConfigResponse {
     /**
-     * The effective KeyAccessJustificationsEnrollmentConfig for external keys.
+     * Contains the effective KeyAccessJustificationsEnrollmentConfig for external keys.
      */
     externalConfig?: Schema$KeyAccessJustificationsEnrollmentConfig;
     /**
-     * The effective KeyAccessJustificationsEnrollmentConfig for hardware keys.
+     * Contains the effective KeyAccessJustificationsEnrollmentConfig for hardware keys.
      */
     hardwareConfig?: Schema$KeyAccessJustificationsEnrollmentConfig;
     /**
-     * The effective KeyAccessJustificationsEnrollmentConfig for software keys.
+     * Contains the effective KeyAccessJustificationsEnrollmentConfig for software keys.
      */
     softwareConfig?: Schema$KeyAccessJustificationsEnrollmentConfig;
   }
   /**
-   * Response message for KeyAccessJustificationsConfig.ShowEffectiveKeyAccessJustificationsPolicyConfig.
+   * Represents a response message for KeyAccessJustificationsConfig.ShowEffectiveKeyAccessJustificationsPolicyConfig.
    */
   export interface Schema$ShowEffectiveKeyAccessJustificationsPolicyConfigResponse {
     /**
-     * The effective KeyAccessJustificationsPolicyConfig.
+     * Contains the effective KeyAccessJustificationsPolicyConfig.
      */
     effectiveKajPolicy?: Schema$KeyAccessJustificationsPolicyConfig;
   }
@@ -1692,6 +1696,10 @@ export namespace cloudkms_v1 {
      */
     disableTime?: string | null;
     /**
+     * Optional. Immutable. Indicates whether key portability is enabled for the SingleTenantHsmInstance. This can only be set at creation time. Key portability features are disabled by default and not yet available in GA.
+     */
+    keyPortabilityEnabled?: boolean | null;
+    /**
      * Identifier. The resource name for this SingleTenantHsmInstance in the format `projects/x/locations/x/singleTenantHsmInstances/x`.
      */
     name?: string | null;
@@ -1704,7 +1712,7 @@ export namespace cloudkms_v1 {
      */
     state?: string | null;
     /**
-     * Output only. The system-defined duration that an instance can remain unrefreshed until it is automatically disabled. This will have a value of 120 days.
+     * Output only. The system-defined duration that an instance can remain unrefreshed until it is automatically disabled. This will have a value of 730 days.
      */
     unrefreshedDurationUntilDisable?: string | null;
   }
@@ -2022,7 +2030,7 @@ export namespace cloudkms_v1 {
      *
      *   // Do the magic
      *   const res = await cloudkms.folders.getKajPolicyConfig({
-     *     // Required. The name of the KeyAccessJustificationsPolicyConfig to get.
+     *     // Required. Specifies the name of the KeyAccessJustificationsPolicyConfig to get.
      *     name: 'folders/my-folder/kajPolicyConfig',
      *   });
      *   console.log(res.data);
@@ -2030,6 +2038,7 @@ export namespace cloudkms_v1 {
      *   // Example response
      *   // {
      *   //   "defaultKeyAccessJustificationPolicy": {},
+     *   //   "defaultPolicyAvailable": false,
      *   //   "name": "my_name"
      *   // }
      * }
@@ -2327,9 +2336,9 @@ export namespace cloudkms_v1 {
      *
      *   // Do the magic
      *   const res = await cloudkms.folders.updateKajPolicyConfig({
-     *     // Identifier. The resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
+     *     // Identifier. Represents the resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
      *     name: 'folders/my-folder/kajPolicyConfig',
-     *     // Optional. The list of fields to update.
+     *     // Optional. Specifies the list of fields to update.
      *     updateMask: 'placeholder-value',
      *
      *     // Request body metadata
@@ -2337,6 +2346,7 @@ export namespace cloudkms_v1 {
      *       // request body parameters
      *       // {
      *       //   "defaultKeyAccessJustificationPolicy": {},
+     *       //   "defaultPolicyAvailable": false,
      *       //   "name": "my_name"
      *       // }
      *     },
@@ -2346,6 +2356,7 @@ export namespace cloudkms_v1 {
      *   // Example response
      *   // {
      *   //   "defaultKeyAccessJustificationPolicy": {},
+     *   //   "defaultPolicyAvailable": false,
      *   //   "name": "my_name"
      *   // }
      * }
@@ -2461,7 +2472,7 @@ export namespace cloudkms_v1 {
   }
   export interface Params$Resource$Folders$Getkajpolicyconfig extends StandardParameters {
     /**
-     * Required. The name of the KeyAccessJustificationsPolicyConfig to get.
+     * Required. Specifies the name of the KeyAccessJustificationsPolicyConfig to get.
      */
     name?: string;
   }
@@ -2482,11 +2493,11 @@ export namespace cloudkms_v1 {
   }
   export interface Params$Resource$Folders$Updatekajpolicyconfig extends StandardParameters {
     /**
-     * Identifier. The resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
+     * Identifier. Represents the resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
      */
     name?: string;
     /**
-     * Optional. The list of fields to update.
+     * Optional. Specifies the list of fields to update.
      */
     updateMask?: string;
 
@@ -2536,7 +2547,7 @@ export namespace cloudkms_v1 {
      *
      *   // Do the magic
      *   const res = await cloudkms.organizations.getKajPolicyConfig({
-     *     // Required. The name of the KeyAccessJustificationsPolicyConfig to get.
+     *     // Required. Specifies the name of the KeyAccessJustificationsPolicyConfig to get.
      *     name: 'organizations/my-organization/kajPolicyConfig',
      *   });
      *   console.log(res.data);
@@ -2544,6 +2555,7 @@ export namespace cloudkms_v1 {
      *   // Example response
      *   // {
      *   //   "defaultKeyAccessJustificationPolicy": {},
+     *   //   "defaultPolicyAvailable": false,
      *   //   "name": "my_name"
      *   // }
      * }
@@ -2684,9 +2696,9 @@ export namespace cloudkms_v1 {
      *
      *   // Do the magic
      *   const res = await cloudkms.organizations.updateKajPolicyConfig({
-     *     // Identifier. The resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
+     *     // Identifier. Represents the resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
      *     name: 'organizations/my-organization/kajPolicyConfig',
-     *     // Optional. The list of fields to update.
+     *     // Optional. Specifies the list of fields to update.
      *     updateMask: 'placeholder-value',
      *
      *     // Request body metadata
@@ -2694,6 +2706,7 @@ export namespace cloudkms_v1 {
      *       // request body parameters
      *       // {
      *       //   "defaultKeyAccessJustificationPolicy": {},
+     *       //   "defaultPolicyAvailable": false,
      *       //   "name": "my_name"
      *       // }
      *     },
@@ -2703,6 +2716,7 @@ export namespace cloudkms_v1 {
      *   // Example response
      *   // {
      *   //   "defaultKeyAccessJustificationPolicy": {},
+     *   //   "defaultPolicyAvailable": false,
      *   //   "name": "my_name"
      *   // }
      * }
@@ -2812,17 +2826,17 @@ export namespace cloudkms_v1 {
 
   export interface Params$Resource$Organizations$Getkajpolicyconfig extends StandardParameters {
     /**
-     * Required. The name of the KeyAccessJustificationsPolicyConfig to get.
+     * Required. Specifies the name of the KeyAccessJustificationsPolicyConfig to get.
      */
     name?: string;
   }
   export interface Params$Resource$Organizations$Updatekajpolicyconfig extends StandardParameters {
     /**
-     * Identifier. The resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
+     * Identifier. Represents the resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
      */
     name?: string;
     /**
-     * Optional. The list of fields to update.
+     * Optional. Specifies the list of fields to update.
      */
     updateMask?: string;
 
@@ -3017,7 +3031,7 @@ export namespace cloudkms_v1 {
      *
      *   // Do the magic
      *   const res = await cloudkms.projects.getKajPolicyConfig({
-     *     // Required. The name of the KeyAccessJustificationsPolicyConfig to get.
+     *     // Required. Specifies the name of the KeyAccessJustificationsPolicyConfig to get.
      *     name: 'projects/my-project/kajPolicyConfig',
      *   });
      *   console.log(res.data);
@@ -3025,6 +3039,7 @@ export namespace cloudkms_v1 {
      *   // Example response
      *   // {
      *   //   "defaultKeyAccessJustificationPolicy": {},
+     *   //   "defaultPolicyAvailable": false,
      *   //   "name": "my_name"
      *   // }
      * }
@@ -3317,7 +3332,7 @@ export namespace cloudkms_v1 {
      *   const res =
      *     await cloudkms.projects.showEffectiveKeyAccessJustificationsEnrollmentConfig(
      *       {
-     *         // Required. The number or id of the project to get the effective KeyAccessJustificationsEnrollmentConfig for.
+     *         // Required. Specifies the number or id of the project to get the effective KeyAccessJustificationsEnrollmentConfig for.
      *         project: 'projects/my-project',
      *       },
      *     );
@@ -3472,7 +3487,7 @@ export namespace cloudkms_v1 {
      *   // Do the magic
      *   const res =
      *     await cloudkms.projects.showEffectiveKeyAccessJustificationsPolicyConfig({
-     *       // Required. The number or id of the project to get the effective KeyAccessJustificationsPolicyConfig. In the format of "projects/{|\}"
+     *       // Required. Specifies the number or id of the project to get the effective KeyAccessJustificationsPolicyConfig. In the format of "projects/{|\}"
      *       project: 'projects/my-project',
      *     });
      *   console.log(res.data);
@@ -3780,9 +3795,9 @@ export namespace cloudkms_v1 {
      *
      *   // Do the magic
      *   const res = await cloudkms.projects.updateKajPolicyConfig({
-     *     // Identifier. The resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
+     *     // Identifier. Represents the resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
      *     name: 'projects/my-project/kajPolicyConfig',
-     *     // Optional. The list of fields to update.
+     *     // Optional. Specifies the list of fields to update.
      *     updateMask: 'placeholder-value',
      *
      *     // Request body metadata
@@ -3790,6 +3805,7 @@ export namespace cloudkms_v1 {
      *       // request body parameters
      *       // {
      *       //   "defaultKeyAccessJustificationPolicy": {},
+     *       //   "defaultPolicyAvailable": false,
      *       //   "name": "my_name"
      *       // }
      *     },
@@ -3799,6 +3815,7 @@ export namespace cloudkms_v1 {
      *   // Example response
      *   // {
      *   //   "defaultKeyAccessJustificationPolicy": {},
+     *   //   "defaultPolicyAvailable": false,
      *   //   "name": "my_name"
      *   // }
      * }
@@ -3914,7 +3931,7 @@ export namespace cloudkms_v1 {
   }
   export interface Params$Resource$Projects$Getkajpolicyconfig extends StandardParameters {
     /**
-     * Required. The name of the KeyAccessJustificationsPolicyConfig to get.
+     * Required. Specifies the name of the KeyAccessJustificationsPolicyConfig to get.
      */
     name?: string;
   }
@@ -3926,13 +3943,13 @@ export namespace cloudkms_v1 {
   }
   export interface Params$Resource$Projects$Showeffectivekeyaccessjustificationsenrollmentconfig extends StandardParameters {
     /**
-     * Required. The number or id of the project to get the effective KeyAccessJustificationsEnrollmentConfig for.
+     * Required. Specifies the number or id of the project to get the effective KeyAccessJustificationsEnrollmentConfig for.
      */
     project?: string;
   }
   export interface Params$Resource$Projects$Showeffectivekeyaccessjustificationspolicyconfig extends StandardParameters {
     /**
-     * Required. The number or id of the project to get the effective KeyAccessJustificationsPolicyConfig. In the format of "projects/{|\}"
+     * Required. Specifies the number or id of the project to get the effective KeyAccessJustificationsPolicyConfig. In the format of "projects/{|\}"
      */
     project?: string;
   }
@@ -3953,11 +3970,11 @@ export namespace cloudkms_v1 {
   }
   export interface Params$Resource$Projects$Updatekajpolicyconfig extends StandardParameters {
     /**
-     * Identifier. The resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
+     * Identifier. Represents the resource name for this KeyAccessJustificationsPolicyConfig in the format of "{organizations|folders|projects\}/x/kajPolicyConfig".
      */
     name?: string;
     /**
-     * Optional. The list of fields to update.
+     * Optional. Specifies the list of fields to update.
      */
     updateMask?: string;
 
@@ -4430,7 +4447,7 @@ export namespace cloudkms_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -4463,7 +4480,7 @@ export namespace cloudkms_v1 {
      *
      *   // Do the magic
      *   const res = await cloudkms.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -4755,7 +4772,7 @@ export namespace cloudkms_v1 {
   }
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
@@ -14297,6 +14314,7 @@ export namespace cloudkms_v1 {
      *         //   "createTime": "my_createTime",
      *         //   "deleteTime": "my_deleteTime",
      *         //   "disableTime": "my_disableTime",
+     *         //   "keyPortabilityEnabled": false,
      *         //   "name": "my_name",
      *         //   "quorumAuth": {},
      *         //   "state": "my_state",
@@ -14457,6 +14475,7 @@ export namespace cloudkms_v1 {
      *   //   "createTime": "my_createTime",
      *   //   "deleteTime": "my_deleteTime",
      *   //   "disableTime": "my_disableTime",
+     *   //   "keyPortabilityEnabled": false,
      *   //   "name": "my_name",
      *   //   "quorumAuth": {},
      *   //   "state": "my_state",
