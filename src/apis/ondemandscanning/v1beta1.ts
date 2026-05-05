@@ -125,6 +125,19 @@ export namespace ondemandscanning_v1beta1 {
   }
 
   /**
+   * AISkillAnalysisOccurrence provides the results of an AI-based skill analysis.
+   */
+  export interface Schema$AISkillAnalysisOccurrence {
+    /**
+     * Findings produced by the analysis.
+     */
+    findings?: Schema$Finding[];
+    /**
+     * Name of the skill that produced this analysis.
+     */
+    skillName?: string | null;
+  }
+  /**
    * An alias to a repo revision.
    */
   export interface Schema$AliasContext {
@@ -631,6 +644,43 @@ export namespace ondemandscanning_v1beta1 {
      */
     filePath?: string | null;
     layerDetails?: Schema$LayerDetails;
+    /**
+     * Line number in the file where the package is found. Applies only to source repository scanning. Note: this field is marked as `optional` in other corresponding protos, but in edition 2023, the "optional" keyword is redundant.
+     */
+    lineNumber?: number | null;
+  }
+  /**
+   * Finding provides details for a single finding within an AISkillAnalysisOccurrence.
+   */
+  export interface Schema$Finding {
+    /**
+     * Category of the finding.
+     */
+    category?: string | null;
+    /**
+     * Detailed description of the finding.
+     */
+    description?: string | null;
+    /**
+     * Path to the file where the finding was detected.
+     */
+    filePath?: string | null;
+    /**
+     * Unique identifier of the rule that produced this finding.
+     */
+    ruleId?: string | null;
+    /**
+     * Severity of the finding.
+     */
+    severity?: string | null;
+    /**
+     * Code snippet relevant to the finding.
+     */
+    snippet?: string | null;
+    /**
+     * Title of the finding.
+     */
+    title?: string | null;
   }
   /**
    * A set of properties that uniquely identify a given Docker image.
@@ -716,6 +766,10 @@ export namespace ondemandscanning_v1beta1 {
      * Each package found in a file should have its own layer metadata (that is, information from the origin layer of the package).
      */
     layerDetails?: Schema$GrafeasV1LayerDetails;
+    /**
+     * Line number in the file where the package was found. Optional field that only applies to source repository scanning.
+     */
+    lineNumber?: number | null;
   }
   /**
    * Details about the layer a package was found in.
@@ -1057,6 +1111,14 @@ export namespace ondemandscanning_v1beta1 {
    * An instance of an analysis type that has been found on a resource.
    */
   export interface Schema$Occurrence {
+    /**
+     * The time this advisory was published by the source.
+     */
+    advisoryPublishTime?: string | null;
+    /**
+     * Describes an AI skill analysis.
+     */
+    aiSkillAnalysis?: Schema$AISkillAnalysisOccurrence;
     /**
      * Describes an attestation of an artifact.
      */
