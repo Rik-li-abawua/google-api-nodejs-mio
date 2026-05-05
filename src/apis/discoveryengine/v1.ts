@@ -112,6 +112,7 @@ export namespace discoveryengine_v1 {
    */
   export class Discoveryengine {
     context: APIRequestContext;
+    billingAccounts: Resource$Billingaccounts;
     projects: Resource$Projects;
 
     constructor(options: GlobalOptions, google?: GoogleConfigurable) {
@@ -120,6 +121,7 @@ export namespace discoveryengine_v1 {
         google,
       };
 
+      this.billingAccounts = new Resource$Billingaccounts(this.context);
       this.projects = new Resource$Projects(this.context);
     }
   }
@@ -1097,6 +1099,10 @@ export namespace discoveryengine_v1 {
      */
     actionParams?: {[key: string]: any} | null;
     /**
+     * Optional. Whether to create a BAP connection for the connector.
+     */
+    createBapConnection?: boolean | null;
+    /**
      * Output only. The connector contains the necessary parameters and is configured to support actions.
      */
     isActionConfigured?: boolean | null;
@@ -1109,9 +1115,24 @@ export namespace discoveryengine_v1 {
      */
     serviceName?: string | null;
     /**
+     * Optional. Mapping from operation name to the list of scopes. Only be populated if there are user specified scopes.
+     */
+    userDefinedScopesMapping?: {
+      [key: string]: Schema$GoogleCloudDiscoveryengineV1ActionConfigScopeList;
+    } | null;
+    /**
      * Optional. Whether to use static secrets for the connector. If true, the secrets provided in the action_params will be ignored.
      */
     useStaticSecrets?: boolean | null;
+  }
+  /**
+   * Stores a list of scopes.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1ActionConfigScopeList {
+    /**
+     * Optional. The list of scopes.
+     */
+    scopes?: string[] | null;
   }
   /**
    * Request message for CompletionService.AdvancedCompleteQuery method. .
@@ -1332,6 +1353,24 @@ export namespace discoveryengine_v1 {
     disableInitialIndex?: boolean | null;
   }
   /**
+   * Agent Gateway setting, which may be attached to Gemini Enterprise resources for egress control of Gemini Enterprise agents to agents and tools outside of Gemini Enterprise.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1AgentGatewaySetting {
+    /**
+     * Optional. The default egress agent gateway to use, when this setting is applied to a Gemini Enterprise resource. The deployment mode must be GOOGLE_MANAGED, and the governed access path must be AGENT_TO_ANYWHERE.
+     */
+    defaultEgressAgentGateway?: Schema$GoogleCloudDiscoveryengineV1AgentGatewaySettingAgentGatewayReference;
+  }
+  /**
+   * Reference to an Agent Gateway resource.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1AgentGatewaySettingAgentGatewayReference {
+    /**
+     * Required. Immutable. The resource name of the agent gateway. Expected format: `projects/{project_number\}/locations/{location\}/agentGateways/{agent_gateway\}`.
+     */
+    name?: string | null;
+  }
+  /**
    * The connector level alert config.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1AlertPolicyConfig {
@@ -1408,6 +1447,10 @@ export namespace discoveryengine_v1 {
      */
     actionParams?: {[key: string]: any} | null;
     /**
+     * Optional. Whether to create a BAP connection for the connector.
+     */
+    createBapConnection?: boolean | null;
+    /**
      * Output only. The connector contains the necessary parameters and is configured to support actions.
      */
     isActionConfigured?: boolean | null;
@@ -1420,9 +1463,26 @@ export namespace discoveryengine_v1 {
      */
     serviceName?: string | null;
     /**
+     * Optional. Mapping from operation name to the list of scopes. Only be populated if there are user specified scopes.
+     */
+    userDefinedScopesMapping?: {
+      [
+        key: string
+      ]: Schema$GoogleCloudDiscoveryengineV1alphaActionConfigScopeList;
+    } | null;
+    /**
      * Optional. Whether to use static secrets for the connector. If true, the secrets provided in the action_params will be ignored.
      */
     useStaticSecrets?: boolean | null;
+  }
+  /**
+   * Stores a list of scopes.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaActionConfigScopeList {
+    /**
+     * Optional. The list of scopes.
+     */
+    scopes?: string[] | null;
   }
   /**
    * Request for DataStoreService.AddPatientFilter method.
@@ -1449,6 +1509,24 @@ export namespace discoveryengine_v1 {
      * If set true, initial indexing is disabled for the DataStore.
      */
     disableInitialIndex?: boolean | null;
+  }
+  /**
+   * Agent Gateway setting, which may be attached to Gemini Enterprise resources for egress control of Gemini Enterprise agents to agents and tools outside of Gemini Enterprise.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaAgentGatewaySetting {
+    /**
+     * Optional. The default egress agent gateway to use, when this setting is applied to a Gemini Enterprise resource. The deployment mode must be GOOGLE_MANAGED, and the governed access path must be AGENT_TO_ANYWHERE.
+     */
+    defaultEgressAgentGateway?: Schema$GoogleCloudDiscoveryengineV1alphaAgentGatewaySettingAgentGatewayReference;
+  }
+  /**
+   * Reference to an Agent Gateway resource.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaAgentGatewaySettingAgentGatewayReference {
+    /**
+     * Required. Immutable. The resource name of the agent gateway. Expected format: `projects/{project_number\}/locations/{location\}/agentGateways/{agent_gateway\}`.
+     */
+    name?: string | null;
   }
   /**
    * The connector level alert config.
@@ -1531,7 +1609,7 @@ export namespace discoveryengine_v1 {
      */
     answerText?: string | null;
     /**
-     * List of blob attachments in the answer.
+     * Output only. List of blob attachments in the answer.
      */
     blobAttachments?: Schema$GoogleCloudDiscoveryengineV1alphaAnswerBlobAttachment[];
     /**
@@ -2002,6 +2080,10 @@ export namespace discoveryengine_v1 {
    */
   export interface Schema$GoogleCloudDiscoveryengineV1alphaAssistAnswerReply {
     /**
+     * The time when the reply was created.
+     */
+    createTime?: string | null;
+    /**
      * Possibly grounded response text or media from the assistant.
      */
     groundedContent?: Schema$GoogleCloudDiscoveryengineV1alphaAssistantGroundedContent;
@@ -2120,11 +2202,19 @@ export namespace discoveryengine_v1 {
      * Grounding information for parts of the text.
      */
     segments?: Schema$GoogleCloudDiscoveryengineV1alphaAssistantGroundedContentTextGroundingMetadataSegment[];
+    /**
+     * Grounding information for parts of the visual content.
+     */
+    visualSegments?: Schema$GoogleCloudDiscoveryengineV1alphaAssistantGroundedContentTextGroundingMetadataVisualSegment[];
   }
   /**
    * Referenced content and related document metadata.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1alphaAssistantGroundedContentTextGroundingMetadataReference {
+    /**
+     * Chunk of code snippet from the referenced document.
+     */
+    codeSnippet?: string | null;
     /**
      * Referenced text content.
      */
@@ -2146,6 +2236,7 @@ export namespace discoveryengine_v1 {
      * Domain name from the document URI. Note that the `uri` field may contain a URL that redirects to the actual website, in which case this will contain the domain name of the target site.
      */
     domain?: string | null;
+    language?: string | null;
     /**
      * The mime type of the document. https://www.iana.org/assignments/media-types/media-types.xhtml.
      */
@@ -2187,6 +2278,19 @@ export namespace discoveryengine_v1 {
      * The text segment itself.
      */
     text?: string | null;
+  }
+  /**
+   * Grounding information for a visual segment.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaAssistantGroundedContentTextGroundingMetadataVisualSegment {
+    /**
+     * The content id of the visual segment. In order to display the citation of the visual element, this content_id needs to match with the `grounded_content.content_metadata.content_id` field.
+     */
+    contentId?: string | null;
+    /**
+     * References for the visual segment.
+     */
+    referenceIndices?: number[] | null;
   }
   /**
    * The configuration for the BAP connector.
@@ -2294,6 +2398,15 @@ export namespace discoveryengine_v1 {
      * Output only. List of citations.
      */
     citations?: Schema$GoogleCloudDiscoveryengineV1alphaCitation[];
+  }
+  /**
+   * The configuration for the CLI execution based connectors.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaCliConfig {
+    /**
+     * Optional. The actions enabled on the associated CLI connection.
+     */
+    enabledActions?: string[] | null;
   }
   /**
    * Configurations used to enable CMEK data encryption with Cloud KMS keys.
@@ -2792,6 +2905,10 @@ export namespace discoveryengine_v1 {
      */
     blockingReasons?: string[] | null;
     /**
+     * Optional. The configuration for establishing a CLI connection.
+     */
+    cliConfig?: Schema$GoogleCloudDiscoveryengineV1alphaCliConfig;
+    /**
      * Optional. The modes enabled for this connector. Default state is CONNECTOR_MODE_UNSPECIFIED.
      */
     connectorModes?: string[] | null;
@@ -2812,7 +2929,7 @@ export namespace discoveryengine_v1 {
      */
     dataProtectionPolicy?: Schema$GoogleCloudDiscoveryengineV1alphaDataProtectionPolicy;
     /**
-     * Required. The name of the data source. Supported values: `salesforce`, `jira`, `confluence`, `bigquery`.
+     * Required. The identifier for the data source. This is a partial list of supported connectors. Please refer to the [documentation](https://docs.cloud.google.com/gemini/enterprise/docs/connectors/introduction-to-connectors-and-data-stores) for the full list of connectors. Supported first-party connectors include: * `gcs` * `bigquery` * `gcp_fhir` * `google_mail` * `google_drive` * `google_calendar` * `google_chat` Supported third-party connectors include: Generally available (GA) connectors: * `onedrive` * `outlook` * `confluence` * `jira` * `servicenow` * `sharepoint` Preview connectors: * `asana` * `azure_active_directory` * `box` * `canva` * `confluence_server` * `custom_connector` * `docusign` * `dropbox` * `dynamics365` * `github` * `gitlab` * `hubspot` * `jira_server` * `linear` * `native_cloud_identity` * `notion` * `okta` * `pagerduty` * `peoplesoft` * `salesforce` * `shopify` * `slack` * `snowflake` * `teams` * `trello` * `workday` * `zendesk`
      */
     dataSource?: string | null;
     /**
@@ -2820,7 +2937,11 @@ export namespace discoveryengine_v1 {
      */
     destinationConfigs?: Schema$GoogleCloudDiscoveryengineV1alphaDestinationConfig[];
     /**
-     * Output only. The list of FQDNs of the data connector can egress to. This includes both FQDN derived from the customer provided instance URL and default per connector type FQDNs. Note: This field is derived from both the DataConnector.params, and connector source spec. It should only be used for CAIS and Org Policy evaluation purposes.
+     * Output only. The dynamic tools fetched for this connector.
+     */
+    dynamicTools?: Schema$GoogleCloudDiscoveryengineV1alphaDynamicTool[];
+    /**
+     * Output only. The list of FQDNs of the data connector can egress to. This includes both FQDN derived from the customer provided instance URL and default per connector type FQDNs.
      */
     egressFqdns?: string[] | null;
     /**
@@ -2876,7 +2997,7 @@ export namespace discoveryengine_v1 {
      */
     latestPauseTime?: string | null;
     /**
-     * Output only. The full resource name of the Data Connector. Format: `projects/x/locations/x/collections/x/dataConnector`.
+     * Identifier. The full resource name of the Data Connector. Format: `projects/x/locations/x/collections/x/dataConnector`.
      */
     name?: string | null;
     /**
@@ -2928,7 +3049,7 @@ export namespace discoveryengine_v1 {
      */
     updateTime?: string | null;
     /**
-     * Output only. Whether the connector is created with VPC-SC enabled. This is only used for CuOP evaluation purpose.
+     * Output only. Whether the connector is created with VPC-SC enabled.
      */
     vpcscEnabled?: boolean | null;
   }
@@ -3034,11 +3155,11 @@ export namespace discoveryengine_v1 {
     startingSchema?: Schema$GoogleCloudDiscoveryengineV1alphaSchema;
   }
   /**
-   * Data protection policy config for a connector.
+   * Contains the data protection policy config for a DataStore or a connector.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1alphaDataProtectionPolicy {
     /**
-     * Optional. The sensitive data protection policy for the connector source.
+     * Optional. Specifies the sensitive data protection policy for the connector source.
      */
     sensitiveDataProtectionPolicy?: Schema$GoogleCloudDiscoveryengineV1alphaDataProtectionPolicySensitiveDataProtectionPolicy;
   }
@@ -3047,7 +3168,7 @@ export namespace discoveryengine_v1 {
    */
   export interface Schema$GoogleCloudDiscoveryengineV1alphaDataProtectionPolicySensitiveDataProtectionPolicy {
     /**
-     * Optional. The Sensitive Data Protection content policy resource name.
+     * Optional. Specifies the resource name of the Sensitive Data Protection content policy.
      */
     policy?: string | null;
   }
@@ -3088,6 +3209,10 @@ export namespace discoveryengine_v1 {
      */
     createTime?: string | null;
     /**
+     * Optional. Specifies the data protection policy for the data store.
+     */
+    dataProtectionPolicy?: Schema$GoogleCloudDiscoveryengineV1alphaDataProtectionPolicy;
+    /**
      * Output only. The id of the default Schema associated to this data store.
      */
     defaultSchemaId?: string | null;
@@ -3099,6 +3224,10 @@ export namespace discoveryengine_v1 {
      * Configuration for Document understanding and enrichment.
      */
     documentProcessingConfig?: Schema$GoogleCloudDiscoveryengineV1alphaDocumentProcessingConfig;
+    /**
+     * Optional. If set, this DataStore is a federated search DataStore.
+     */
+    federatedSearchConfig?: Schema$GoogleCloudDiscoveryengineV1alphaDataStoreFederatedSearchConfig;
     /**
      * Optional. Configuration for `HEALTHCARE_FHIR` vertical.
      */
@@ -3180,6 +3309,100 @@ export namespace discoveryengine_v1 {
      * Last updated timestamp for websites.
      */
     websiteDataUpdateTime?: string | null;
+  }
+  /**
+   * Stores information for federated search.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaDataStoreFederatedSearchConfig {
+    /**
+     * AlloyDB config. If set, this DataStore is connected to AlloyDB.
+     */
+    alloyDbConfig?: Schema$GoogleCloudDiscoveryengineV1alphaDataStoreFederatedSearchConfigAlloyDbConfig;
+    /**
+     * NotebookLM config. If set, this DataStore is connected to NotebookLM Enterprise.
+     */
+    notebooklmConfig?: Schema$GoogleCloudDiscoveryengineV1alphaDataStoreFederatedSearchConfigNotebooklmConfig;
+    /**
+     * Third Party OAuth config. If set, this DataStore is connected to a third party application.
+     */
+    thirdPartyOauthConfig?: Schema$GoogleCloudDiscoveryengineV1alphaDataStoreFederatedSearchConfigThirdPartyOauthConfig;
+  }
+  /**
+   * Stores information for connecting to AlloyDB.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaDataStoreFederatedSearchConfigAlloyDbConfig {
+    /**
+     * Optional. Configuration for Magic.
+     */
+    alloydbAiNlConfig?: Schema$GoogleCloudDiscoveryengineV1alphaDataStoreFederatedSearchConfigAlloyDbConfigAlloyDbAiNaturalLanguageConfig;
+    /**
+     * Required. Configuration for connecting to AlloyDB.
+     */
+    alloydbConnectionConfig?: Schema$GoogleCloudDiscoveryengineV1alphaDataStoreFederatedSearchConfigAlloyDbConfigAlloyDbConnectionConfig;
+    /**
+     * Optional. Fields to be returned in the search results. If empty, all fields will be returned.
+     */
+    returnedFields?: string[] | null;
+  }
+  /**
+   * Configuration for AlloyDB AI Natural Language.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaDataStoreFederatedSearchConfigAlloyDbConfigAlloyDbAiNaturalLanguageConfig {
+    /**
+     * Optional. AlloyDb AI NL config id, i.e. the value that was used for calling `SELECT alloydb_ai_nl.g_create_configuration(...)`. Can be empty.
+     */
+    nlConfigId?: string | null;
+  }
+  /**
+   * Configuration for connecting to AlloyDB.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaDataStoreFederatedSearchConfigAlloyDbConfigAlloyDbConnectionConfig {
+    /**
+     * Optional. Auth mode.
+     */
+    authMode?: string | null;
+    /**
+     * Required. The AlloyDB database to connect to.
+     */
+    database?: string | null;
+    /**
+     * Optional. If true, enable PSVS for AlloyDB.
+     */
+    enablePsvs?: boolean | null;
+    /**
+     * Required. The AlloyDB instance to connect to.
+     */
+    instance?: string | null;
+    /**
+     * Required. Database password. If auth_mode = END_USER_ACCOUNT, it can be unset. In that case, the password will be inferred on the AlloyDB side, based on the authenticated user.
+     */
+    password?: string | null;
+    /**
+     * Required. Database user. If auth_mode = END_USER_ACCOUNT, it can be unset. In that case, the user will be inferred on the AlloyDB side, based on the authenticated user.
+     */
+    user?: string | null;
+  }
+  /**
+   * Config for connecting to NotebookLM Enterprise.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaDataStoreFederatedSearchConfigNotebooklmConfig {
+    /**
+     * Required. Search config name. Format: projects/x/locations/global/notebookLmSearchConfigs/x
+     */
+    searchConfig?: string | null;
+  }
+  /**
+   * Stores information for third party applicationOAuth.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaDataStoreFederatedSearchConfigThirdPartyOauthConfig {
+    /**
+     * Optional. The type of the application. E.g., "jira", "box", etc.
+     */
+    appName?: string | null;
+    /**
+     * Optional. The instance name identifying the 3P app, e.g., "vaissptbots-my". This is different from the instance_uri which is the full URL of the 3P app e.g., "https://vaissptbots-my.sharepoint.com".
+     */
+    instanceName?: string | null;
   }
   /**
    * Stores information regarding the serving configurations at DataStore level.
@@ -3529,6 +3752,27 @@ export namespace discoveryengine_v1 {
     useNativeText?: boolean | null;
   }
   /**
+   * Configuration for dynamic tools.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaDynamicTool {
+    /**
+     * Optional. The description of the tool.
+     */
+    description?: string | null;
+    /**
+     * Optional. The display name of the tool.
+     */
+    displayName?: string | null;
+    /**
+     * Optional. Whether the tool is enabled.
+     */
+    enabled?: boolean | null;
+    /**
+     * Required. The name of the tool.
+     */
+    name?: string | null;
+  }
+  /**
    * Metadata related to the progress of the SiteSearchEngineService.EnableAdvancedSiteSearch operation. This will be returned by the google.longrunning.Operation.metadata field.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1alphaEnableAdvancedSiteSearchMetadata {
@@ -3549,6 +3793,10 @@ export namespace discoveryengine_v1 {
    * Metadata that describes the training and serving parameters of an Engine.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1alphaEngine {
+    /**
+     * Optional. The agent gateway setting for the engine.
+     */
+    agentGatewaySetting?: Schema$GoogleCloudDiscoveryengineV1alphaAgentGatewaySetting;
     /**
      * Optional. Immutable. This the application type which this engine resource represents. NOTE: this is a new concept independ of existing industry vertical or solution type.
      */
@@ -3594,7 +3842,7 @@ export namespace discoveryengine_v1 {
      */
     displayName?: string | null;
     /**
-     * Optional. Feature config for the engine to opt in or opt out of features. Supported keys: * `*`: all features, if it's present, all other feature state settings are ignored. * `agent-gallery` * `no-code-agent-builder` * `prompt-gallery` * `model-selector` * `notebook-lm` * `people-search` * `people-search-org-chart` * `bi-directional-audio` * `feedback` * `session-sharing` * `personalization-memory` * `personalization-suggested-highlights` * `disable-agent-sharing` * `disable-image-generation` * `disable-video-generation` * `disable-onedrive-upload` * `disable-talk-to-content` * `disable-google-drive-upload` * `disable-welcome-emails`
+     * Optional. Feature config for the engine to opt in or opt out of features. Supported keys: * `*`: all features, if it's present, all other feature state settings are ignored. * `agent-gallery` * `no-code-agent-builder` * `prompt-gallery` * `model-selector` * `notebook-lm` * `people-search` * `people-search-org-chart` * `bi-directional-audio` * `feedback` * `session-sharing` * `personalization-memory` * `personalization-suggested-highlights` * `disable-mobile-app-access` * `disable-agent-sharing` * `disable-image-generation` * `disable-video-generation` * `disable-onedrive-upload` * `disable-talk-to-content` * `disable-google-drive-upload` * `disable-welcome-emails` * `disable-canvas` * `disable-canvas-workspace` * `disable-skills`
      */
     features?: {[key: string]: string} | null;
     /**
@@ -3626,9 +3874,9 @@ export namespace discoveryengine_v1 {
      */
     observabilityConfig?: Schema$GoogleCloudDiscoveryengineV1alphaObservabilityConfig;
     /**
-     * Optional. The email of the procurement contact.
+     * Optional. The emails of the procurement contacts.
      */
-    procurementContactEmail?: string | null;
+    procurementContactEmails?: string[] | null;
     /**
      * Output only. Additional information of a recommendation engine. Only applicable if solution_type is SOLUTION_TYPE_RECOMMENDATION.
      */
@@ -4014,6 +4262,10 @@ export namespace discoveryengine_v1 {
      */
     schemaOrgPaths?: string[] | null;
     /**
+     * Optional. Specifies the importance of the field when `searchable_option` is `SEARCHABLE_ENABLED`. If `searchable_option` is `SEARCHABLE_DISABLED`, this field is ignored. If `searchable_option` is `SEARCHABLE_ENABLED` and this is `SEARCHABLE_FIELD_IMPORTANCE_UNSPECIFIED`, it behaves as `DEFAULT_IMPORTANCE`.
+     */
+    searchableFieldImportance?: string | null;
+    /**
      * If searchable_option is SEARCHABLE_ENABLED, field values are searchable by text queries in SearchService.Search. If SEARCHABLE_ENABLED but field type is numerical, field values will not be searchable by text queries in SearchService.Search, as there are no text values associated to numerical fields. If searchable_option is unset, the server behavior defaults to SEARCHABLE_DISABLED for fields that support setting searchable options. Only `string` fields that have no key property mapping support setting searchable_option. For those fields that do not support setting searchable options, the server will skip searchable option setting, and setting searchable_option for those fields will throw `INVALID_ARGUMENT` error.
      */
     searchableOption?: string | null;
@@ -4284,7 +4536,7 @@ export namespace discoveryengine_v1 {
      */
     successCount?: string | null;
     /**
-     * Operation last update time. If the operation is done, this is also the finish time.
+     * Output only. Operation last update time. If the operation is done, this is also the finish time.
      */
     updateTime?: string | null;
   }
@@ -4460,11 +4712,11 @@ export namespace discoveryengine_v1 {
    */
   export interface Schema$GoogleCloudDiscoveryengineV1alphaObservabilityConfig {
     /**
-     * Optional. Enables observability. If false, all other flags are ignored.
+     * Optional. Enables observability. If `false`, all other flags are ignored.
      */
     observabilityEnabled?: boolean | null;
     /**
-     * Optional. Enables sensitive logging. Sensitive logging includes customer core content (e.g. prompts, responses). If false, will sanitize all sensitive fields.
+     * Optional. Enables sensitive logging. Sensitive logging includes customer core content (e.g. prompts, responses). If `false`, will sanitize all sensitive fields.
      */
     sensitiveLoggingEnabled?: boolean | null;
   }
@@ -4557,7 +4809,7 @@ export namespace discoveryengine_v1 {
     } | null;
   }
   /**
-   * Represents the currently effective configurable billing parameters. These values are derived from the customer's subscription history stored internally and reflect the thresholds actively being used for billing purposes at the time of the GetProject call. This includes the start_time of the subscription and may differ from the values in `customer_provided_config` due to billing rules (e.g., scale-downs taking effect only at the start of a new month).
+   * Represents the currently effective configurable billing parameters. These values are derived from the customer's subscription history stored internally and reflect the thresholds actively being used for billing purposes at the time of the GetProject call. This includes the start_time of the subscription and may differ from the values in `customer_provided_config` due to billing rules (e.g., scale-downs taking effect only at the start of a new month). We also include the update type to indicate the type of update performed on the configurable billing configuration in the UpdateProject operation.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1alphaProjectConfigurableBillingStatus {
     /**
@@ -4584,6 +4836,10 @@ export namespace discoveryengine_v1 {
      * Output only. The latest terminate effective time of search qpm and indexing core subscriptions.
      */
     terminateTime?: string | null;
+    /**
+     * Output only. The type of update performed in this operation. This field is populated in the response of UpdateProject.
+     */
+    updateType?: string | null;
   }
   /**
    * Customer provided configurations.
@@ -5230,6 +5486,10 @@ export namespace discoveryengine_v1 {
      */
     customFineTuningSpec?: Schema$GoogleCloudDiscoveryengineV1alphaCustomFineTuningSpec;
     /**
+     * Optional. Optional configuration for the Custom Ranking feature.
+     */
+    customRankingParams?: Schema$GoogleCloudDiscoveryengineV1alphaSearchRequestCustomRankingParams;
+    /**
      * Specifications that define the specific DataStores to be searched, along with configurations for those data stores. This is only considered for Engines with multiple data stores. For engines with a single data store, the specs directly under SearchRequest should be used.
      */
     dataStoreSpecs?: Schema$GoogleCloudDiscoveryengineV1alphaSearchRequestDataStoreSpec[];
@@ -5241,6 +5501,10 @@ export namespace discoveryengine_v1 {
      * Uses the provided embedding to do additional semantic document retrieval. The retrieval is based on the dot product of SearchRequest.EmbeddingSpec.EmbeddingVector.vector and the document embedding that is provided in SearchRequest.EmbeddingSpec.EmbeddingVector.field_path. If SearchRequest.EmbeddingSpec.EmbeddingVector.field_path is not provided, it will use ServingConfig.EmbeddingConfig.field_path.
      */
     embeddingSpec?: Schema$GoogleCloudDiscoveryengineV1alphaSearchRequestEmbeddingSpec;
+    /**
+     * Optional. The entity for customers that may run multiple different entities, domains, sites or regions, for example, "Google US", "Google Ads", "Waymo", "google.com", "youtube.com", etc. If this is set, it should be exactly matched with UserEvent.entity to get search results boosted by entity.
+     */
+    entity?: string | null;
     /**
      * Facet specifications for faceted search. If empty, no facets are returned. A maximum of 100 values are allowed. Otherwise, an `INVALID_ARGUMENT` error is returned.
      */
@@ -5346,7 +5610,7 @@ export namespace discoveryengine_v1 {
      */
     servingConfig?: string | null;
     /**
-     * The session resource name. Optional. Session allows users to do multi-turn /search API calls or coordination between /search API calls and /answer API calls. Example #1 (multi-turn /search API calls): Call /search API with the session ID generated in the first call. Here, the previous search query gets considered in query standing. I.e., if the first query is "How did Alphabet do in 2022?" and the current query is "How about 2023?", the current query will be interpreted as "How did Alphabet do in 2023?". Example #2 (coordination between /search API calls and /answer API calls): Call /answer API with the session ID generated in the first call. Here, the answer generation happens in the context of the search results from the first search call. Multi-turn Search feature is currently at private GA stage. Please use v1alpha or v1beta version instead before we launch this feature to public GA. Or ask for allowlisting through Google Support team.
+     * The session resource name. Optional. Session allows users to do multi-turn /search API calls or coordination between /search API calls and /answer API calls. Example #1 (multi-turn /search API calls): Call /search API with the session ID generated in the first call. Here, the previous search query gets considered in query standing. I.e., if the first query is "How did Alphabet do in 2022?" and the current query is "How about 2023?", the current query will be interpreted as "How did Alphabet do in 2023?". Example #2 (coordination between /search API calls and /answer API calls): Call /answer API with the session ID generated in the first call. Here, the answer generation happens in the context of the search results from the first search call.
      */
     session?: string | null;
     /**
@@ -5608,6 +5872,15 @@ export namespace discoveryengine_v1 {
     mode?: string | null;
   }
   /**
+   * Configuration parameters for the Custom Ranking feature.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaSearchRequestCustomRankingParams {
+    /**
+     * Optional. A list of ranking expressions (see `ranking_expression` for the syntax documentation) to evaluate. The evaluation results will be returned in `SearchResponse.SearchResult.rank_signals.precomputed_expression_values` field.
+     */
+    expressionsToPrecompute?: string[] | null;
+  }
+  /**
    * A struct to define data stores to filter on in a search call and configurations for those data stores. Otherwise, an `INVALID_ARGUMENT` error is returned.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1alphaSearchRequestDataStoreSpec {
@@ -5743,7 +6016,7 @@ export namespace discoveryengine_v1 {
      */
     filterExtractionCondition?: string | null;
     /**
-     * Field names used for location-based filtering, where geolocation filters are detected in natural language search queries. Only valid when the FilterExtractionCondition is set to `ENABLED`. If this field is set, it overrides the field names set in ServingConfig.geo_search_query_detection_field_names.
+     * Field names used for location-based filtering, where geolocation filters are detected in natural language search queries. Only valid when the FilterExtractionCondition is set to `ENABLED`.
      */
     geoSearchQueryDetectionFieldNames?: string[] | null;
   }
@@ -5831,7 +6104,7 @@ export namespace discoveryengine_v1 {
     condition?: string | null;
   }
   /**
-   * Session specification. Multi-turn Search feature is currently at private GA stage. Please use v1alpha or v1beta version instead before we launch this feature to public GA. Or ask for allowlisting through Google Support team.
+   * Session specification.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1alphaSearchRequestSessionSpec {
     /**
@@ -5909,6 +6182,10 @@ export namespace discoveryengine_v1 {
      * Output only. In ConversationalSearchService.GetSession API, if GetSessionRequest.include_answer_details is set to true, this field will be populated when getting assistant session.
      */
     detailedAssistAnswer?: Schema$GoogleCloudDiscoveryengineV1alphaAssistAnswer;
+    /**
+     * Optional. Indicates whether this turn is a live turn.
+     */
+    live?: boolean | null;
     /**
      * Optional. The user query. May not be set if this turn is merely regenerating an answer to a different turn
      */
@@ -6205,6 +6482,10 @@ export namespace discoveryengine_v1 {
    */
   export interface Schema$GoogleCloudDiscoveryengineV1alphaUserInfo {
     /**
+     * Optional. Input only. Precise location of the user. It is used in Custom Ranking to calculate the distance between the user and the relevant documents.
+     */
+    preciseLocation?: Schema$GoogleCloudDiscoveryengineV1alphaUserInfoPreciseLocation;
+    /**
      * Optional. IANA time zone, e.g. Europe/Budapest.
      */
     timeZone?: string | null;
@@ -6213,9 +6494,22 @@ export namespace discoveryengine_v1 {
      */
     userAgent?: string | null;
     /**
-     * Highly recommended for logged-in users. Unique identifier for logged-in user, such as a user name. Don't set for anonymous users. Always use a hashed value for this ID. Don't set the field to the same fixed ID for different users. This mixes the event history of those users together, which results in degraded model quality. The field must be a UTF-8 encoded string with a length limit of 128 characters. Otherwise, an `INVALID_ARGUMENT` error is returned.
+     * Highly recommended for logged-in users. Unique identifier for logged-in user, such as a user name. Don't set for anonymous users. Always use a hashed value for this ID. Don't set the field to the same fixed ID for different users. This mixes the event history of those users together, which results in degraded model quality. The field must be a UTF-8 encoded string with a length limit of 128 characters. Otherwise, an `INVALID_ARGUMENT` error is returned. Represents an opaque ID to the Search API. The Search API doesn't interpret the value in any way. This field is used to associate events with a user across sessions if the events are being uploaded.
      */
     userId?: string | null;
+  }
+  /**
+   * Precise location info with multiple representation options. Currently only latitude and longitude point is supported.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1alphaUserInfoPreciseLocation {
+    /**
+     * Optional. Location represented by a natural language address. Will later be geocoded and converted to either a point or a polygon.
+     */
+    address?: string | null;
+    /**
+     * Optional. Location represented by a latitude/longitude point.
+     */
+    point?: Schema$GoogleTypeLatLng;
   }
   /**
    * User License information assigned by the admin.
@@ -7190,6 +7484,10 @@ export namespace discoveryengine_v1 {
    */
   export interface Schema$GoogleCloudDiscoveryengineV1AssistAnswerReply {
     /**
+     * The time when the reply was created.
+     */
+    createTime?: string | null;
+    /**
      * Possibly grounded response text or media from the assistant.
      */
     groundedContent?: Schema$GoogleCloudDiscoveryengineV1AssistantGroundedContent;
@@ -7198,6 +7496,10 @@ export namespace discoveryengine_v1 {
    * Discovery Engine Assistant resource.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1Assistant {
+    /**
+     * Output only. Represents the time when this Assistant was created.
+     */
+    createTime?: string | null;
     /**
      * Optional. Customer policy for the assistant.
      */
@@ -7228,6 +7530,10 @@ export namespace discoveryengine_v1 {
      * Immutable. Resource name of the assistant. Format: `projects/{project\}/locations/{location\}/collections/{collection\}/engines/{engine\}/assistants/{assistant\}` It must be a UTF-8 encoded string with a length limit of 1024 characters.
      */
     name?: string | null;
+    /**
+     * Output only. Represents the time when this Assistant was most recently updated.
+     */
+    updateTime?: string | null;
     /**
      * Optional. The type of web grounding to use.
      */
@@ -7420,11 +7726,19 @@ export namespace discoveryengine_v1 {
      * Grounding information for parts of the text.
      */
     segments?: Schema$GoogleCloudDiscoveryengineV1AssistantGroundedContentTextGroundingMetadataSegment[];
+    /**
+     * Grounding information for parts of the visual content.
+     */
+    visualSegments?: Schema$GoogleCloudDiscoveryengineV1AssistantGroundedContentTextGroundingMetadataVisualSegment[];
   }
   /**
    * Referenced content and related document metadata.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1AssistantGroundedContentTextGroundingMetadataReference {
+    /**
+     * Chunk of code snippet from the referenced document.
+     */
+    codeSnippet?: string | null;
     /**
      * Referenced text content.
      */
@@ -7446,6 +7760,7 @@ export namespace discoveryengine_v1 {
      * Domain name from the document URI. Note that the `uri` field may contain a URL that redirects to the actual website, in which case this will contain the domain name of the target site.
      */
     domain?: string | null;
+    language?: string | null;
     /**
      * The mime type of the document. https://www.iana.org/assignments/media-types/media-types.xhtml.
      */
@@ -7487,6 +7802,19 @@ export namespace discoveryengine_v1 {
      * The text segment itself.
      */
     text?: string | null;
+  }
+  /**
+   * Grounding information for a visual segment.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1AssistantGroundedContentTextGroundingMetadataVisualSegment {
+    /**
+     * The content id of the visual segment. In order to display the citation of the visual element, this content_id needs to match with the `grounded_content.content_metadata.content_id` field.
+     */
+    contentId?: string | null;
+    /**
+     * References for the visual segment.
+     */
+    referenceIndices?: number[] | null;
   }
   /**
    * Information to identify a tool.
@@ -7699,6 +8027,24 @@ export namespace discoveryengine_v1 {
      * If set true, initial indexing is disabled for the DataStore.
      */
     disableInitialIndex?: boolean | null;
+  }
+  /**
+   * Agent Gateway setting, which may be attached to Gemini Enterprise resources for egress control of Gemini Enterprise agents to agents and tools outside of Gemini Enterprise.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1betaAgentGatewaySetting {
+    /**
+     * Optional. The default egress agent gateway to use, when this setting is applied to a Gemini Enterprise resource. The deployment mode must be GOOGLE_MANAGED, and the governed access path must be AGENT_TO_ANYWHERE.
+     */
+    defaultEgressAgentGateway?: Schema$GoogleCloudDiscoveryengineV1betaAgentGatewaySettingAgentGatewayReference;
+  }
+  /**
+   * Reference to an Agent Gateway resource.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1betaAgentGatewaySettingAgentGatewayReference {
+    /**
+     * Required. Immutable. The resource name of the agent gateway. Expected format: `projects/{project_number\}/locations/{location\}/agentGateways/{agent_gateway\}`.
+     */
+    name?: string | null;
   }
   /**
    * Metadata related to the progress of the SiteSearchEngineService.BatchCreateTargetSites operation. This will be returned by the google.longrunning.Operation.metadata field.
@@ -8115,6 +8461,10 @@ export namespace discoveryengine_v1 {
      */
     documentProcessingConfig?: Schema$GoogleCloudDiscoveryengineV1betaDocumentProcessingConfig;
     /**
+     * Optional. If set, this DataStore is a federated search DataStore.
+     */
+    federatedSearchConfig?: Schema$GoogleCloudDiscoveryengineV1betaDataStoreFederatedSearchConfig;
+    /**
      * Optional. Configuration for `HEALTHCARE_FHIR` vertical.
      */
     healthcareFhirConfig?: Schema$GoogleCloudDiscoveryengineV1betaHealthcareFhirConfig;
@@ -8191,6 +8541,100 @@ export namespace discoveryengine_v1 {
      * Last updated timestamp for websites.
      */
     websiteDataUpdateTime?: string | null;
+  }
+  /**
+   * Stores information for federated search.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1betaDataStoreFederatedSearchConfig {
+    /**
+     * AlloyDB config. If set, this DataStore is connected to AlloyDB.
+     */
+    alloyDbConfig?: Schema$GoogleCloudDiscoveryengineV1betaDataStoreFederatedSearchConfigAlloyDbConfig;
+    /**
+     * NotebookLM config. If set, this DataStore is connected to NotebookLM Enterprise.
+     */
+    notebooklmConfig?: Schema$GoogleCloudDiscoveryengineV1betaDataStoreFederatedSearchConfigNotebooklmConfig;
+    /**
+     * Third Party OAuth config. If set, this DataStore is connected to a third party application.
+     */
+    thirdPartyOauthConfig?: Schema$GoogleCloudDiscoveryengineV1betaDataStoreFederatedSearchConfigThirdPartyOauthConfig;
+  }
+  /**
+   * Stores information for connecting to AlloyDB.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1betaDataStoreFederatedSearchConfigAlloyDbConfig {
+    /**
+     * Optional. Configuration for Magic.
+     */
+    alloydbAiNlConfig?: Schema$GoogleCloudDiscoveryengineV1betaDataStoreFederatedSearchConfigAlloyDbConfigAlloyDbAiNaturalLanguageConfig;
+    /**
+     * Required. Configuration for connecting to AlloyDB.
+     */
+    alloydbConnectionConfig?: Schema$GoogleCloudDiscoveryengineV1betaDataStoreFederatedSearchConfigAlloyDbConfigAlloyDbConnectionConfig;
+    /**
+     * Optional. Fields to be returned in the search results. If empty, all fields will be returned.
+     */
+    returnedFields?: string[] | null;
+  }
+  /**
+   * Configuration for AlloyDB AI Natural Language.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1betaDataStoreFederatedSearchConfigAlloyDbConfigAlloyDbAiNaturalLanguageConfig {
+    /**
+     * Optional. AlloyDb AI NL config id, i.e. the value that was used for calling `SELECT alloydb_ai_nl.g_create_configuration(...)`. Can be empty.
+     */
+    nlConfigId?: string | null;
+  }
+  /**
+   * Configuration for connecting to AlloyDB.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1betaDataStoreFederatedSearchConfigAlloyDbConfigAlloyDbConnectionConfig {
+    /**
+     * Optional. Auth mode.
+     */
+    authMode?: string | null;
+    /**
+     * Required. The AlloyDB database to connect to.
+     */
+    database?: string | null;
+    /**
+     * Optional. If true, enable PSVS for AlloyDB.
+     */
+    enablePsvs?: boolean | null;
+    /**
+     * Required. The AlloyDB instance to connect to.
+     */
+    instance?: string | null;
+    /**
+     * Required. Database password. If auth_mode = END_USER_ACCOUNT, it can be unset. In that case, the password will be inferred on the AlloyDB side, based on the authenticated user.
+     */
+    password?: string | null;
+    /**
+     * Required. Database user. If auth_mode = END_USER_ACCOUNT, it can be unset. In that case, the user will be inferred on the AlloyDB side, based on the authenticated user.
+     */
+    user?: string | null;
+  }
+  /**
+   * Config for connecting to NotebookLM Enterprise.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1betaDataStoreFederatedSearchConfigNotebooklmConfig {
+    /**
+     * Required. Search config name. Format: projects/x/locations/global/notebookLmSearchConfigs/x
+     */
+    searchConfig?: string | null;
+  }
+  /**
+   * Stores information for third party applicationOAuth.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1betaDataStoreFederatedSearchConfigThirdPartyOauthConfig {
+    /**
+     * Optional. The type of the application. E.g., "jira", "box", etc.
+     */
+    appName?: string | null;
+    /**
+     * Optional. The instance name identifying the 3P app, e.g., "vaissptbots-my". This is different from the instance_uri which is the full URL of the 3P app e.g., "https://vaissptbots-my.sharepoint.com".
+     */
+    instanceName?: string | null;
   }
   /**
    * Stores information regarding the serving configurations at DataStore level.
@@ -8457,6 +8901,10 @@ export namespace discoveryengine_v1 {
    */
   export interface Schema$GoogleCloudDiscoveryengineV1betaEngine {
     /**
+     * Optional. The agent gateway setting for the engine.
+     */
+    agentGatewaySetting?: Schema$GoogleCloudDiscoveryengineV1betaAgentGatewaySetting;
+    /**
      * Optional. Immutable. This the application type which this engine resource represents. NOTE: this is a new concept independ of existing industry vertical or solution type.
      */
     appType?: string | null;
@@ -8501,7 +8949,7 @@ export namespace discoveryengine_v1 {
      */
     displayName?: string | null;
     /**
-     * Optional. Feature config for the engine to opt in or opt out of features. Supported keys: * `*`: all features, if it's present, all other feature state settings are ignored. * `agent-gallery` * `no-code-agent-builder` * `prompt-gallery` * `model-selector` * `notebook-lm` * `people-search` * `people-search-org-chart` * `bi-directional-audio` * `feedback` * `session-sharing` * `personalization-memory` * `personalization-suggested-highlights` * `disable-agent-sharing` * `disable-image-generation` * `disable-video-generation` * `disable-onedrive-upload` * `disable-talk-to-content` * `disable-google-drive-upload` * `disable-welcome-emails`
+     * Optional. Feature config for the engine to opt in or opt out of features. Supported keys: * `*`: all features, if it's present, all other feature state settings are ignored. * `agent-gallery` * `no-code-agent-builder` * `prompt-gallery` * `model-selector` * `notebook-lm` * `people-search` * `people-search-org-chart` * `bi-directional-audio` * `feedback` * `session-sharing` * `personalization-memory` * `personalization-suggested-highlights` * `disable-mobile-app-access` * `disable-agent-sharing` * `disable-image-generation` * `disable-video-generation` * `disable-onedrive-upload` * `disable-talk-to-content` * `disable-google-drive-upload` * `disable-welcome-emails` * `disable-canvas` * `disable-canvas-workspace` * `disable-skills`
      */
     features?: {[key: string]: string} | null;
     /**
@@ -8533,9 +8981,9 @@ export namespace discoveryengine_v1 {
      */
     observabilityConfig?: Schema$GoogleCloudDiscoveryengineV1betaObservabilityConfig;
     /**
-     * Optional. The email of the procurement contact.
+     * Optional. The emails of the procurement contacts.
      */
-    procurementContactEmail?: string | null;
+    procurementContactEmails?: string[] | null;
     /**
      * Configurations for the Search Engine. Only applicable if solution_type is SOLUTION_TYPE_SEARCH.
      */
@@ -9027,7 +9475,7 @@ export namespace discoveryengine_v1 {
      */
     successCount?: string | null;
     /**
-     * Operation last update time. If the operation is done, this is also the finish time.
+     * Output only. Operation last update time. If the operation is done, this is also the finish time.
      */
     updateTime?: string | null;
   }
@@ -9161,11 +9609,11 @@ export namespace discoveryengine_v1 {
    */
   export interface Schema$GoogleCloudDiscoveryengineV1betaObservabilityConfig {
     /**
-     * Optional. Enables observability. If false, all other flags are ignored.
+     * Optional. Enables observability. If `false`, all other flags are ignored.
      */
     observabilityEnabled?: boolean | null;
     /**
-     * Optional. Enables sensitive logging. Sensitive logging includes customer core content (e.g. prompts, responses). If false, will sanitize all sensitive fields.
+     * Optional. Enables sensitive logging. Sensitive logging includes customer core content (e.g. prompts, responses). If `false`, will sanitize all sensitive fields.
      */
     sensitiveLoggingEnabled?: boolean | null;
   }
@@ -9235,7 +9683,7 @@ export namespace discoveryengine_v1 {
     } | null;
   }
   /**
-   * Represents the currently effective configurable billing parameters. These values are derived from the customer's subscription history stored internally and reflect the thresholds actively being used for billing purposes at the time of the GetProject call. This includes the start_time of the subscription and may differ from the values in `customer_provided_config` due to billing rules (e.g., scale-downs taking effect only at the start of a new month).
+   * Represents the currently effective configurable billing parameters. These values are derived from the customer's subscription history stored internally and reflect the thresholds actively being used for billing purposes at the time of the GetProject call. This includes the start_time of the subscription and may differ from the values in `customer_provided_config` due to billing rules (e.g., scale-downs taking effect only at the start of a new month). We also include the update type to indicate the type of update performed on the configurable billing configuration in the UpdateProject operation.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1betaProjectConfigurableBillingStatus {
     /**
@@ -9262,6 +9710,10 @@ export namespace discoveryengine_v1 {
      * Output only. The latest terminate effective time of search qpm and indexing core subscriptions.
      */
     terminateTime?: string | null;
+    /**
+     * Output only. The type of update performed in this operation. This field is populated in the response of UpdateProject.
+     */
+    updateType?: string | null;
   }
   /**
    * Customer provided configurations.
@@ -9560,6 +10012,10 @@ export namespace discoveryengine_v1 {
      */
     crowdingSpecs?: Schema$GoogleCloudDiscoveryengineV1betaSearchRequestCrowdingSpec[];
     /**
+     * Optional. Optional configuration for the Custom Ranking feature.
+     */
+    customRankingParams?: Schema$GoogleCloudDiscoveryengineV1betaSearchRequestCustomRankingParams;
+    /**
      * Specifications that define the specific DataStores to be searched, along with configurations for those data stores. This is only considered for Engines with multiple data stores. For engines with a single data store, the specs directly under SearchRequest should be used.
      */
     dataStoreSpecs?: Schema$GoogleCloudDiscoveryengineV1betaSearchRequestDataStoreSpec[];
@@ -9571,6 +10027,10 @@ export namespace discoveryengine_v1 {
      * Uses the provided embedding to do additional semantic document retrieval. The retrieval is based on the dot product of SearchRequest.EmbeddingSpec.EmbeddingVector.vector and the document embedding that is provided in SearchRequest.EmbeddingSpec.EmbeddingVector.field_path. If SearchRequest.EmbeddingSpec.EmbeddingVector.field_path is not provided, it will use ServingConfig.EmbeddingConfig.field_path.
      */
     embeddingSpec?: Schema$GoogleCloudDiscoveryengineV1betaSearchRequestEmbeddingSpec;
+    /**
+     * Optional. The entity for customers that may run multiple different entities, domains, sites or regions, for example, "Google US", "Google Ads", "Waymo", "google.com", "youtube.com", etc. If this is set, it should be exactly matched with UserEvent.entity to get search results boosted by entity.
+     */
+    entity?: string | null;
     /**
      * Facet specifications for faceted search. If empty, no facets are returned. A maximum of 100 values are allowed. Otherwise, an `INVALID_ARGUMENT` error is returned.
      */
@@ -9676,7 +10136,7 @@ export namespace discoveryengine_v1 {
      */
     servingConfig?: string | null;
     /**
-     * The session resource name. Optional. Session allows users to do multi-turn /search API calls or coordination between /search API calls and /answer API calls. Example #1 (multi-turn /search API calls): Call /search API with the session ID generated in the first call. Here, the previous search query gets considered in query standing. I.e., if the first query is "How did Alphabet do in 2022?" and the current query is "How about 2023?", the current query will be interpreted as "How did Alphabet do in 2023?". Example #2 (coordination between /search API calls and /answer API calls): Call /answer API with the session ID generated in the first call. Here, the answer generation happens in the context of the search results from the first search call. Multi-turn Search feature is currently at private GA stage. Please use v1alpha or v1beta version instead before we launch this feature to public GA. Or ask for allowlisting through Google Support team.
+     * The session resource name. Optional. Session allows users to do multi-turn /search API calls or coordination between /search API calls and /answer API calls. Example #1 (multi-turn /search API calls): Call /search API with the session ID generated in the first call. Here, the previous search query gets considered in query standing. I.e., if the first query is "How did Alphabet do in 2022?" and the current query is "How about 2023?", the current query will be interpreted as "How did Alphabet do in 2023?". Example #2 (coordination between /search API calls and /answer API calls): Call /answer API with the session ID generated in the first call. Here, the answer generation happens in the context of the search results from the first search call.
      */
     session?: string | null;
     /**
@@ -9934,6 +10394,15 @@ export namespace discoveryengine_v1 {
     mode?: string | null;
   }
   /**
+   * Configuration parameters for the Custom Ranking feature.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1betaSearchRequestCustomRankingParams {
+    /**
+     * Optional. A list of ranking expressions (see `ranking_expression` for the syntax documentation) to evaluate. The evaluation results will be returned in `SearchResponse.SearchResult.rank_signals.precomputed_expression_values` field.
+     */
+    expressionsToPrecompute?: string[] | null;
+  }
+  /**
    * A struct to define data stores to filter on in a search call and configurations for those data stores. Otherwise, an `INVALID_ARGUMENT` error is returned.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1betaSearchRequestDataStoreSpec {
@@ -10069,7 +10538,7 @@ export namespace discoveryengine_v1 {
      */
     filterExtractionCondition?: string | null;
     /**
-     * Field names used for location-based filtering, where geolocation filters are detected in natural language search queries. Only valid when the FilterExtractionCondition is set to `ENABLED`. If this field is set, it overrides the field names set in ServingConfig.geo_search_query_detection_field_names.
+     * Field names used for location-based filtering, where geolocation filters are detected in natural language search queries. Only valid when the FilterExtractionCondition is set to `ENABLED`.
      */
     geoSearchQueryDetectionFieldNames?: string[] | null;
   }
@@ -10157,7 +10626,7 @@ export namespace discoveryengine_v1 {
     condition?: string | null;
   }
   /**
-   * Session specification. Multi-turn Search feature is currently at private GA stage. Please use v1alpha or v1beta version instead before we launch this feature to public GA. Or ask for allowlisting through Google Support team.
+   * Session specification.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1betaSearchRequestSessionSpec {
     /**
@@ -10388,6 +10857,10 @@ export namespace discoveryengine_v1 {
    */
   export interface Schema$GoogleCloudDiscoveryengineV1betaUserInfo {
     /**
+     * Optional. Input only. Precise location of the user. It is used in Custom Ranking to calculate the distance between the user and the relevant documents.
+     */
+    preciseLocation?: Schema$GoogleCloudDiscoveryengineV1betaUserInfoPreciseLocation;
+    /**
      * Optional. IANA time zone, e.g. Europe/Budapest.
      */
     timeZone?: string | null;
@@ -10396,9 +10869,22 @@ export namespace discoveryengine_v1 {
      */
     userAgent?: string | null;
     /**
-     * Highly recommended for logged-in users. Unique identifier for logged-in user, such as a user name. Don't set for anonymous users. Always use a hashed value for this ID. Don't set the field to the same fixed ID for different users. This mixes the event history of those users together, which results in degraded model quality. The field must be a UTF-8 encoded string with a length limit of 128 characters. Otherwise, an `INVALID_ARGUMENT` error is returned.
+     * Highly recommended for logged-in users. Unique identifier for logged-in user, such as a user name. Don't set for anonymous users. Always use a hashed value for this ID. Don't set the field to the same fixed ID for different users. This mixes the event history of those users together, which results in degraded model quality. The field must be a UTF-8 encoded string with a length limit of 128 characters. Otherwise, an `INVALID_ARGUMENT` error is returned. Represents an opaque ID to the Search API. The Search API doesn't interpret the value in any way. This field is used to associate events with a user across sessions if the events are being uploaded.
      */
     userId?: string | null;
+  }
+  /**
+   * Precise location info with multiple representation options. Currently only latitude and longitude point is supported.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1betaUserInfoPreciseLocation {
+    /**
+     * Optional. Location represented by a natural language address. Will later be geocoded and converted to either a point or a polygon.
+     */
+    address?: string | null;
+    /**
+     * Optional. Location represented by a latitude/longitude point.
+     */
+    point?: Schema$GoogleTypeLatLng;
   }
   /**
    * User License information assigned by the admin.
@@ -10840,6 +11326,15 @@ export namespace discoveryengine_v1 {
      * Output only. List of citations.
      */
     citations?: Schema$GoogleCloudDiscoveryengineV1Citation[];
+  }
+  /**
+   * The configuration for the CLI execution based connectors.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1CliConfig {
+    /**
+     * Optional. The actions enabled on the associated CLI connection.
+     */
+    enabledActions?: string[] | null;
   }
   /**
    * Cloud SQL source import data from.
@@ -11465,6 +11960,10 @@ export namespace discoveryengine_v1 {
      */
     blockingReasons?: string[] | null;
     /**
+     * Optional. The configuration for establishing a CLI connection.
+     */
+    cliConfig?: Schema$GoogleCloudDiscoveryengineV1CliConfig;
+    /**
      * Optional. The modes enabled for this connector. Default state is CONNECTOR_MODE_UNSPECIFIED.
      */
     connectorModes?: string[] | null;
@@ -11481,7 +11980,7 @@ export namespace discoveryengine_v1 {
      */
     createTime?: string | null;
     /**
-     * Required. The name of the data source. Supported values: `salesforce`, `jira`, `confluence`, `bigquery`.
+     * Required. The identifier for the data source. This is a partial list of supported connectors. Please refer to the [documentation](https://docs.cloud.google.com/gemini/enterprise/docs/connectors/introduction-to-connectors-and-data-stores) for the full list of connectors. Supported first-party connectors include: * `gcs` * `bigquery` * `gcp_fhir` * `google_mail` * `google_drive` * `google_calendar` * `google_chat` Supported third-party connectors include: Generally available (GA) connectors: * `onedrive` * `outlook` * `confluence` * `jira` * `servicenow` * `sharepoint` Preview connectors: * `asana` * `azure_active_directory` * `box` * `canva` * `confluence_server` * `custom_connector` * `docusign` * `dropbox` * `dynamics365` * `github` * `gitlab` * `hubspot` * `jira_server` * `linear` * `native_cloud_identity` * `notion` * `okta` * `pagerduty` * `peoplesoft` * `salesforce` * `shopify` * `slack` * `snowflake` * `teams` * `trello` * `workday` * `zendesk`
      */
     dataSource?: string | null;
     /**
@@ -11489,7 +11988,11 @@ export namespace discoveryengine_v1 {
      */
     destinationConfigs?: Schema$GoogleCloudDiscoveryengineV1DestinationConfig[];
     /**
-     * Output only. The list of FQDNs of the data connector can egress to. This includes both FQDN derived from the customer provided instance URL and default per connector type FQDNs. Note: This field is derived from both the DataConnector.params, and connector source spec. It should only be used for CAIS and Org Policy evaluation purposes.
+     * Output only. The dynamic tools fetched for this connector.
+     */
+    dynamicTools?: Schema$GoogleCloudDiscoveryengineV1DynamicTool[];
+    /**
+     * Output only. The list of FQDNs of the data connector can egress to. This includes both FQDN derived from the customer provided instance URL and default per connector type FQDNs.
      */
     egressFqdns?: string[] | null;
     /**
@@ -11545,7 +12048,7 @@ export namespace discoveryengine_v1 {
      */
     latestPauseTime?: string | null;
     /**
-     * Output only. The full resource name of the Data Connector. Format: `projects/x/locations/x/collections/x/dataConnector`.
+     * Identifier. The full resource name of the Data Connector. Format: `projects/x/locations/x/collections/x/dataConnector`.
      */
     name?: string | null;
     /**
@@ -11597,7 +12100,7 @@ export namespace discoveryengine_v1 {
      */
     updateTime?: string | null;
     /**
-     * Output only. Whether the connector is created with VPC-SC enabled. This is only used for CuOP evaluation purpose.
+     * Output only. Whether the connector is created with VPC-SC enabled.
      */
     vpcscEnabled?: boolean | null;
   }
@@ -11751,6 +12254,10 @@ export namespace discoveryengine_v1 {
      */
     documentProcessingConfig?: Schema$GoogleCloudDiscoveryengineV1DocumentProcessingConfig;
     /**
+     * Optional. If set, this DataStore is a federated search DataStore.
+     */
+    federatedSearchConfig?: Schema$GoogleCloudDiscoveryengineV1DataStoreFederatedSearchConfig;
+    /**
      * Optional. Configuration for `HEALTHCARE_FHIR` vertical.
      */
     healthcareFhirConfig?: Schema$GoogleCloudDiscoveryengineV1HealthcareFhirConfig;
@@ -11823,6 +12330,100 @@ export namespace discoveryengine_v1 {
      * Last updated timestamp for websites.
      */
     websiteDataUpdateTime?: string | null;
+  }
+  /**
+   * Stores information for federated search.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1DataStoreFederatedSearchConfig {
+    /**
+     * AlloyDB config. If set, this DataStore is connected to AlloyDB.
+     */
+    alloyDbConfig?: Schema$GoogleCloudDiscoveryengineV1DataStoreFederatedSearchConfigAlloyDbConfig;
+    /**
+     * NotebookLM config. If set, this DataStore is connected to NotebookLM Enterprise.
+     */
+    notebooklmConfig?: Schema$GoogleCloudDiscoveryengineV1DataStoreFederatedSearchConfigNotebooklmConfig;
+    /**
+     * Third Party OAuth config. If set, this DataStore is connected to a third party application.
+     */
+    thirdPartyOauthConfig?: Schema$GoogleCloudDiscoveryengineV1DataStoreFederatedSearchConfigThirdPartyOauthConfig;
+  }
+  /**
+   * Stores information for connecting to AlloyDB.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1DataStoreFederatedSearchConfigAlloyDbConfig {
+    /**
+     * Optional. Configuration for Magic.
+     */
+    alloydbAiNlConfig?: Schema$GoogleCloudDiscoveryengineV1DataStoreFederatedSearchConfigAlloyDbConfigAlloyDbAiNaturalLanguageConfig;
+    /**
+     * Required. Configuration for connecting to AlloyDB.
+     */
+    alloydbConnectionConfig?: Schema$GoogleCloudDiscoveryengineV1DataStoreFederatedSearchConfigAlloyDbConfigAlloyDbConnectionConfig;
+    /**
+     * Optional. Fields to be returned in the search results. If empty, all fields will be returned.
+     */
+    returnedFields?: string[] | null;
+  }
+  /**
+   * Configuration for AlloyDB AI Natural Language.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1DataStoreFederatedSearchConfigAlloyDbConfigAlloyDbAiNaturalLanguageConfig {
+    /**
+     * Optional. AlloyDb AI NL config id, i.e. the value that was used for calling `SELECT alloydb_ai_nl.g_create_configuration(...)`. Can be empty.
+     */
+    nlConfigId?: string | null;
+  }
+  /**
+   * Configuration for connecting to AlloyDB.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1DataStoreFederatedSearchConfigAlloyDbConfigAlloyDbConnectionConfig {
+    /**
+     * Optional. Auth mode.
+     */
+    authMode?: string | null;
+    /**
+     * Required. The AlloyDB database to connect to.
+     */
+    database?: string | null;
+    /**
+     * Optional. If true, enable PSVS for AlloyDB.
+     */
+    enablePsvs?: boolean | null;
+    /**
+     * Required. The AlloyDB instance to connect to.
+     */
+    instance?: string | null;
+    /**
+     * Required. Database password. If auth_mode = END_USER_ACCOUNT, it can be unset. In that case, the password will be inferred on the AlloyDB side, based on the authenticated user.
+     */
+    password?: string | null;
+    /**
+     * Required. Database user. If auth_mode = END_USER_ACCOUNT, it can be unset. In that case, the user will be inferred on the AlloyDB side, based on the authenticated user.
+     */
+    user?: string | null;
+  }
+  /**
+   * Config for connecting to NotebookLM Enterprise.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1DataStoreFederatedSearchConfigNotebooklmConfig {
+    /**
+     * Required. Search config name. Format: projects/x/locations/global/notebookLmSearchConfigs/x
+     */
+    searchConfig?: string | null;
+  }
+  /**
+   * Stores information for third party applicationOAuth.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1DataStoreFederatedSearchConfigThirdPartyOauthConfig {
+    /**
+     * Optional. The type of the application. E.g., "jira", "box", etc.
+     */
+    appName?: string | null;
+    /**
+     * Optional. The instance name identifying the 3P app, e.g., "vaissptbots-my". This is different from the instance_uri which is the full URL of the 3P app e.g., "https://vaissptbots-my.sharepoint.com".
+     */
+    instanceName?: string | null;
   }
   /**
    * Stores information regarding the serving configurations at DataStore level.
@@ -11993,6 +12594,36 @@ export namespace discoveryengine_v1 {
    */
   export interface Schema$GoogleCloudDiscoveryengineV1DisableAdvancedSiteSearchResponse {}
   /**
+   * Request message for LicenseConfigService.DistributeLicenseConfig method.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigRequest {
+    /**
+     * Optional. Distribute seats to this license config instead of creating a new one. If not specified, a new license config will be created from the billing account license config.
+     */
+    licenseConfigId?: string | null;
+    /**
+     * Required. The number of licenses to distribute.
+     */
+    licenseCount?: string | null;
+    /**
+     * Required. The target GCP project region to distribute the license config to.
+     */
+    location?: string | null;
+    /**
+     * Required. The target GCP project number to distribute the license config to.
+     */
+    projectNumber?: string | null;
+  }
+  /**
+   * Response message for LicenseConfigService.DistributeLicenseConfig method.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigResponse {
+    /**
+     * The updated or created LicenseConfig.
+     */
+    licenseConfig?: Schema$GoogleCloudDiscoveryengineV1LicenseConfig;
+  }
+  /**
    * Document captures all raw metadata information of items to be recommended or searched.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1Document {
@@ -12017,7 +12648,7 @@ export namespace discoveryengine_v1 {
      */
     indexStatus?: Schema$GoogleCloudDiscoveryengineV1DocumentIndexStatus;
     /**
-     * Output only. The last time the document was indexed. If this field is set, the document could be returned in search results. This field is OUTPUT_ONLY. If this field is not populated, it means the document has never been indexed.
+     * Output only. The time when the document was last indexed. If this field is populated, it means the document has been indexed. While documents typically become searchable within seconds of indexing, it can sometimes take up to a few hours. If this field is not populated, it means the document has never been indexed.
      */
     indexTime?: string | null;
     /**
@@ -12089,7 +12720,7 @@ export namespace discoveryengine_v1 {
      */
     errorSamples?: Schema$GoogleRpcStatus[];
     /**
-     * The time when the document was indexed. If this field is populated, it means the document has been indexed.
+     * The time when the document was indexed. If this field is populated, it means the document has been indexed. While documents typically become searchable within seconds of indexing, it can sometimes take up to a few hours.
      */
     indexTime?: string | null;
     /**
@@ -12258,6 +12889,27 @@ export namespace discoveryengine_v1 {
     values?: number[] | null;
   }
   /**
+   * Configuration for dynamic tools.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1DynamicTool {
+    /**
+     * Optional. The description of the tool.
+     */
+    description?: string | null;
+    /**
+     * Optional. The display name of the tool.
+     */
+    displayName?: string | null;
+    /**
+     * Optional. Whether the tool is enabled.
+     */
+    enabled?: boolean | null;
+    /**
+     * Required. The name of the tool.
+     */
+    name?: string | null;
+  }
+  /**
    * Metadata related to the progress of the SiteSearchEngineService.EnableAdvancedSiteSearch operation. This will be returned by the google.longrunning.Operation.metadata field.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1EnableAdvancedSiteSearchMetadata {
@@ -12282,6 +12934,10 @@ export namespace discoveryengine_v1 {
    * Metadata that describes the training and serving parameters of an Engine.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1Engine {
+    /**
+     * Optional. The agent gateway setting for the engine.
+     */
+    agentGatewaySetting?: Schema$GoogleCloudDiscoveryengineV1AgentGatewaySetting;
     /**
      * Optional. Immutable. This the application type which this engine resource represents. NOTE: this is a new concept independ of existing industry vertical or solution type.
      */
@@ -12327,7 +12983,7 @@ export namespace discoveryengine_v1 {
      */
     displayName?: string | null;
     /**
-     * Optional. Feature config for the engine to opt in or opt out of features. Supported keys: * `*`: all features, if it's present, all other feature state settings are ignored. * `agent-gallery` * `no-code-agent-builder` * `prompt-gallery` * `model-selector` * `notebook-lm` * `people-search` * `people-search-org-chart` * `bi-directional-audio` * `feedback` * `session-sharing` * `personalization-memory` * `personalization-suggested-highlights` * `disable-agent-sharing` * `disable-image-generation` * `disable-video-generation` * `disable-onedrive-upload` * `disable-talk-to-content` * `disable-google-drive-upload` * `disable-welcome-emails`
+     * Optional. Feature config for the engine to opt in or opt out of features. Supported keys: * `*`: all features, if it's present, all other feature state settings are ignored. * `agent-gallery` * `no-code-agent-builder` * `prompt-gallery` * `model-selector` * `notebook-lm` * `people-search` * `people-search-org-chart` * `bi-directional-audio` * `feedback` * `session-sharing` * `personalization-memory` * `personalization-suggested-highlights` * `disable-mobile-app-access` * `disable-agent-sharing` * `disable-image-generation` * `disable-video-generation` * `disable-onedrive-upload` * `disable-talk-to-content` * `disable-google-drive-upload` * `disable-welcome-emails` * `disable-canvas` * `disable-canvas-workspace` * `disable-skills`
      */
     features?: {[key: string]: string} | null;
     /**
@@ -12359,9 +13015,9 @@ export namespace discoveryengine_v1 {
      */
     observabilityConfig?: Schema$GoogleCloudDiscoveryengineV1ObservabilityConfig;
     /**
-     * Optional. The email of the procurement contact.
+     * Optional. The emails of the procurement contacts.
      */
-    procurementContactEmail?: string | null;
+    procurementContactEmails?: string[] | null;
     /**
      * Configurations for the Search Engine. Only applicable if solution_type is SOLUTION_TYPE_SEARCH.
      */
@@ -13087,7 +13743,7 @@ export namespace discoveryengine_v1 {
      */
     successCount?: string | null;
     /**
-     * Operation last update time. If the operation is done, this is also the finish time.
+     * Output only. Operation last update time. If the operation is done, this is also the finish time.
      */
     updateTime?: string | null;
   }
@@ -13456,11 +14112,11 @@ export namespace discoveryengine_v1 {
    */
   export interface Schema$GoogleCloudDiscoveryengineV1ObservabilityConfig {
     /**
-     * Optional. Enables observability. If false, all other flags are ignored.
+     * Optional. Enables observability. If `false`, all other flags are ignored.
      */
     observabilityEnabled?: boolean | null;
     /**
-     * Optional. Enables sensitive logging. Sensitive logging includes customer core content (e.g. prompts, responses). If false, will sanitize all sensitive fields.
+     * Optional. Enables sensitive logging. Sensitive logging includes customer core content (e.g. prompts, responses). If `false`, will sanitize all sensitive fields.
      */
     sensitiveLoggingEnabled?: boolean | null;
   }
@@ -13559,7 +14215,7 @@ export namespace discoveryengine_v1 {
     } | null;
   }
   /**
-   * Represents the currently effective configurable billing parameters. These values are derived from the customer's subscription history stored internally and reflect the thresholds actively being used for billing purposes at the time of the GetProject call. This includes the start_time of the subscription and may differ from the values in `customer_provided_config` due to billing rules (e.g., scale-downs taking effect only at the start of a new month).
+   * Represents the currently effective configurable billing parameters. These values are derived from the customer's subscription history stored internally and reflect the thresholds actively being used for billing purposes at the time of the GetProject call. This includes the start_time of the subscription and may differ from the values in `customer_provided_config` due to billing rules (e.g., scale-downs taking effect only at the start of a new month). We also include the update type to indicate the type of update performed on the configurable billing configuration in the UpdateProject operation.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1ProjectConfigurableBillingStatus {
     /**
@@ -13586,6 +14242,10 @@ export namespace discoveryengine_v1 {
      * Output only. The latest terminate effective time of search qpm and indexing core subscriptions.
      */
     terminateTime?: string | null;
+    /**
+     * Output only. The type of update performed in this operation. This field is populated in the response of UpdateProject.
+     */
+    updateType?: string | null;
   }
   /**
    * Customer provided configurations.
@@ -13913,7 +14573,7 @@ export namespace discoveryengine_v1 {
      */
     id?: string | null;
     /**
-     * The score of this record based on the given query and selected model. The score will be rounded to 2 decimal places. If the score is close to 0, it will be rounded to 0.0001 to avoid returning unset.
+     * The score of this record based on the given query and selected model. The score will be rounded to 4 decimal places. If the score is close to 0, it will be rounded to 0.00001 to avoid returning unset.
      */
     score?: number | null;
     /**
@@ -14049,6 +14709,32 @@ export namespace discoveryengine_v1 {
     summary?: Schema$GoogleCloudDiscoveryengineV1SearchResponseSummary;
   }
   /**
+   * Request message for LicenseConfigService.RetractLicenseConfig method.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigRequest {
+    /**
+     * Optional. If set to true, retract the entire license config. Otherwise, retract the specified license count.
+     */
+    fullRetract?: boolean | null;
+    /**
+     * Required. Full resource name of LicenseConfig. Format: `projects/{project\}/locations/{location\}/licenseConfigs/{license_config_id\}`.
+     */
+    licenseConfig?: string | null;
+    /**
+     * Optional. The number of licenses to retract. Only used when full_retract is false.
+     */
+    licenseCount?: string | null;
+  }
+  /**
+   * Response message for LicenseConfigService.RetractLicenseConfig method.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigResponse {
+    /**
+     * The updated LicenseConfig.
+     */
+    licenseConfig?: Schema$GoogleCloudDiscoveryengineV1LicenseConfig;
+  }
+  /**
    * Safety rating corresponding to the generated content.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1SafetyRating {
@@ -14165,6 +14851,10 @@ export namespace discoveryengine_v1 {
      */
     crowdingSpecs?: Schema$GoogleCloudDiscoveryengineV1SearchRequestCrowdingSpec[];
     /**
+     * Optional. Optional configuration for the Custom Ranking feature.
+     */
+    customRankingParams?: Schema$GoogleCloudDiscoveryengineV1SearchRequestCustomRankingParams;
+    /**
      * Specifications that define the specific DataStores to be searched, along with configurations for those data stores. This is only considered for Engines with multiple data stores. For engines with a single data store, the specs directly under SearchRequest should be used.
      */
     dataStoreSpecs?: Schema$GoogleCloudDiscoveryengineV1SearchRequestDataStoreSpec[];
@@ -14172,6 +14862,10 @@ export namespace discoveryengine_v1 {
      * Optional. Config for display feature, like match highlighting on search results.
      */
     displaySpec?: Schema$GoogleCloudDiscoveryengineV1SearchRequestDisplaySpec;
+    /**
+     * Optional. The entity for customers that may run multiple different entities, domains, sites or regions, for example, "Google US", "Google Ads", "Waymo", "google.com", "youtube.com", etc. If this is set, it should be exactly matched with UserEvent.entity to get search results boosted by entity.
+     */
+    entity?: string | null;
     /**
      * Facet specifications for faceted search. If empty, no facets are returned. A maximum of 100 values are allowed. Otherwise, an `INVALID_ARGUMENT` error is returned.
      */
@@ -14192,6 +14886,10 @@ export namespace discoveryengine_v1 {
      * Optional. Config for natural language query understanding capabilities, such as extracting structured field filters from the query. Refer to [this documentation](https://cloud.google.com/generative-ai-app-builder/docs/natural-language-queries) for more information. If `naturalLanguageQueryUnderstandingSpec` is not specified, no additional natural language query understanding will be done.
      */
     naturalLanguageQueryUnderstandingSpec?: Schema$GoogleCloudDiscoveryengineV1SearchRequestNaturalLanguageQueryUnderstandingSpec;
+    /**
+     * Optional. The maximum number of results to retrieve from each data store. If not specified, it will use the SearchRequest.DataStoreSpec.num_results if provided, otherwise there is no limit.
+     */
+    numResultsPerDataStore?: number | null;
     /**
      * A 0-indexed integer that specifies the current offset (that is, starting result location, amongst the Documents deemed by the API as relevant) in search results. This field is only considered if page_token is unset. If this field is negative, an `INVALID_ARGUMENT` is returned. A large offset may be capped to a reasonable threshold.
      */
@@ -14253,7 +14951,7 @@ export namespace discoveryengine_v1 {
      */
     searchAsYouTypeSpec?: Schema$GoogleCloudDiscoveryengineV1SearchRequestSearchAsYouTypeSpec;
     /**
-     * The session resource name. Optional. Session allows users to do multi-turn /search API calls or coordination between /search API calls and /answer API calls. Example #1 (multi-turn /search API calls): Call /search API with the session ID generated in the first call. Here, the previous search query gets considered in query standing. I.e., if the first query is "How did Alphabet do in 2022?" and the current query is "How about 2023?", the current query will be interpreted as "How did Alphabet do in 2023?". Example #2 (coordination between /search API calls and /answer API calls): Call /answer API with the session ID generated in the first call. Here, the answer generation happens in the context of the search results from the first search call. Multi-turn Search feature is currently at private GA stage. Please use v1alpha or v1beta version instead before we launch this feature to public GA. Or ask for allowlisting through Google Support team.
+     * The session resource name. Optional. Session allows users to do multi-turn /search API calls or coordination between /search API calls and /answer API calls. Example #1 (multi-turn /search API calls): Call /search API with the session ID generated in the first call. Here, the previous search query gets considered in query standing. I.e., if the first query is "How did Alphabet do in 2022?" and the current query is "How about 2023?", the current query will be interpreted as "How did Alphabet do in 2023?". Example #2 (coordination between /search API calls and /answer API calls): Call /answer API with the session ID generated in the first call. Here, the answer generation happens in the context of the search results from the first search call.
      */
     session?: string | null;
     /**
@@ -14498,6 +15196,15 @@ export namespace discoveryengine_v1 {
     mode?: string | null;
   }
   /**
+   * Configuration parameters for the Custom Ranking feature.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1SearchRequestCustomRankingParams {
+    /**
+     * Optional. A list of ranking expressions (see `ranking_expression` for the syntax documentation) to evaluate. The evaluation results will be returned in `SearchResponse.SearchResult.rank_signals.precomputed_expression_values` field.
+     */
+    expressionsToPrecompute?: string[] | null;
+  }
+  /**
    * A struct to define data stores to filter on in a search call and configurations for those data stores. Otherwise, an `INVALID_ARGUMENT` error is returned.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1SearchRequestDataStoreSpec {
@@ -14517,6 +15224,10 @@ export namespace discoveryengine_v1 {
      * Optional. Filter specification to filter documents in the data store specified by data_store field. For more information on filtering, see [Filtering](https://cloud.google.com/generative-ai-app-builder/docs/filter-search-metadata)
      */
     filter?: string | null;
+    /**
+     * Optional. The maximum number of results to retrieve from this data store. If not specified, it will use the SearchRequest.num_results_per_data_store if provided, otherwise there is no limit. If both this field and SearchRequest.num_results_per_data_store are specified, this field will be used.
+     */
+    numResults?: number | null;
   }
   /**
    * Specifies features for display, like match highlighting.
@@ -14607,7 +15318,7 @@ export namespace discoveryengine_v1 {
      */
     filterExtractionCondition?: string | null;
     /**
-     * Field names used for location-based filtering, where geolocation filters are detected in natural language search queries. Only valid when the FilterExtractionCondition is set to `ENABLED`. If this field is set, it overrides the field names set in ServingConfig.geo_search_query_detection_field_names.
+     * Field names used for location-based filtering, where geolocation filters are detected in natural language search queries. Only valid when the FilterExtractionCondition is set to `ENABLED`.
      */
     geoSearchQueryDetectionFieldNames?: string[] | null;
   }
@@ -14643,7 +15354,7 @@ export namespace discoveryengine_v1 {
     condition?: string | null;
   }
   /**
-   * Session specification. Multi-turn Search feature is currently at private GA stage. Please use v1alpha or v1beta version instead before we launch this feature to public GA. Or ask for allowlisting through Google Support team.
+   * Session specification.
    */
   export interface Schema$GoogleCloudDiscoveryengineV1SearchRequestSessionSpec {
     /**
@@ -14959,6 +15670,10 @@ export namespace discoveryengine_v1 {
      * Optional. Predicted conversion rate adjustment as a rank.
      */
     pctrRank?: number | null;
+    /**
+     * Optional. A list of precomputed expression results for a given document, in the same order as requested in `SearchRequest.custom_ranking_params.expressions_to_precompute`.
+     */
+    precomputedExpressionValues?: number[] | null;
     /**
      * Optional. Semantic relevance adjustment.
      */
@@ -15295,6 +16010,10 @@ export namespace discoveryengine_v1 {
      */
     detailedAssistAnswer?: Schema$GoogleCloudDiscoveryengineV1AssistAnswer;
     /**
+     * Optional. Indicates whether this turn is a live turn.
+     */
+    live?: boolean | null;
+    /**
      * Optional. The user query. May not be set if this turn is merely regenerating an answer to a different turn
      */
     query?: Schema$GoogleCloudDiscoveryengineV1Query;
@@ -15316,7 +16035,7 @@ export namespace discoveryengine_v1 {
      */
     collectionDisplayName?: string | null;
     /**
-     * Required. The ID to use for the Collection, which will become the final component of the Collection's resource name. A new Collection is created as part of the DataConnector setup. DataConnector is a singleton resource under Collection, managing all DataStores of the Collection. This field must conform to [RFC-1034](https://tools.ietf.org/html/rfc1034) standard with a length limit of 63 characters. Otherwise, an INVALID_ARGUMENT error is returned.
+     * Required. The ID to use for the Collection, which will become the final component of the Collection's resource name. A new Collection is created as part of the DataConnector setup. DataConnector is a singleton resource under Collection, managing all DataStores of the Collection. Should conform to [RFC-1034](https://tools.ietf.org/html/rfc1034) standard with a length limit of 63 characters. Otherwise, an `INVALID_ARGUMENT` error is returned.
      */
     collectionId?: string | null;
     /**
@@ -15800,6 +16519,10 @@ export namespace discoveryengine_v1 {
      */
     engine?: string | null;
     /**
+     * Optional. Represents the entity for customers that may run multiple different entities, domains, sites or regions, for example, `Google US`, `Google Ads`, `Waymo`, `google.com`, `youtube.com`, etc. We recommend that you set `entity` to get better per-entity search, completion, and prediction results.
+     */
+    entity?: string | null;
+    /**
      * Only required for UserEventService.ImportUserEvents method. Timestamp of when the user event happened.
      */
     eventTime?: string | null;
@@ -15861,6 +16584,10 @@ export namespace discoveryengine_v1 {
    */
   export interface Schema$GoogleCloudDiscoveryengineV1UserInfo {
     /**
+     * Optional. Input only. Precise location of the user. It is used in Custom Ranking to calculate the distance between the user and the relevant documents.
+     */
+    preciseLocation?: Schema$GoogleCloudDiscoveryengineV1UserInfoPreciseLocation;
+    /**
      * Optional. IANA time zone, e.g. Europe/Budapest.
      */
     timeZone?: string | null;
@@ -15869,9 +16596,22 @@ export namespace discoveryengine_v1 {
      */
     userAgent?: string | null;
     /**
-     * Highly recommended for logged-in users. Unique identifier for logged-in user, such as a user name. Don't set for anonymous users. Always use a hashed value for this ID. Don't set the field to the same fixed ID for different users. This mixes the event history of those users together, which results in degraded model quality. The field must be a UTF-8 encoded string with a length limit of 128 characters. Otherwise, an `INVALID_ARGUMENT` error is returned.
+     * Highly recommended for logged-in users. Unique identifier for logged-in user, such as a user name. Don't set for anonymous users. Always use a hashed value for this ID. Don't set the field to the same fixed ID for different users. This mixes the event history of those users together, which results in degraded model quality. The field must be a UTF-8 encoded string with a length limit of 128 characters. Otherwise, an `INVALID_ARGUMENT` error is returned. Represents an opaque ID to the Search API. The Search API doesn't interpret the value in any way. This field is used to associate events with a user across sessions if the events are being uploaded.
      */
     userId?: string | null;
+  }
+  /**
+   * Precise location info with multiple representation options. Currently only latitude and longitude point is supported.
+   */
+  export interface Schema$GoogleCloudDiscoveryengineV1UserInfoPreciseLocation {
+    /**
+     * Optional. Location represented by a natural language address. Will later be geocoded and converted to either a point or a polygon.
+     */
+    address?: string | null;
+    /**
+     * Optional. Location represented by a latitude/longitude point.
+     */
+    point?: Schema$GoogleTypeLatLng;
   }
   /**
    * User License information assigned by the admin.
@@ -16374,7 +17114,7 @@ export namespace discoveryengine_v1 {
      */
     enableVisualContentSummary?: boolean | null;
     /**
-     * Output only. Feature config for the engine to opt in or opt out of features. Supported keys: * `agent-gallery` * `no-code-agent-builder` * `prompt-gallery` * `model-selector` * `notebook-lm` * `people-search` * `people-search-org-chart` * `bi-directional-audio` * `feedback` * `session-sharing` * `personalization-memory` * `personalization-suggested-highlights` * `disable-agent-sharing` * `disable-image-generation` * `disable-video-generation` * `disable-onedrive-upload` * `disable-talk-to-content` * `disable-google-drive-upload` * `disable-welcome-emails`
+     * Output only. Feature config for the engine to opt in or opt out of features. Supported keys: * `agent-gallery` * `no-code-agent-builder` * `prompt-gallery` * `model-selector` * `notebook-lm` * `people-search` * `people-search-org-chart` * `bi-directional-audio` * `feedback` * `session-sharing` * `personalization-memory` * `personalization-suggested-highlights` * `disable-mobile-app-access` * `disable-agent-sharing` * `disable-image-generation` * `disable-video-generation` * `disable-onedrive-upload` * `disable-talk-to-content` * `disable-google-drive-upload` * `disable-welcome-emails` * `disable-canvas` * `disable-canvas-workspace` * `disable-skills`
      */
     features?: {[key: string]: string} | null;
     /**
@@ -16738,6 +17478,19 @@ export namespace discoveryengine_v1 {
     title?: string | null;
   }
   /**
+   * An object that represents a latitude/longitude pair. This is expressed as a pair of doubles to represent degrees latitude and degrees longitude. Unless specified otherwise, this object must conform to the WGS84 standard. Values must be within normalized ranges.
+   */
+  export interface Schema$GoogleTypeLatLng {
+    /**
+     * The latitude in degrees. It must be in the range [-90.0, +90.0].
+     */
+    latitude?: number | null;
+    /**
+     * The longitude in degrees. It must be in the range [-180.0, +180.0].
+     */
+    longitude?: number | null;
+  }
+  /**
    * Represents a time zone from the [IANA Time Zone Database](https://www.iana.org/time-zones).
    */
   export interface Schema$GoogleTypeTimeZone {
@@ -16749,6 +17502,381 @@ export namespace discoveryengine_v1 {
      * Optional. IANA Time Zone Database version number. For example "2019a".
      */
     version?: string | null;
+  }
+
+  export class Resource$Billingaccounts {
+    context: APIRequestContext;
+    billingAccountLicenseConfigs: Resource$Billingaccounts$Billingaccountlicenseconfigs;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+      this.billingAccountLicenseConfigs =
+        new Resource$Billingaccounts$Billingaccountlicenseconfigs(this.context);
+    }
+  }
+
+  export class Resource$Billingaccounts$Billingaccountlicenseconfigs {
+    context: APIRequestContext;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+    }
+
+    /**
+     * Distributes a LicenseConfig from billing account level to project level.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const discoveryengine = google.discoveryengine('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await discoveryengine.billingAccounts.billingAccountLicenseConfigs.distributeLicenseConfig(
+     *       {
+     *         // Required. Full resource name of BillingAccountLicenseConfig. Format: `billingAccounts/{billing_account\}/billingAccountLicenseConfigs/{billing_account_license_config_id\}`.
+     *         billingAccountLicenseConfig:
+     *           'billingAccounts/my-billingAccount/billingAccountLicenseConfigs/my-billingAccountLicenseConfig',
+     *
+     *         // Request body metadata
+     *         requestBody: {
+     *           // request body parameters
+     *           // {
+     *           //   "licenseConfigId": "my_licenseConfigId",
+     *           //   "licenseCount": "my_licenseCount",
+     *           //   "location": "my_location",
+     *           //   "projectNumber": "my_projectNumber"
+     *           // }
+     *         },
+     *       },
+     *     );
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "licenseConfig": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    distributeLicenseConfig(
+      params: Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Distributelicenseconfig,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    distributeLicenseConfig(
+      params?: Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Distributelicenseconfig,
+      options?: MethodOptions
+    ): Promise<
+      GaxiosResponseWithHTTP2<Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigResponse>
+    >;
+    distributeLicenseConfig(
+      params: Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Distributelicenseconfig,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    distributeLicenseConfig(
+      params: Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Distributelicenseconfig,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigResponse>,
+      callback: BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigResponse>
+    ): void;
+    distributeLicenseConfig(
+      params: Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Distributelicenseconfig,
+      callback: BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigResponse>
+    ): void;
+    distributeLicenseConfig(
+      callback: BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigResponse>
+    ): void;
+    distributeLicenseConfig(
+      paramsOrCallback?:
+        | Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Distributelicenseconfig
+        | BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<
+          GaxiosResponseWithHTTP2<Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigResponse>
+        >
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Distributelicenseconfig;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Distributelicenseconfig;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl =
+        options.rootUrl || 'https://discoveryengine.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl +
+              '/v1/{+billingAccountLicenseConfig}:distributeLicenseConfig'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['billingAccountLicenseConfig'],
+        pathParams: ['billingAccountLicenseConfig'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigResponse>(
+          parameters
+        );
+      }
+    }
+
+    /**
+     * This method is called from the billing account side to retract the LicenseConfig from the given project back to the billing account.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const discoveryengine = google.discoveryengine('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await discoveryengine.billingAccounts.billingAccountLicenseConfigs.retractLicenseConfig(
+     *       {
+     *         // Required. Full resource name of BillingAccountLicenseConfig. Format: `billingAccounts/{billing_account\}/billingAccountLicenseConfigs/{billing_account_license_config_id\}`.
+     *         billingAccountLicenseConfig:
+     *           'billingAccounts/my-billingAccount/billingAccountLicenseConfigs/my-billingAccountLicenseConfig',
+     *
+     *         // Request body metadata
+     *         requestBody: {
+     *           // request body parameters
+     *           // {
+     *           //   "fullRetract": false,
+     *           //   "licenseConfig": "my_licenseConfig",
+     *           //   "licenseCount": "my_licenseCount"
+     *           // }
+     *         },
+     *       },
+     *     );
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "licenseConfig": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    retractLicenseConfig(
+      params: Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Retractlicenseconfig,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    retractLicenseConfig(
+      params?: Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Retractlicenseconfig,
+      options?: MethodOptions
+    ): Promise<
+      GaxiosResponseWithHTTP2<Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigResponse>
+    >;
+    retractLicenseConfig(
+      params: Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Retractlicenseconfig,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    retractLicenseConfig(
+      params: Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Retractlicenseconfig,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigResponse>,
+      callback: BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigResponse>
+    ): void;
+    retractLicenseConfig(
+      params: Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Retractlicenseconfig,
+      callback: BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigResponse>
+    ): void;
+    retractLicenseConfig(
+      callback: BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigResponse>
+    ): void;
+    retractLicenseConfig(
+      paramsOrCallback?:
+        | Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Retractlicenseconfig
+        | BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<
+          GaxiosResponseWithHTTP2<Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigResponse>
+        >
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Retractlicenseconfig;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Retractlicenseconfig;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl =
+        options.rootUrl || 'https://discoveryengine.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl +
+              '/v1/{+billingAccountLicenseConfig}:retractLicenseConfig'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['billingAccountLicenseConfig'],
+        pathParams: ['billingAccountLicenseConfig'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigResponse>(
+          parameters
+        );
+      }
+    }
+  }
+
+  export interface Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Distributelicenseconfig extends StandardParameters {
+    /**
+     * Required. Full resource name of BillingAccountLicenseConfig. Format: `billingAccounts/{billing_account\}/billingAccountLicenseConfigs/{billing_account_license_config_id\}`.
+     */
+    billingAccountLicenseConfig?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$GoogleCloudDiscoveryengineV1DistributeLicenseConfigRequest;
+  }
+  export interface Params$Resource$Billingaccounts$Billingaccountlicenseconfigs$Retractlicenseconfig extends StandardParameters {
+    /**
+     * Required. Full resource name of BillingAccountLicenseConfig. Format: `billingAccounts/{billing_account\}/billingAccountLicenseConfigs/{billing_account_license_config_id\}`.
+     */
+    billingAccountLicenseConfig?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$GoogleCloudDiscoveryengineV1RetractLicenseConfigRequest;
   }
 
   export class Resource$Projects {
@@ -16786,6 +17914,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -17005,6 +18134,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -17154,6 +18284,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -17310,6 +18441,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -17470,6 +18602,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -17481,7 +18614,7 @@ export namespace discoveryengine_v1 {
      *   const res = await discoveryengine.projects.locations.setUpDataConnectorV2({
      *     // Required. The display name of the Collection. Should be human readable, used to display collections in the Console Dashboard. UTF-8 encoded string with limit of 1024 characters.
      *     collectionDisplayName: 'placeholder-value',
-     *     // Required. The ID to use for the Collection, which will become the final component of the Collection's resource name. A new Collection is created as part of the DataConnector setup. DataConnector is a singleton resource under Collection, managing all DataStores of the Collection. This field must conform to [RFC-1034](https://tools.ietf.org/html/rfc1034) standard with a length limit of 63 characters. Otherwise, an INVALID_ARGUMENT error is returned.
+     *     // Required. The ID to use for the Collection, which will become the final component of the Collection's resource name. A new Collection is created as part of the DataConnector setup. DataConnector is a singleton resource under Collection, managing all DataStores of the Collection. Should conform to [RFC-1034](https://tools.ietf.org/html/rfc1034) standard with a length limit of 63 characters. Otherwise, an `INVALID_ARGUMENT` error is returned.
      *     collectionId: 'placeholder-value',
      *     // Required. The parent of Collection, in the format of `projects/{project\}/locations/{location\}`.
      *     parent: 'projects/my-project/locations/my-location',
@@ -17497,12 +18630,14 @@ export namespace discoveryengine_v1 {
      *       //   "autoRunDisabled": false,
      *       //   "bapConfig": {},
      *       //   "blockingReasons": [],
+     *       //   "cliConfig": {},
      *       //   "connectorModes": [],
      *       //   "connectorType": "my_connectorType",
      *       //   "createEuaSaas": false,
      *       //   "createTime": "my_createTime",
      *       //   "dataSource": "my_dataSource",
      *       //   "destinationConfigs": [],
+     *       //   "dynamicTools": [],
      *       //   "egressFqdns": [],
      *       //   "endUserConfig": {},
      *       //   "entities": [],
@@ -17671,6 +18806,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -17829,6 +18965,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -17997,7 +19134,7 @@ export namespace discoveryengine_v1 {
      */
     collectionDisplayName?: string;
     /**
-     * Required. The ID to use for the Collection, which will become the final component of the Collection's resource name. A new Collection is created as part of the DataConnector setup. DataConnector is a singleton resource under Collection, managing all DataStores of the Collection. This field must conform to [RFC-1034](https://tools.ietf.org/html/rfc1034) standard with a length limit of 63 characters. Otherwise, an INVALID_ARGUMENT error is returned.
+     * Required. The ID to use for the Collection, which will become the final component of the Collection's resource name. A new Collection is created as part of the DataConnector setup. DataConnector is a singleton resource under Collection, managing all DataStores of the Collection. Should conform to [RFC-1034](https://tools.ietf.org/html/rfc1034) standard with a length limit of 63 characters. Otherwise, an `INVALID_ARGUMENT` error is returned.
      */
     collectionId?: string;
     /**
@@ -18068,6 +19205,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -18214,6 +19352,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -18369,6 +19508,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -18520,6 +19660,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -18739,6 +19880,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -18886,6 +20028,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -18896,7 +20039,7 @@ export namespace discoveryengine_v1 {
      *   // Do the magic
      *   const res =
      *     await discoveryengine.projects.locations.collections.getDataConnector({
-     *       // Required. Full resource name of DataConnector, such as `projects/{project\}/locations/{location\}/collections/{collection_id\}/dataConnector`. If the caller does not have permission to access the DataConnector, regardless of whether or not it exists, a PERMISSION_DENIED error is returned. If the requested DataConnector does not exist, a NOT_FOUND error is returned.
+     *       // Required. Full resource name of DataConnector, such as `projects/{project\}/locations/{location\}/collections/{collection_id\}/dataConnector`. If the caller does not have permission to access the DataConnector, regardless of whether or not it exists, a `PERMISSION_DENIED` error is returned. If the requested DataConnector does not exist, a `NOT_FOUND` error is returned.
      *       name: 'projects/my-project/locations/my-location/collections/my-collection/dataConnector',
      *     });
      *   console.log(res.data);
@@ -18910,12 +20053,14 @@ export namespace discoveryengine_v1 {
      *   //   "autoRunDisabled": false,
      *   //   "bapConfig": {},
      *   //   "blockingReasons": [],
+     *   //   "cliConfig": {},
      *   //   "connectorModes": [],
      *   //   "connectorType": "my_connectorType",
      *   //   "createEuaSaas": false,
      *   //   "createTime": "my_createTime",
      *   //   "dataSource": "my_dataSource",
      *   //   "destinationConfigs": [],
+     *   //   "dynamicTools": [],
      *   //   "egressFqdns": [],
      *   //   "endUserConfig": {},
      *   //   "entities": [],
@@ -19077,6 +20222,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -19087,9 +20233,9 @@ export namespace discoveryengine_v1 {
      *   // Do the magic
      *   const res =
      *     await discoveryengine.projects.locations.collections.updateDataConnector({
-     *       // Output only. The full resource name of the Data Connector. Format: `projects/x/locations/x/collections/x/dataConnector`.
+     *       // Identifier. The full resource name of the Data Connector. Format: `projects/x/locations/x/collections/x/dataConnector`.
      *       name: 'projects/my-project/locations/my-location/collections/my-collection/dataConnector',
-     *       // Indicates which fields in the provided DataConnector to update. Supported field paths include: - `refresh_interval` - `params` - `auto_run_disabled` - `action_config` - `action_config.action_params` - `action_config.service_name` - `destination_configs` - `blocking_reasons` - `sync_mode` - `incremental_sync_disabled` - `incremental_refresh_interval` - `data_protection_policy` Note: Support for these fields may vary depending on the connector type. For example, not all connectors support `destination_configs`. If an unsupported or unknown field path is provided, the request will return an INVALID_ARGUMENT error.
+     *       // Indicates which fields in the provided DataConnector to update. Supported field paths include: - `refresh_interval` - `params` - `auto_run_disabled` - `action_config` - `action_config.action_params` - `action_config.service_name` - `destination_configs` - `blocking_reasons` - `sync_mode` - `incremental_sync_disabled` - `incremental_refresh_interval` - `data_protection_policy` Note: Support for these fields may vary depending on the connector type. For example, not all connectors support `destination_configs`. If an unsupported or unknown field path is provided, the request will return an `INVALID_ARGUMENT` error.
      *       updateMask: 'placeholder-value',
      *
      *       // Request body metadata
@@ -19103,12 +20249,14 @@ export namespace discoveryengine_v1 {
      *         //   "autoRunDisabled": false,
      *         //   "bapConfig": {},
      *         //   "blockingReasons": [],
+     *         //   "cliConfig": {},
      *         //   "connectorModes": [],
      *         //   "connectorType": "my_connectorType",
      *         //   "createEuaSaas": false,
      *         //   "createTime": "my_createTime",
      *         //   "dataSource": "my_dataSource",
      *         //   "destinationConfigs": [],
+     *         //   "dynamicTools": [],
      *         //   "egressFqdns": [],
      *         //   "endUserConfig": {},
      *         //   "entities": [],
@@ -19151,12 +20299,14 @@ export namespace discoveryengine_v1 {
      *   //   "autoRunDisabled": false,
      *   //   "bapConfig": {},
      *   //   "blockingReasons": [],
+     *   //   "cliConfig": {},
      *   //   "connectorModes": [],
      *   //   "connectorType": "my_connectorType",
      *   //   "createEuaSaas": false,
      *   //   "createTime": "my_createTime",
      *   //   "dataSource": "my_dataSource",
      *   //   "destinationConfigs": [],
+     *   //   "dynamicTools": [],
      *   //   "egressFqdns": [],
      *   //   "endUserConfig": {},
      *   //   "entities": [],
@@ -19301,17 +20451,17 @@ export namespace discoveryengine_v1 {
   }
   export interface Params$Resource$Projects$Locations$Collections$Getdataconnector extends StandardParameters {
     /**
-     * Required. Full resource name of DataConnector, such as `projects/{project\}/locations/{location\}/collections/{collection_id\}/dataConnector`. If the caller does not have permission to access the DataConnector, regardless of whether or not it exists, a PERMISSION_DENIED error is returned. If the requested DataConnector does not exist, a NOT_FOUND error is returned.
+     * Required. Full resource name of DataConnector, such as `projects/{project\}/locations/{location\}/collections/{collection_id\}/dataConnector`. If the caller does not have permission to access the DataConnector, regardless of whether or not it exists, a `PERMISSION_DENIED` error is returned. If the requested DataConnector does not exist, a `NOT_FOUND` error is returned.
      */
     name?: string;
   }
   export interface Params$Resource$Projects$Locations$Collections$Updatedataconnector extends StandardParameters {
     /**
-     * Output only. The full resource name of the Data Connector. Format: `projects/x/locations/x/collections/x/dataConnector`.
+     * Identifier. The full resource name of the Data Connector. Format: `projects/x/locations/x/collections/x/dataConnector`.
      */
     name?: string;
     /**
-     * Indicates which fields in the provided DataConnector to update. Supported field paths include: - `refresh_interval` - `params` - `auto_run_disabled` - `action_config` - `action_config.action_params` - `action_config.service_name` - `destination_configs` - `blocking_reasons` - `sync_mode` - `incremental_sync_disabled` - `incremental_refresh_interval` - `data_protection_policy` Note: Support for these fields may vary depending on the connector type. For example, not all connectors support `destination_configs`. If an unsupported or unknown field path is provided, the request will return an INVALID_ARGUMENT error.
+     * Indicates which fields in the provided DataConnector to update. Supported field paths include: - `refresh_interval` - `params` - `auto_run_disabled` - `action_config` - `action_config.action_params` - `action_config.service_name` - `destination_configs` - `blocking_reasons` - `sync_mode` - `incremental_sync_disabled` - `incremental_refresh_interval` - `data_protection_policy` Note: Support for these fields may vary depending on the connector type. For example, not all connectors support `destination_configs`. If an unsupported or unknown field path is provided, the request will return an `INVALID_ARGUMENT` error.
      */
     updateMask?: string;
 
@@ -19331,6 +20481,188 @@ export namespace discoveryengine_v1 {
           this.context
         );
     }
+
+    /**
+     * ServeMcpDeleteRequest serves a MCP DELETE request.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const discoveryengine = google.discoveryengine('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await discoveryengine.projects.locations.collections.dataConnector.mcp({
+     *       collectionsId: 'placeholder-value',
+     *       // The HTTP Content-Type header value specifying the content type of the body.
+     *       contentType: 'placeholder-value',
+     *       // The HTTP request/response body as raw binary.
+     *       data: 'placeholder-value',
+     *       // Application specific response metadata. Must be set in the first response for streaming APIs.
+     *       extensions: 'placeholder-value',
+     *
+     *       locationsId: 'placeholder-value',
+     *
+     *       projectsId: 'placeholder-value',
+     *     });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "contentType": "my_contentType",
+     *   //   "data": "my_data",
+     *   //   "extensions": []
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    mcp(
+      params: Params$Resource$Projects$Locations$Collections$Dataconnector$Mcp,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    mcp(
+      params?: Params$Resource$Projects$Locations$Collections$Dataconnector$Mcp,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$GoogleApiHttpBody>>;
+    mcp(
+      params: Params$Resource$Projects$Locations$Collections$Dataconnector$Mcp,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    mcp(
+      params: Params$Resource$Projects$Locations$Collections$Dataconnector$Mcp,
+      options: MethodOptions | BodyResponseCallback<Schema$GoogleApiHttpBody>,
+      callback: BodyResponseCallback<Schema$GoogleApiHttpBody>
+    ): void;
+    mcp(
+      params: Params$Resource$Projects$Locations$Collections$Dataconnector$Mcp,
+      callback: BodyResponseCallback<Schema$GoogleApiHttpBody>
+    ): void;
+    mcp(callback: BodyResponseCallback<Schema$GoogleApiHttpBody>): void;
+    mcp(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Collections$Dataconnector$Mcp
+        | BodyResponseCallback<Schema$GoogleApiHttpBody>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$GoogleApiHttpBody>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$GoogleApiHttpBody>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$GoogleApiHttpBody>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Collections$Dataconnector$Mcp;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Collections$Dataconnector$Mcp;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl =
+        options.rootUrl || 'https://discoveryengine.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl +
+              '/v1/projects/{projectsId}/locations/{locationsId}/collections/{collectionsId}/dataConnector/mcp'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'DELETE',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['projectsId', 'locationsId', 'collectionsId'],
+        pathParams: ['collectionsId', 'locationsId', 'projectsId'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$GoogleApiHttpBody>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$GoogleApiHttpBody>(parameters);
+      }
+    }
+  }
+
+  export interface Params$Resource$Projects$Locations$Collections$Dataconnector$Mcp extends StandardParameters {
+    /**
+     *
+     */
+    collectionsId?: string;
+    /**
+     * The HTTP Content-Type header value specifying the content type of the body.
+     */
+    contentType?: string;
+    /**
+     * The HTTP request/response body as raw binary.
+     */
+    data?: string;
+    /**
+     * Application specific response metadata. Must be set in the first response for streaming APIs.
+     */
+    extensions?: {[key: string]: any}[];
+    /**
+     *
+     */
+    locationsId?: string;
+    /**
+     *
+     */
+    projectsId?: string;
   }
 
   export class Resource$Projects$Locations$Collections$Dataconnector$Operations {
@@ -19364,6 +20696,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -19514,6 +20847,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -19791,6 +21125,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -19956,6 +21291,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -19995,6 +21331,7 @@ export namespace discoveryengine_v1 {
      *         //   "defaultSchemaId": "my_defaultSchemaId",
      *         //   "displayName": "my_displayName",
      *         //   "documentProcessingConfig": {},
+     *         //   "federatedSearchConfig": {},
      *         //   "healthcareFhirConfig": {},
      *         //   "identityMappingStore": "my_identityMappingStore",
      *         //   "industryVertical": "my_industryVertical",
@@ -20147,6 +21484,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -20295,6 +21633,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -20323,6 +21662,7 @@ export namespace discoveryengine_v1 {
      *   //   "defaultSchemaId": "my_defaultSchemaId",
      *   //   "displayName": "my_displayName",
      *   //   "documentProcessingConfig": {},
+     *   //   "federatedSearchConfig": {},
      *   //   "healthcareFhirConfig": {},
      *   //   "identityMappingStore": "my_identityMappingStore",
      *   //   "industryVertical": "my_industryVertical",
@@ -20466,6 +21806,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -20618,6 +21959,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -20779,6 +22121,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -20809,6 +22152,7 @@ export namespace discoveryengine_v1 {
      *         //   "defaultSchemaId": "my_defaultSchemaId",
      *         //   "displayName": "my_displayName",
      *         //   "documentProcessingConfig": {},
+     *         //   "federatedSearchConfig": {},
      *         //   "healthcareFhirConfig": {},
      *         //   "identityMappingStore": "my_identityMappingStore",
      *         //   "industryVertical": "my_industryVertical",
@@ -20838,6 +22182,7 @@ export namespace discoveryengine_v1 {
      *   //   "defaultSchemaId": "my_defaultSchemaId",
      *   //   "displayName": "my_displayName",
      *   //   "documentProcessingConfig": {},
+     *   //   "federatedSearchConfig": {},
      *   //   "healthcareFhirConfig": {},
      *   //   "identityMappingStore": "my_identityMappingStore",
      *   //   "industryVertical": "my_industryVertical",
@@ -20981,6 +22326,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -21279,6 +22625,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -21461,6 +22808,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -21647,6 +22995,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -21787,6 +23136,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -21949,6 +23299,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -22125,6 +23476,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -22286,6 +23638,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -22470,6 +23823,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -22726,6 +24080,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -22872,6 +24227,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -23022,6 +24378,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -23236,6 +24593,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud_search.query',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -23432,6 +24790,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -23597,6 +24956,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -23786,6 +25146,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -23972,6 +25333,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -24112,6 +25474,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -24274,6 +25637,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -24437,6 +25801,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -24687,6 +26052,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -24859,6 +26225,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -25033,6 +26400,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -25173,6 +26541,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -25330,6 +26699,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -25495,6 +26865,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -25746,6 +27117,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -25928,6 +27300,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -26078,6 +27451,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -26279,6 +27653,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -26429,6 +27804,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -26635,6 +28011,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -26801,6 +28178,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -26951,6 +28329,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -27105,6 +28484,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -27266,6 +28646,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -27492,6 +28873,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -27642,6 +29024,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -27843,6 +29226,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -27854,7 +29238,7 @@ export namespace discoveryengine_v1 {
      *   const res =
      *     await discoveryengine.projects.locations.collections.dataStores.servingConfigs.answer(
      *       {
-     *         // Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. This field is used to identify the serving configuration name, set of models used to make the search.
+     *         // Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. Or the resource name of the agent engine serving config, such as: `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_agent_answer`. (use when `enable_agent_invocation` set to true, and you have custom `AI_MODE` agent engine configured) This field is used to identify the serving configuration name, set of models used to make the search.
      *         servingConfig:
      *           'projects/my-project/locations/my-location/collections/my-collection/dataStores/my-dataStore/servingConfigs/my-servingConfig',
      *
@@ -28020,6 +29404,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -28224,6 +29609,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -28364,6 +29750,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -28535,6 +29922,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -28696,6 +30084,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -28896,6 +30285,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -29069,6 +30459,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -29093,13 +30484,16 @@ export namespace discoveryengine_v1 {
      *           //   "canonicalFilter": "my_canonicalFilter",
      *           //   "contentSearchSpec": {},
      *           //   "crowdingSpecs": [],
+     *           //   "customRankingParams": {},
      *           //   "dataStoreSpecs": [],
      *           //   "displaySpec": {},
+     *           //   "entity": "my_entity",
      *           //   "facetSpecs": [],
      *           //   "filter": "my_filter",
      *           //   "imageQuery": {},
      *           //   "languageCode": "my_languageCode",
      *           //   "naturalLanguageQueryUnderstandingSpec": {},
+     *           //   "numResultsPerDataStore": 0,
      *           //   "offset": 0,
      *           //   "oneBoxPageSize": 0,
      *           //   "orderBy": "my_orderBy",
@@ -29278,6 +30672,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -29302,13 +30697,16 @@ export namespace discoveryengine_v1 {
      *           //   "canonicalFilter": "my_canonicalFilter",
      *           //   "contentSearchSpec": {},
      *           //   "crowdingSpecs": [],
+     *           //   "customRankingParams": {},
      *           //   "dataStoreSpecs": [],
      *           //   "displaySpec": {},
+     *           //   "entity": "my_entity",
      *           //   "facetSpecs": [],
      *           //   "filter": "my_filter",
      *           //   "imageQuery": {},
      *           //   "languageCode": "my_languageCode",
      *           //   "naturalLanguageQueryUnderstandingSpec": {},
+     *           //   "numResultsPerDataStore": 0,
      *           //   "offset": 0,
      *           //   "oneBoxPageSize": 0,
      *           //   "orderBy": "my_orderBy",
@@ -29486,6 +30884,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -29497,7 +30896,7 @@ export namespace discoveryengine_v1 {
      *   const res =
      *     await discoveryengine.projects.locations.collections.dataStores.servingConfigs.streamAnswer(
      *       {
-     *         // Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. This field is used to identify the serving configuration name, set of models used to make the search.
+     *         // Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. Or the resource name of the agent engine serving config, such as: `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_agent_answer`. (use when `enable_agent_invocation` set to true, and you have custom `AI_MODE` agent engine configured) This field is used to identify the serving configuration name, set of models used to make the search.
      *         servingConfig:
      *           'projects/my-project/locations/my-location/collections/my-collection/dataStores/my-dataStore/servingConfigs/my-servingConfig',
      *
@@ -29641,7 +31040,7 @@ export namespace discoveryengine_v1 {
 
   export interface Params$Resource$Projects$Locations$Collections$Datastores$Servingconfigs$Answer extends StandardParameters {
     /**
-     * Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. This field is used to identify the serving configuration name, set of models used to make the search.
+     * Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. Or the resource name of the agent engine serving config, such as: `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_agent_answer`. (use when `enable_agent_invocation` set to true, and you have custom `AI_MODE` agent engine configured) This field is used to identify the serving configuration name, set of models used to make the search.
      */
     servingConfig?: string;
 
@@ -29741,7 +31140,7 @@ export namespace discoveryengine_v1 {
   }
   export interface Params$Resource$Projects$Locations$Collections$Datastores$Servingconfigs$Streamanswer extends StandardParameters {
     /**
-     * Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. This field is used to identify the serving configuration name, set of models used to make the search.
+     * Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. Or the resource name of the agent engine serving config, such as: `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_agent_answer`. (use when `enable_agent_invocation` set to true, and you have custom `AI_MODE` agent engine configured) This field is used to identify the serving configuration name, set of models used to make the search.
      */
     servingConfig?: string;
 
@@ -29788,6 +31187,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -29802,6 +31202,8 @@ export namespace discoveryengine_v1 {
      *         // Required. Full resource name of parent data store. Format: `projects/{project\}/locations/{location\}/collections/{collection\}/dataStores/{data_store_id\}`
      *         parent:
      *           'projects/my-project/locations/my-location/collections/my-collection/dataStores/my-dataStore',
+     *         // Optional. The ID to use for the session, which will become the final component of the session's resource name. This value should be 1-63 characters, and valid characters are /a-z0-9{0,61\}[a-z0-9]/. If not specified, a unique ID will be generated.
+     *         sessionId: 'placeholder-value',
      *
      *         // Request body metadata
      *         requestBody: {
@@ -29969,6 +31371,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -30110,6 +31513,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -30273,6 +31677,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -30439,6 +31844,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -30598,6 +32004,10 @@ export namespace discoveryengine_v1 {
      * Required. Full resource name of parent data store. Format: `projects/{project\}/locations/{location\}/collections/{collection\}/dataStores/{data_store_id\}`
      */
     parent?: string;
+    /**
+     * Optional. The ID to use for the session, which will become the final component of the session's resource name. This value should be 1-63 characters, and valid characters are /a-z0-9{0,61\}[a-z0-9]/. If not specified, a unique ID will be generated.
+     */
+    sessionId?: string;
 
     /**
      * Request body metadata
@@ -30689,6 +32099,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -30883,6 +32294,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -31043,6 +32455,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -31202,6 +32615,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -31361,6 +32775,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -31522,6 +32937,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -31751,6 +33167,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -31901,6 +33318,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -32102,6 +33520,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -32266,6 +33685,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -32416,6 +33836,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -32614,6 +34035,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -32776,6 +34198,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -32947,6 +34370,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -33097,6 +34521,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -33258,6 +34683,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -33420,6 +34846,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -33654,6 +35081,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -33804,6 +35232,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -34006,6 +35435,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -34169,6 +35599,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -34359,6 +35790,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -34514,6 +35946,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -34680,6 +36113,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -34844,6 +36278,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -34873,6 +36308,7 @@ export namespace discoveryengine_v1 {
      *           //   "directUserRequest": false,
      *           //   "documents": [],
      *           //   "engine": "my_engine",
+     *           //   "entity": "my_entity",
      *           //   "eventTime": "my_eventTime",
      *           //   "eventType": "my_eventType",
      *           //   "filter": "my_filter",
@@ -34903,6 +36339,7 @@ export namespace discoveryengine_v1 {
      *   //   "directUserRequest": false,
      *   //   "documents": [],
      *   //   "engine": "my_engine",
+     *   //   "entity": "my_entity",
      *   //   "eventTime": "my_eventTime",
      *   //   "eventType": "my_eventType",
      *   //   "filter": "my_filter",
@@ -35116,6 +36553,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -35310,6 +36748,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -35621,6 +37060,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -35641,6 +37081,7 @@ export namespace discoveryengine_v1 {
      *       requestBody: {
      *         // request body parameters
      *         // {
+     *         //   "agentGatewaySetting": {},
      *         //   "appType": "my_appType",
      *         //   "chatEngineConfig": {},
      *         //   "chatEngineMetadata": {},
@@ -35660,7 +37101,7 @@ export namespace discoveryengine_v1 {
      *         //   "modelConfigs": {},
      *         //   "name": "my_name",
      *         //   "observabilityConfig": {},
-     *         //   "procurementContactEmail": "my_procurementContactEmail",
+     *         //   "procurementContactEmails": [],
      *         //   "searchEngineConfig": {},
      *         //   "solutionType": "my_solutionType",
      *         //   "updateTime": "my_updateTime"
@@ -35805,6 +37246,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -35953,6 +37395,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -35969,6 +37412,7 @@ export namespace discoveryengine_v1 {
      *
      *   // Example response
      *   // {
+     *   //   "agentGatewaySetting": {},
      *   //   "appType": "my_appType",
      *   //   "chatEngineConfig": {},
      *   //   "chatEngineMetadata": {},
@@ -35988,7 +37432,7 @@ export namespace discoveryengine_v1 {
      *   //   "modelConfigs": {},
      *   //   "name": "my_name",
      *   //   "observabilityConfig": {},
-     *   //   "procurementContactEmail": "my_procurementContactEmail",
+     *   //   "procurementContactEmails": [],
      *   //   "searchEngineConfig": {},
      *   //   "solutionType": "my_solutionType",
      *   //   "updateTime": "my_updateTime"
@@ -36124,6 +37568,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -36274,6 +37719,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -36436,6 +37882,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -36455,6 +37902,7 @@ export namespace discoveryengine_v1 {
      *       requestBody: {
      *         // request body parameters
      *         // {
+     *         //   "agentGatewaySetting": {},
      *         //   "appType": "my_appType",
      *         //   "chatEngineConfig": {},
      *         //   "chatEngineMetadata": {},
@@ -36474,7 +37922,7 @@ export namespace discoveryengine_v1 {
      *         //   "modelConfigs": {},
      *         //   "name": "my_name",
      *         //   "observabilityConfig": {},
-     *         //   "procurementContactEmail": "my_procurementContactEmail",
+     *         //   "procurementContactEmails": [],
      *         //   "searchEngineConfig": {},
      *         //   "solutionType": "my_solutionType",
      *         //   "updateTime": "my_updateTime"
@@ -36485,6 +37933,7 @@ export namespace discoveryengine_v1 {
      *
      *   // Example response
      *   // {
+     *   //   "agentGatewaySetting": {},
      *   //   "appType": "my_appType",
      *   //   "chatEngineConfig": {},
      *   //   "chatEngineMetadata": {},
@@ -36504,7 +37953,7 @@ export namespace discoveryengine_v1 {
      *   //   "modelConfigs": {},
      *   //   "name": "my_name",
      *   //   "observabilityConfig": {},
-     *   //   "procurementContactEmail": "my_procurementContactEmail",
+     *   //   "procurementContactEmails": [],
      *   //   "searchEngineConfig": {},
      *   //   "solutionType": "my_solutionType",
      *   //   "updateTime": "my_updateTime"
@@ -36640,6 +38089,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -36891,6 +38341,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -36912,6 +38363,7 @@ export namespace discoveryengine_v1 {
      *         requestBody: {
      *           // request body parameters
      *           // {
+     *           //   "createTime": "my_createTime",
      *           //   "customerPolicy": {},
      *           //   "defaultWebGroundingToggleOff": false,
      *           //   "description": "my_description",
@@ -36919,6 +38371,7 @@ export namespace discoveryengine_v1 {
      *           //   "enabledTools": {},
      *           //   "generationConfig": {},
      *           //   "name": "my_name",
+     *           //   "updateTime": "my_updateTime",
      *           //   "webGroundingType": "my_webGroundingType"
      *           // }
      *         },
@@ -36928,6 +38381,7 @@ export namespace discoveryengine_v1 {
      *
      *   // Example response
      *   // {
+     *   //   "createTime": "my_createTime",
      *   //   "customerPolicy": {},
      *   //   "defaultWebGroundingToggleOff": false,
      *   //   "description": "my_description",
@@ -36935,6 +38389,7 @@ export namespace discoveryengine_v1 {
      *   //   "enabledTools": {},
      *   //   "generationConfig": {},
      *   //   "name": "my_name",
+     *   //   "updateTime": "my_updateTime",
      *   //   "webGroundingType": "my_webGroundingType"
      *   // }
      * }
@@ -37072,6 +38527,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -37213,6 +38669,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -37232,6 +38689,7 @@ export namespace discoveryengine_v1 {
      *
      *   // Example response
      *   // {
+     *   //   "createTime": "my_createTime",
      *   //   "customerPolicy": {},
      *   //   "defaultWebGroundingToggleOff": false,
      *   //   "description": "my_description",
@@ -37239,6 +38697,7 @@ export namespace discoveryengine_v1 {
      *   //   "enabledTools": {},
      *   //   "generationConfig": {},
      *   //   "name": "my_name",
+     *   //   "updateTime": "my_updateTime",
      *   //   "webGroundingType": "my_webGroundingType"
      *   // }
      * }
@@ -37373,6 +38832,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -37535,6 +38995,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -37555,6 +39016,7 @@ export namespace discoveryengine_v1 {
      *         requestBody: {
      *           // request body parameters
      *           // {
+     *           //   "createTime": "my_createTime",
      *           //   "customerPolicy": {},
      *           //   "defaultWebGroundingToggleOff": false,
      *           //   "description": "my_description",
@@ -37562,6 +39024,7 @@ export namespace discoveryengine_v1 {
      *           //   "enabledTools": {},
      *           //   "generationConfig": {},
      *           //   "name": "my_name",
+     *           //   "updateTime": "my_updateTime",
      *           //   "webGroundingType": "my_webGroundingType"
      *           // }
      *         },
@@ -37571,6 +39034,7 @@ export namespace discoveryengine_v1 {
      *
      *   // Example response
      *   // {
+     *   //   "createTime": "my_createTime",
      *   //   "customerPolicy": {},
      *   //   "defaultWebGroundingToggleOff": false,
      *   //   "description": "my_description",
@@ -37578,6 +39042,7 @@ export namespace discoveryengine_v1 {
      *   //   "enabledTools": {},
      *   //   "generationConfig": {},
      *   //   "name": "my_name",
+     *   //   "updateTime": "my_updateTime",
      *   //   "webGroundingType": "my_webGroundingType"
      *   // }
      * }
@@ -37712,6 +39177,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -37928,21 +39394,45 @@ export namespace discoveryengine_v1 {
 
   export class Resource$Projects$Locations$Collections$Engines$Assistants$Agents {
     context: APIRequestContext;
-    message: Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message;
+    a2a: Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a;
     operations: Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Operations;
-    tasks: Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks;
     constructor(context: APIRequestContext) {
       this.context = context;
-      this.message =
-        new Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message(
+      this.a2a =
+        new Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a(
           this.context
         );
       this.operations =
         new Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Operations(
           this.context
         );
+    }
+  }
+
+  export class Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a {
+    context: APIRequestContext;
+    v1: Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+      this.v1 =
+        new Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1(
+          this.context
+        );
+    }
+  }
+
+  export class Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1 {
+    context: APIRequestContext;
+    message: Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message;
+    tasks: Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+      this.message =
+        new Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message(
+          this.context
+        );
       this.tasks =
-        new Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks(
+        new Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks(
           this.context
         );
     }
@@ -37969,7 +39459,11 @@ export namespace discoveryengine_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -37978,7 +39472,7 @@ export namespace discoveryengine_v1 {
      *
      *   // Do the magic
      *   const res =
-     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.getCard(
+     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.getCard(
      *       {
      *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
      *         tenant:
@@ -38023,31 +39517,31 @@ export namespace discoveryengine_v1 {
      * @returns A promise if used with async/await, or void if used with a callback.
      */
     getCard(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Getcard,
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Getcard,
       options: StreamMethodOptions
     ): Promise<GaxiosResponseWithHTTP2<Readable>>;
     getCard(
-      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Getcard,
+      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Getcard,
       options?: MethodOptions
     ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1AgentCard>>;
     getCard(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Getcard,
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Getcard,
       options: StreamMethodOptions | BodyResponseCallback<Readable>,
       callback: BodyResponseCallback<Readable>
     ): void;
     getCard(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Getcard,
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Getcard,
       options: MethodOptions | BodyResponseCallback<Schema$A2aV1AgentCard>,
       callback: BodyResponseCallback<Schema$A2aV1AgentCard>
     ): void;
     getCard(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Getcard,
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Getcard,
       callback: BodyResponseCallback<Schema$A2aV1AgentCard>
     ): void;
     getCard(callback: BodyResponseCallback<Schema$A2aV1AgentCard>): void;
     getCard(
       paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Getcard
+        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Getcard
         | BodyResponseCallback<Schema$A2aV1AgentCard>
         | BodyResponseCallback<Readable>,
       optionsOrCallback?:
@@ -38063,13 +39557,13 @@ export namespace discoveryengine_v1 {
       | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1AgentCard>>
       | Promise<GaxiosResponseWithHTTP2<Readable>> {
       let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Getcard;
+        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Getcard;
       let options = (optionsOrCallback || {}) as MethodOptions;
 
       if (typeof paramsOrCallback === 'function') {
         callback = paramsOrCallback;
         params =
-          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Getcard;
+          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Getcard;
         options = {};
       }
 
@@ -38083,7 +39577,10 @@ export namespace discoveryengine_v1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/{+tenant}/card').replace(/([^:]\/)\/+/g, '$1'),
+            url: (rootUrl + '/v1/{+tenant}/a2a/v1/card').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
             method: 'GET',
             apiVersion: '',
           },
@@ -38105,14 +39602,14 @@ export namespace discoveryengine_v1 {
     }
   }
 
-  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Getcard extends StandardParameters {
+  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Getcard extends StandardParameters {
     /**
      * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
      */
     tenant?: string;
   }
 
-  export class Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message {
+  export class Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message {
     context: APIRequestContext;
     constructor(context: APIRequestContext) {
       this.context = context;
@@ -38140,7 +39637,11 @@ export namespace discoveryengine_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -38149,7 +39650,7 @@ export namespace discoveryengine_v1 {
      *
      *   // Do the magic
      *   const res =
-     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.message.send(
+     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.message.send(
      *       {
      *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
      *         tenant:
@@ -38188,33 +39689,33 @@ export namespace discoveryengine_v1 {
      * @returns A promise if used with async/await, or void if used with a callback.
      */
     send(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Send,
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Send,
       options: StreamMethodOptions
     ): Promise<GaxiosResponseWithHTTP2<Readable>>;
     send(
-      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Send,
+      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Send,
       options?: MethodOptions
     ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1SendMessageResponse>>;
     send(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Send,
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Send,
       options: StreamMethodOptions | BodyResponseCallback<Readable>,
       callback: BodyResponseCallback<Readable>
     ): void;
     send(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Send,
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Send,
       options:
         | MethodOptions
         | BodyResponseCallback<Schema$A2aV1SendMessageResponse>,
       callback: BodyResponseCallback<Schema$A2aV1SendMessageResponse>
     ): void;
     send(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Send,
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Send,
       callback: BodyResponseCallback<Schema$A2aV1SendMessageResponse>
     ): void;
     send(callback: BodyResponseCallback<Schema$A2aV1SendMessageResponse>): void;
     send(
       paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Send
+        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Send
         | BodyResponseCallback<Schema$A2aV1SendMessageResponse>
         | BodyResponseCallback<Readable>,
       optionsOrCallback?:
@@ -38230,13 +39731,13 @@ export namespace discoveryengine_v1 {
       | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1SendMessageResponse>>
       | Promise<GaxiosResponseWithHTTP2<Readable>> {
       let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Send;
+        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Send;
       let options = (optionsOrCallback || {}) as MethodOptions;
 
       if (typeof paramsOrCallback === 'function') {
         callback = paramsOrCallback;
         params =
-          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Send;
+          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Send;
         options = {};
       }
 
@@ -38250,7 +39751,7 @@ export namespace discoveryengine_v1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/{+tenant}/message:send').replace(
+            url: (rootUrl + '/v1/{+tenant}/a2a/v1/message:send').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -38296,7 +39797,11 @@ export namespace discoveryengine_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -38305,7 +39810,7 @@ export namespace discoveryengine_v1 {
      *
      *   // Do the magic
      *   const res =
-     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.message.stream(
+     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.message.stream(
      *       {
      *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
      *         tenant:
@@ -38346,31 +39851,31 @@ export namespace discoveryengine_v1 {
      * @returns A promise if used with async/await, or void if used with a callback.
      */
     stream(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Stream,
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Stream,
       options: StreamMethodOptions
     ): Promise<GaxiosResponseWithHTTP2<Readable>>;
     stream(
-      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Stream,
+      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Stream,
       options?: MethodOptions
     ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1StreamResponse>>;
     stream(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Stream,
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Stream,
       options: StreamMethodOptions | BodyResponseCallback<Readable>,
       callback: BodyResponseCallback<Readable>
     ): void;
     stream(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Stream,
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Stream,
       options: MethodOptions | BodyResponseCallback<Schema$A2aV1StreamResponse>,
       callback: BodyResponseCallback<Schema$A2aV1StreamResponse>
     ): void;
     stream(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Stream,
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Stream,
       callback: BodyResponseCallback<Schema$A2aV1StreamResponse>
     ): void;
     stream(callback: BodyResponseCallback<Schema$A2aV1StreamResponse>): void;
     stream(
       paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Stream
+        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Stream
         | BodyResponseCallback<Schema$A2aV1StreamResponse>
         | BodyResponseCallback<Readable>,
       optionsOrCallback?:
@@ -38386,13 +39891,13 @@ export namespace discoveryengine_v1 {
       | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1StreamResponse>>
       | Promise<GaxiosResponseWithHTTP2<Readable>> {
       let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Stream;
+        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Stream;
       let options = (optionsOrCallback || {}) as MethodOptions;
 
       if (typeof paramsOrCallback === 'function') {
         callback = paramsOrCallback;
         params =
-          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Stream;
+          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Stream;
         options = {};
       }
 
@@ -38406,7 +39911,7 @@ export namespace discoveryengine_v1 {
       const parameters = {
         options: Object.assign(
           {
-            url: (rootUrl + '/{+tenant}/message:stream').replace(
+            url: (rootUrl + '/v1/{+tenant}/a2a/v1/message:stream').replace(
               /([^:]\/)\/+/g,
               '$1'
             ),
@@ -38431,7 +39936,7 @@ export namespace discoveryengine_v1 {
     }
   }
 
-  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Send extends StandardParameters {
+  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Send extends StandardParameters {
     /**
      * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
      */
@@ -38442,7 +39947,7 @@ export namespace discoveryengine_v1 {
      */
     requestBody?: Schema$A2aV1SendMessageRequest;
   }
-  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Message$Stream extends StandardParameters {
+  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Message$Stream extends StandardParameters {
     /**
      * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
      */
@@ -38452,6 +39957,1224 @@ export namespace discoveryengine_v1 {
      * Request body metadata
      */
     requestBody?: Schema$A2aV1SendMessageRequest;
+  }
+
+  export class Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks {
+    context: APIRequestContext;
+    pushNotificationConfigs: Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+      this.pushNotificationConfigs =
+        new Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs(
+          this.context
+        );
+    }
+
+    /**
+     * Cancel a task from the agent. If supported one should expect no more task updates for the task.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const discoveryengine = google.discoveryengine('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.cancel(
+     *       {
+     *         // The resource name of the task to cancel. Format: tasks/{task_id\}
+     *         name: 'tasks/my-task',
+     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     *         tenant:
+     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
+     *
+     *         // Request body metadata
+     *         requestBody: {
+     *           // request body parameters
+     *           // {}
+     *         },
+     *       },
+     *     );
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "artifacts": [],
+     *   //   "contextId": "my_contextId",
+     *   //   "history": [],
+     *   //   "id": "my_id",
+     *   //   "metadata": {},
+     *   //   "status": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    cancel(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Cancel,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    cancel(
+      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Cancel,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1Task>>;
+    cancel(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Cancel,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    cancel(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Cancel,
+      options: MethodOptions | BodyResponseCallback<Schema$A2aV1Task>,
+      callback: BodyResponseCallback<Schema$A2aV1Task>
+    ): void;
+    cancel(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Cancel,
+      callback: BodyResponseCallback<Schema$A2aV1Task>
+    ): void;
+    cancel(callback: BodyResponseCallback<Schema$A2aV1Task>): void;
+    cancel(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Cancel
+        | BodyResponseCallback<Schema$A2aV1Task>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$A2aV1Task>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$A2aV1Task>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1Task>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Cancel;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Cancel;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl =
+        options.rootUrl || 'https://discoveryengine.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+tenant}/a2a/v1/{+name}:cancel').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['tenant', 'name'],
+        pathParams: ['name', 'tenant'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$A2aV1Task>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$A2aV1Task>(parameters);
+      }
+    }
+
+    /**
+     * Get the current state of a task from the agent.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const discoveryengine = google.discoveryengine('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.get(
+     *       {
+     *         // The number of most recent messages from the task's history to retrieve.
+     *         historyLength: 'placeholder-value',
+     *         // Required. The resource name of the task. Format: tasks/{task_id\}
+     *         name: 'tasks/my-task',
+     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     *         tenant:
+     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
+     *       },
+     *     );
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "artifacts": [],
+     *   //   "contextId": "my_contextId",
+     *   //   "history": [],
+     *   //   "id": "my_id",
+     *   //   "metadata": {},
+     *   //   "status": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    get(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Get,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    get(
+      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Get,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1Task>>;
+    get(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Get,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    get(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Get,
+      options: MethodOptions | BodyResponseCallback<Schema$A2aV1Task>,
+      callback: BodyResponseCallback<Schema$A2aV1Task>
+    ): void;
+    get(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Get,
+      callback: BodyResponseCallback<Schema$A2aV1Task>
+    ): void;
+    get(callback: BodyResponseCallback<Schema$A2aV1Task>): void;
+    get(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Get
+        | BodyResponseCallback<Schema$A2aV1Task>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$A2aV1Task>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$A2aV1Task>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1Task>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Get;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Get;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl =
+        options.rootUrl || 'https://discoveryengine.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+tenant}/a2a/v1/{+name}').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['tenant', 'name'],
+        pathParams: ['name', 'tenant'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$A2aV1Task>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$A2aV1Task>(parameters);
+      }
+    }
+
+    /**
+     * TaskSubscription is a streaming call that will return a stream of task update events. This attaches the stream to an existing in process task. If the task is complete the stream will return the completed task (like GetTask) and close the stream.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const discoveryengine = google.discoveryengine('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.subscribe(
+     *       {
+     *         // The resource name of the task to subscribe to. Format: tasks/{task_id\}
+     *         name: 'tasks/my-task',
+     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     *         tenant:
+     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
+     *       },
+     *     );
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "artifactUpdate": {},
+     *   //   "message": {},
+     *   //   "statusUpdate": {},
+     *   //   "task": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    subscribe(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Subscribe,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    subscribe(
+      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Subscribe,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1StreamResponse>>;
+    subscribe(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Subscribe,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    subscribe(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Subscribe,
+      options: MethodOptions | BodyResponseCallback<Schema$A2aV1StreamResponse>,
+      callback: BodyResponseCallback<Schema$A2aV1StreamResponse>
+    ): void;
+    subscribe(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Subscribe,
+      callback: BodyResponseCallback<Schema$A2aV1StreamResponse>
+    ): void;
+    subscribe(callback: BodyResponseCallback<Schema$A2aV1StreamResponse>): void;
+    subscribe(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Subscribe
+        | BodyResponseCallback<Schema$A2aV1StreamResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$A2aV1StreamResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$A2aV1StreamResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1StreamResponse>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Subscribe;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Subscribe;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl =
+        options.rootUrl || 'https://discoveryengine.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+tenant}/a2a/v1/{+name}:subscribe').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['tenant', 'name'],
+        pathParams: ['name', 'tenant'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$A2aV1StreamResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$A2aV1StreamResponse>(parameters);
+      }
+    }
+  }
+
+  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Cancel extends StandardParameters {
+    /**
+     * The resource name of the task to cancel. Format: tasks/{task_id\}
+     */
+    name?: string;
+    /**
+     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     */
+    tenant?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$A2aV1CancelTaskRequest;
+  }
+  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Get extends StandardParameters {
+    /**
+     * The number of most recent messages from the task's history to retrieve.
+     */
+    historyLength?: number;
+    /**
+     * Required. The resource name of the task. Format: tasks/{task_id\}
+     */
+    name?: string;
+    /**
+     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     */
+    tenant?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Subscribe extends StandardParameters {
+    /**
+     * The resource name of the task to subscribe to. Format: tasks/{task_id\}
+     */
+    name?: string;
+    /**
+     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     */
+    tenant?: string;
+  }
+
+  export class Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs {
+    context: APIRequestContext;
+    constructor(context: APIRequestContext) {
+      this.context = context;
+    }
+
+    /**
+     * Set a push notification config for a task.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const discoveryengine = google.discoveryengine('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.create(
+     *       {
+     *         // Required. The ID for the new config.
+     *         configId: 'placeholder-value',
+     *         // Required. The parent task resource for this config. Format: tasks/{task_id\}
+     *         parent: 'tasks/my-task/pushNotificationConfigs',
+     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     *         tenant:
+     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
+     *
+     *         // Request body metadata
+     *         requestBody: {
+     *           // request body parameters
+     *           // {
+     *           //   "name": "my_name",
+     *           //   "pushNotificationConfig": {}
+     *           // }
+     *         },
+     *       },
+     *     );
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "name": "my_name",
+     *   //   "pushNotificationConfig": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    create(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Create,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    create(
+      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Create,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1TaskPushNotificationConfig>>;
+    create(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Create,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    create(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Create,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>,
+      callback: BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
+    ): void;
+    create(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Create,
+      callback: BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
+    ): void;
+    create(
+      callback: BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
+    ): void;
+    create(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Create
+        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1TaskPushNotificationConfig>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Create;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Create;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl =
+        options.rootUrl || 'https://discoveryengine.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+tenant}/a2a/v1/{+parent}').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['tenant', 'parent'],
+        pathParams: ['parent', 'tenant'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$A2aV1TaskPushNotificationConfig>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$A2aV1TaskPushNotificationConfig>(
+          parameters
+        );
+      }
+    }
+
+    /**
+     * Delete a push notification config for a task.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const discoveryengine = google.discoveryengine('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.delete(
+     *       {
+     *         // The resource name of the config to delete. Format: tasks/{task_id\}/pushNotificationConfigs/{config_id\}
+     *         name: 'tasks/my-task/pushNotificationConfigs/my-pushNotificationConfig',
+     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     *         tenant:
+     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
+     *       },
+     *     );
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {}
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    delete(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Delete,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    delete(
+      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Delete,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$GoogleProtobufEmpty>>;
+    delete(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Delete,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    delete(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Delete,
+      options: MethodOptions | BodyResponseCallback<Schema$GoogleProtobufEmpty>,
+      callback: BodyResponseCallback<Schema$GoogleProtobufEmpty>
+    ): void;
+    delete(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Delete,
+      callback: BodyResponseCallback<Schema$GoogleProtobufEmpty>
+    ): void;
+    delete(callback: BodyResponseCallback<Schema$GoogleProtobufEmpty>): void;
+    delete(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Delete
+        | BodyResponseCallback<Schema$GoogleProtobufEmpty>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$GoogleProtobufEmpty>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$GoogleProtobufEmpty>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$GoogleProtobufEmpty>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Delete;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Delete;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl =
+        options.rootUrl || 'https://discoveryengine.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+tenant}/a2a/v1/{+name}').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'DELETE',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['tenant', 'name'],
+        pathParams: ['name', 'tenant'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$GoogleProtobufEmpty>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$GoogleProtobufEmpty>(parameters);
+      }
+    }
+
+    /**
+     * Get a push notification config for a task.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const discoveryengine = google.discoveryengine('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.get(
+     *       {
+     *         // The resource name of the config to retrieve. Format: tasks/{task_id\}/pushNotificationConfigs/{config_id\}
+     *         name: 'tasks/my-task/pushNotificationConfigs/my-pushNotificationConfig',
+     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     *         tenant:
+     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
+     *       },
+     *     );
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "name": "my_name",
+     *   //   "pushNotificationConfig": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    get(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Get,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    get(
+      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Get,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1TaskPushNotificationConfig>>;
+    get(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Get,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    get(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Get,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>,
+      callback: BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
+    ): void;
+    get(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Get,
+      callback: BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
+    ): void;
+    get(
+      callback: BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
+    ): void;
+    get(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Get
+        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1TaskPushNotificationConfig>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Get;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Get;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl =
+        options.rootUrl || 'https://discoveryengine.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1/{+tenant}/a2a/v1/{+name}').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['tenant', 'name'],
+        pathParams: ['name', 'tenant'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$A2aV1TaskPushNotificationConfig>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$A2aV1TaskPushNotificationConfig>(
+          parameters
+        );
+      }
+    }
+
+    /**
+     * Get a list of push notifications configured for a task.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const discoveryengine = google.discoveryengine('v1');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
+     *     ],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res =
+     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.a2a.v1.tasks.pushNotificationConfigs.list(
+     *       {
+     *         // For AIP-158 these fields are present. Usually not used/needed. The maximum number of configurations to return. If unspecified, all configs will be returned.
+     *         pageSize: 'placeholder-value',
+     *         // A page token received from a previous ListTaskPushNotificationConfigRequest call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListTaskPushNotificationConfigRequest` must match the call that provided the page token.
+     *         pageToken: 'placeholder-value',
+     *         // The parent task resource. Format: tasks/{task_id\}
+     *         parent: 'tasks/my-task',
+     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     *         tenant:
+     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
+     *       },
+     *     );
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "configs": [],
+     *   //   "nextPageToken": "my_nextPageToken"
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    list(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$List,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    list(
+      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$List,
+      options?: MethodOptions
+    ): Promise<
+      GaxiosResponseWithHTTP2<Schema$A2aV1ListTaskPushNotificationConfigResponse>
+    >;
+    list(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$List,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    list(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$List,
+      options:
+        | MethodOptions
+        | BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>,
+      callback: BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>
+    ): void;
+    list(
+      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$List,
+      callback: BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>
+    ): void;
+    list(
+      callback: BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>
+    ): void;
+    list(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$List
+        | BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<
+          GaxiosResponseWithHTTP2<Schema$A2aV1ListTaskPushNotificationConfigResponse>
+        >
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$List;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$List;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl =
+        options.rootUrl || 'https://discoveryengine.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (
+              rootUrl + '/v1/{+tenant}/a2a/v1/{+parent}/pushNotificationConfigs'
+            ).replace(/([^:]\/)\/+/g, '$1'),
+            method: 'GET',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['tenant', 'parent'],
+        pathParams: ['parent', 'tenant'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$A2aV1ListTaskPushNotificationConfigResponse>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$A2aV1ListTaskPushNotificationConfigResponse>(
+          parameters
+        );
+      }
+    }
+  }
+
+  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Create extends StandardParameters {
+    /**
+     * Required. The ID for the new config.
+     */
+    configId?: string;
+    /**
+     * Required. The parent task resource for this config. Format: tasks/{task_id\}
+     */
+    parent?: string;
+    /**
+     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     */
+    tenant?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$A2aV1TaskPushNotificationConfig;
+  }
+  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Delete extends StandardParameters {
+    /**
+     * The resource name of the config to delete. Format: tasks/{task_id\}/pushNotificationConfigs/{config_id\}
+     */
+    name?: string;
+    /**
+     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     */
+    tenant?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$Get extends StandardParameters {
+    /**
+     * The resource name of the config to retrieve. Format: tasks/{task_id\}/pushNotificationConfigs/{config_id\}
+     */
+    name?: string;
+    /**
+     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     */
+    tenant?: string;
+  }
+  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$A2a$V1$Tasks$Pushnotificationconfigs$List extends StandardParameters {
+    /**
+     * For AIP-158 these fields are present. Usually not used/needed. The maximum number of configurations to return. If unspecified, all configs will be returned.
+     */
+    pageSize?: number;
+    /**
+     * A page token received from a previous ListTaskPushNotificationConfigRequest call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListTaskPushNotificationConfigRequest` must match the call that provided the page token.
+     */
+    pageToken?: string;
+    /**
+     * The parent task resource. Format: tasks/{task_id\}
+     */
+    parent?: string;
+    /**
+     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
+     */
+    tenant?: string;
   }
 
   export class Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Operations {
@@ -38485,6 +41208,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -38618,1187 +41342,6 @@ export namespace discoveryengine_v1 {
     name?: string;
   }
 
-  export class Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks {
-    context: APIRequestContext;
-    pushNotificationConfigs: Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs;
-    constructor(context: APIRequestContext) {
-      this.context = context;
-      this.pushNotificationConfigs =
-        new Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs(
-          this.context
-        );
-    }
-
-    /**
-     * Cancel a task from the agent. If supported one should expect no more task updates for the task.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const discoveryengine = google.discoveryengine('v1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res =
-     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.tasks.cancel(
-     *       {
-     *         // The resource name of the task to cancel. Format: tasks/{task_id\}
-     *         name: 'tasks/my-task',
-     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     *         tenant:
-     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
-     *
-     *         // Request body metadata
-     *         requestBody: {
-     *           // request body parameters
-     *           // {}
-     *         },
-     *       },
-     *     );
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "artifacts": [],
-     *   //   "contextId": "my_contextId",
-     *   //   "history": [],
-     *   //   "id": "my_id",
-     *   //   "metadata": {},
-     *   //   "status": {}
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    cancel(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Cancel,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    cancel(
-      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Cancel,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1Task>>;
-    cancel(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Cancel,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    cancel(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Cancel,
-      options: MethodOptions | BodyResponseCallback<Schema$A2aV1Task>,
-      callback: BodyResponseCallback<Schema$A2aV1Task>
-    ): void;
-    cancel(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Cancel,
-      callback: BodyResponseCallback<Schema$A2aV1Task>
-    ): void;
-    cancel(callback: BodyResponseCallback<Schema$A2aV1Task>): void;
-    cancel(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Cancel
-        | BodyResponseCallback<Schema$A2aV1Task>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$A2aV1Task>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$A2aV1Task>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1Task>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Cancel;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params =
-          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Cancel;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://discoveryengine.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/{+tenant}/{+name}:cancel').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'POST',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['tenant', 'name'],
-        pathParams: ['name', 'tenant'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$A2aV1Task>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$A2aV1Task>(parameters);
-      }
-    }
-
-    /**
-     * Get the current state of a task from the agent.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const discoveryengine = google.discoveryengine('v1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res =
-     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.tasks.get(
-     *       {
-     *         // The number of most recent messages from the task's history to retrieve.
-     *         historyLength: 'placeholder-value',
-     *         // Required. The resource name of the task. Format: tasks/{task_id\}
-     *         name: 'tasks/my-task',
-     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     *         tenant:
-     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
-     *       },
-     *     );
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "artifacts": [],
-     *   //   "contextId": "my_contextId",
-     *   //   "history": [],
-     *   //   "id": "my_id",
-     *   //   "metadata": {},
-     *   //   "status": {}
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    get(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Get,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    get(
-      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Get,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1Task>>;
-    get(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Get,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    get(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Get,
-      options: MethodOptions | BodyResponseCallback<Schema$A2aV1Task>,
-      callback: BodyResponseCallback<Schema$A2aV1Task>
-    ): void;
-    get(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Get,
-      callback: BodyResponseCallback<Schema$A2aV1Task>
-    ): void;
-    get(callback: BodyResponseCallback<Schema$A2aV1Task>): void;
-    get(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Get
-        | BodyResponseCallback<Schema$A2aV1Task>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$A2aV1Task>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$A2aV1Task>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1Task>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Get;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params =
-          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Get;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://discoveryengine.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/{+tenant}/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['tenant', 'name'],
-        pathParams: ['name', 'tenant'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$A2aV1Task>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$A2aV1Task>(parameters);
-      }
-    }
-
-    /**
-     * TaskSubscription is a streaming call that will return a stream of task update events. This attaches the stream to an existing in process task. If the task is complete the stream will return the completed task (like GetTask) and close the stream.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const discoveryengine = google.discoveryengine('v1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res =
-     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.tasks.subscribe(
-     *       {
-     *         // The resource name of the task to subscribe to. Format: tasks/{task_id\}
-     *         name: 'tasks/my-task',
-     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     *         tenant:
-     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
-     *       },
-     *     );
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "artifactUpdate": {},
-     *   //   "message": {},
-     *   //   "statusUpdate": {},
-     *   //   "task": {}
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    subscribe(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Subscribe,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    subscribe(
-      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Subscribe,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1StreamResponse>>;
-    subscribe(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Subscribe,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    subscribe(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Subscribe,
-      options: MethodOptions | BodyResponseCallback<Schema$A2aV1StreamResponse>,
-      callback: BodyResponseCallback<Schema$A2aV1StreamResponse>
-    ): void;
-    subscribe(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Subscribe,
-      callback: BodyResponseCallback<Schema$A2aV1StreamResponse>
-    ): void;
-    subscribe(callback: BodyResponseCallback<Schema$A2aV1StreamResponse>): void;
-    subscribe(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Subscribe
-        | BodyResponseCallback<Schema$A2aV1StreamResponse>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$A2aV1StreamResponse>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$A2aV1StreamResponse>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1StreamResponse>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Subscribe;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params =
-          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Subscribe;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://discoveryengine.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/{+tenant}/{+name}:subscribe').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['tenant', 'name'],
-        pathParams: ['name', 'tenant'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$A2aV1StreamResponse>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$A2aV1StreamResponse>(parameters);
-      }
-    }
-  }
-
-  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Cancel extends StandardParameters {
-    /**
-     * The resource name of the task to cancel. Format: tasks/{task_id\}
-     */
-    name?: string;
-    /**
-     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     */
-    tenant?: string;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$A2aV1CancelTaskRequest;
-  }
-  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Get extends StandardParameters {
-    /**
-     * The number of most recent messages from the task's history to retrieve.
-     */
-    historyLength?: number;
-    /**
-     * Required. The resource name of the task. Format: tasks/{task_id\}
-     */
-    name?: string;
-    /**
-     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     */
-    tenant?: string;
-  }
-  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Subscribe extends StandardParameters {
-    /**
-     * The resource name of the task to subscribe to. Format: tasks/{task_id\}
-     */
-    name?: string;
-    /**
-     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     */
-    tenant?: string;
-  }
-
-  export class Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs {
-    context: APIRequestContext;
-    constructor(context: APIRequestContext) {
-      this.context = context;
-    }
-
-    /**
-     * Set a push notification config for a task.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const discoveryengine = google.discoveryengine('v1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res =
-     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.tasks.pushNotificationConfigs.create(
-     *       {
-     *         // Required. The ID for the new config.
-     *         configId: 'placeholder-value',
-     *         // Required. The parent task resource for this config. Format: tasks/{task_id\}
-     *         parent: 'tasks/my-task/pushNotificationConfigs',
-     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     *         tenant:
-     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
-     *
-     *         // Request body metadata
-     *         requestBody: {
-     *           // request body parameters
-     *           // {
-     *           //   "name": "my_name",
-     *           //   "pushNotificationConfig": {}
-     *           // }
-     *         },
-     *       },
-     *     );
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "name": "my_name",
-     *   //   "pushNotificationConfig": {}
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    create(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Create,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    create(
-      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Create,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1TaskPushNotificationConfig>>;
-    create(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Create,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    create(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Create,
-      options:
-        | MethodOptions
-        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>,
-      callback: BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
-    ): void;
-    create(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Create,
-      callback: BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
-    ): void;
-    create(
-      callback: BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
-    ): void;
-    create(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Create
-        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1TaskPushNotificationConfig>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Create;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params =
-          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Create;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://discoveryengine.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/{+tenant}/{+parent}').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'POST',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['tenant', 'parent'],
-        pathParams: ['parent', 'tenant'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$A2aV1TaskPushNotificationConfig>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$A2aV1TaskPushNotificationConfig>(
-          parameters
-        );
-      }
-    }
-
-    /**
-     * Delete a push notification config for a task.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const discoveryengine = google.discoveryengine('v1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res =
-     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.tasks.pushNotificationConfigs.delete(
-     *       {
-     *         // The resource name of the config to delete. Format: tasks/{task_id\}/pushNotificationConfigs/{config_id\}
-     *         name: 'tasks/my-task/pushNotificationConfigs/my-pushNotificationConfig',
-     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     *         tenant:
-     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
-     *       },
-     *     );
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {}
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    delete(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Delete,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    delete(
-      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Delete,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$GoogleProtobufEmpty>>;
-    delete(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Delete,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    delete(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Delete,
-      options: MethodOptions | BodyResponseCallback<Schema$GoogleProtobufEmpty>,
-      callback: BodyResponseCallback<Schema$GoogleProtobufEmpty>
-    ): void;
-    delete(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Delete,
-      callback: BodyResponseCallback<Schema$GoogleProtobufEmpty>
-    ): void;
-    delete(callback: BodyResponseCallback<Schema$GoogleProtobufEmpty>): void;
-    delete(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Delete
-        | BodyResponseCallback<Schema$GoogleProtobufEmpty>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$GoogleProtobufEmpty>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$GoogleProtobufEmpty>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$GoogleProtobufEmpty>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Delete;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params =
-          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Delete;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://discoveryengine.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/{+tenant}/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'DELETE',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['tenant', 'name'],
-        pathParams: ['name', 'tenant'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$GoogleProtobufEmpty>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$GoogleProtobufEmpty>(parameters);
-      }
-    }
-
-    /**
-     * Get a push notification config for a task.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const discoveryengine = google.discoveryengine('v1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res =
-     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.tasks.pushNotificationConfigs.get(
-     *       {
-     *         // The resource name of the config to retrieve. Format: tasks/{task_id\}/pushNotificationConfigs/{config_id\}
-     *         name: 'tasks/my-task/pushNotificationConfigs/my-pushNotificationConfig',
-     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     *         tenant:
-     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
-     *       },
-     *     );
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "name": "my_name",
-     *   //   "pushNotificationConfig": {}
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    get(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Get,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    get(
-      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Get,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$A2aV1TaskPushNotificationConfig>>;
-    get(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Get,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    get(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Get,
-      options:
-        | MethodOptions
-        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>,
-      callback: BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
-    ): void;
-    get(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Get,
-      callback: BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
-    ): void;
-    get(
-      callback: BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
-    ): void;
-    get(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Get
-        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$A2aV1TaskPushNotificationConfig>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$A2aV1TaskPushNotificationConfig>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Get;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params =
-          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Get;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://discoveryengine.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/{+tenant}/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['tenant', 'name'],
-        pathParams: ['name', 'tenant'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$A2aV1TaskPushNotificationConfig>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$A2aV1TaskPushNotificationConfig>(
-          parameters
-        );
-      }
-    }
-
-    /**
-     * Get a list of push notifications configured for a task.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const discoveryengine = google.discoveryengine('v1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res =
-     *     await discoveryengine.projects.locations.collections.engines.assistants.agents.tasks.pushNotificationConfigs.list(
-     *       {
-     *         // For AIP-158 these fields are present. Usually not used/needed. The maximum number of configurations to return. If unspecified, all configs will be returned.
-     *         pageSize: 'placeholder-value',
-     *         // A page token received from a previous ListTaskPushNotificationConfigRequest call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListTaskPushNotificationConfigRequest` must match the call that provided the page token.
-     *         pageToken: 'placeholder-value',
-     *         // The parent task resource. Format: tasks/{task_id\}
-     *         parent: 'tasks/my-task',
-     *         // Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     *         tenant:
-     *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/assistants/my-assistant/agents/my-agent',
-     *       },
-     *     );
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "configs": [],
-     *   //   "nextPageToken": "my_nextPageToken"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    list(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$List,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    list(
-      params?: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$List,
-      options?: MethodOptions
-    ): Promise<
-      GaxiosResponseWithHTTP2<Schema$A2aV1ListTaskPushNotificationConfigResponse>
-    >;
-    list(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$List,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    list(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$List,
-      options:
-        | MethodOptions
-        | BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>,
-      callback: BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>
-    ): void;
-    list(
-      params: Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$List,
-      callback: BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>
-    ): void;
-    list(
-      callback: BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>
-    ): void;
-    list(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$List
-        | BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$A2aV1ListTaskPushNotificationConfigResponse>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<
-          GaxiosResponseWithHTTP2<Schema$A2aV1ListTaskPushNotificationConfigResponse>
-        >
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$List;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params =
-          {} as Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$List;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://discoveryengine.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (
-              rootUrl + '/{+tenant}/{+parent}/pushNotificationConfigs'
-            ).replace(/([^:]\/)\/+/g, '$1'),
-            method: 'GET',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['tenant', 'parent'],
-        pathParams: ['parent', 'tenant'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$A2aV1ListTaskPushNotificationConfigResponse>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$A2aV1ListTaskPushNotificationConfigResponse>(
-          parameters
-        );
-      }
-    }
-  }
-
-  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Create extends StandardParameters {
-    /**
-     * Required. The ID for the new config.
-     */
-    configId?: string;
-    /**
-     * Required. The parent task resource for this config. Format: tasks/{task_id\}
-     */
-    parent?: string;
-    /**
-     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     */
-    tenant?: string;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$A2aV1TaskPushNotificationConfig;
-  }
-  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Delete extends StandardParameters {
-    /**
-     * The resource name of the config to delete. Format: tasks/{task_id\}/pushNotificationConfigs/{config_id\}
-     */
-    name?: string;
-    /**
-     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     */
-    tenant?: string;
-  }
-  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$Get extends StandardParameters {
-    /**
-     * The resource name of the config to retrieve. Format: tasks/{task_id\}/pushNotificationConfigs/{config_id\}
-     */
-    name?: string;
-    /**
-     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     */
-    tenant?: string;
-  }
-  export interface Params$Resource$Projects$Locations$Collections$Engines$Assistants$Agents$Tasks$Pushnotificationconfigs$List extends StandardParameters {
-    /**
-     * For AIP-158 these fields are present. Usually not used/needed. The maximum number of configurations to return. If unspecified, all configs will be returned.
-     */
-    pageSize?: number;
-    /**
-     * A page token received from a previous ListTaskPushNotificationConfigRequest call. Provide this to retrieve the subsequent page. When paginating, all other parameters provided to `ListTaskPushNotificationConfigRequest` must match the call that provided the page token.
-     */
-    pageToken?: string;
-    /**
-     * The parent task resource. Format: tasks/{task_id\}
-     */
-    parent?: string;
-    /**
-     * Optional tenant, provided as a path parameter. Experimental, might still change for 1.0 release.
-     */
-    tenant?: string;
-  }
-
   export class Resource$Projects$Locations$Collections$Engines$Completionconfig {
     context: APIRequestContext;
     constructor(context: APIRequestContext) {
@@ -39832,6 +41375,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud_search.query',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -40027,6 +41571,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -40213,6 +41758,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -40353,6 +41899,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -40513,6 +42060,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -40674,6 +42222,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -40924,6 +42473,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -41096,6 +42646,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -41270,6 +42821,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -41410,6 +42962,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -41567,6 +43120,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -41732,6 +43286,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -41983,6 +43538,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -42129,6 +43685,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -42279,6 +43836,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -42491,6 +44049,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -42502,7 +44061,7 @@ export namespace discoveryengine_v1 {
      *   const res =
      *     await discoveryengine.projects.locations.collections.engines.servingConfigs.answer(
      *       {
-     *         // Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. This field is used to identify the serving configuration name, set of models used to make the search.
+     *         // Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. Or the resource name of the agent engine serving config, such as: `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_agent_answer`. (use when `enable_agent_invocation` set to true, and you have custom `AI_MODE` agent engine configured) This field is used to identify the serving configuration name, set of models used to make the search.
      *         servingConfig:
      *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/servingConfigs/my-servingConfig',
      *
@@ -42668,6 +44227,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -42872,6 +44432,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -43012,6 +44573,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -43183,6 +44745,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -43344,6 +44907,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -43544,6 +45108,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -43717,6 +45282,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -43741,13 +45307,16 @@ export namespace discoveryengine_v1 {
      *           //   "canonicalFilter": "my_canonicalFilter",
      *           //   "contentSearchSpec": {},
      *           //   "crowdingSpecs": [],
+     *           //   "customRankingParams": {},
      *           //   "dataStoreSpecs": [],
      *           //   "displaySpec": {},
+     *           //   "entity": "my_entity",
      *           //   "facetSpecs": [],
      *           //   "filter": "my_filter",
      *           //   "imageQuery": {},
      *           //   "languageCode": "my_languageCode",
      *           //   "naturalLanguageQueryUnderstandingSpec": {},
+     *           //   "numResultsPerDataStore": 0,
      *           //   "offset": 0,
      *           //   "oneBoxPageSize": 0,
      *           //   "orderBy": "my_orderBy",
@@ -43926,6 +45495,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -43950,13 +45520,16 @@ export namespace discoveryengine_v1 {
      *           //   "canonicalFilter": "my_canonicalFilter",
      *           //   "contentSearchSpec": {},
      *           //   "crowdingSpecs": [],
+     *           //   "customRankingParams": {},
      *           //   "dataStoreSpecs": [],
      *           //   "displaySpec": {},
+     *           //   "entity": "my_entity",
      *           //   "facetSpecs": [],
      *           //   "filter": "my_filter",
      *           //   "imageQuery": {},
      *           //   "languageCode": "my_languageCode",
      *           //   "naturalLanguageQueryUnderstandingSpec": {},
+     *           //   "numResultsPerDataStore": 0,
      *           //   "offset": 0,
      *           //   "oneBoxPageSize": 0,
      *           //   "orderBy": "my_orderBy",
@@ -44134,6 +45707,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -44145,7 +45719,7 @@ export namespace discoveryengine_v1 {
      *   const res =
      *     await discoveryengine.projects.locations.collections.engines.servingConfigs.streamAnswer(
      *       {
-     *         // Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. This field is used to identify the serving configuration name, set of models used to make the search.
+     *         // Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. Or the resource name of the agent engine serving config, such as: `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_agent_answer`. (use when `enable_agent_invocation` set to true, and you have custom `AI_MODE` agent engine configured) This field is used to identify the serving configuration name, set of models used to make the search.
      *         servingConfig:
      *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine/servingConfigs/my-servingConfig',
      *
@@ -44289,7 +45863,7 @@ export namespace discoveryengine_v1 {
 
   export interface Params$Resource$Projects$Locations$Collections$Engines$Servingconfigs$Answer extends StandardParameters {
     /**
-     * Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. This field is used to identify the serving configuration name, set of models used to make the search.
+     * Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. Or the resource name of the agent engine serving config, such as: `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_agent_answer`. (use when `enable_agent_invocation` set to true, and you have custom `AI_MODE` agent engine configured) This field is used to identify the serving configuration name, set of models used to make the search.
      */
     servingConfig?: string;
 
@@ -44389,7 +45963,7 @@ export namespace discoveryengine_v1 {
   }
   export interface Params$Resource$Projects$Locations$Collections$Engines$Servingconfigs$Streamanswer extends StandardParameters {
     /**
-     * Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. This field is used to identify the serving configuration name, set of models used to make the search.
+     * Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. Or the resource name of the agent engine serving config, such as: `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_agent_answer`. (use when `enable_agent_invocation` set to true, and you have custom `AI_MODE` agent engine configured) This field is used to identify the serving configuration name, set of models used to make the search.
      */
     servingConfig?: string;
 
@@ -44436,6 +46010,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -44450,6 +46025,8 @@ export namespace discoveryengine_v1 {
      *         // Required. Full resource name of parent data store. Format: `projects/{project\}/locations/{location\}/collections/{collection\}/dataStores/{data_store_id\}`
      *         parent:
      *           'projects/my-project/locations/my-location/collections/my-collection/engines/my-engine',
+     *         // Optional. The ID to use for the session, which will become the final component of the session's resource name. This value should be 1-63 characters, and valid characters are /a-z0-9{0,61\}[a-z0-9]/. If not specified, a unique ID will be generated.
+     *         sessionId: 'placeholder-value',
      *
      *         // Request body metadata
      *         requestBody: {
@@ -44617,6 +46194,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -44758,6 +46336,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -44919,6 +46498,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -45083,6 +46663,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -45242,6 +46823,10 @@ export namespace discoveryengine_v1 {
      * Required. Full resource name of parent data store. Format: `projects/{project\}/locations/{location\}/collections/{collection\}/dataStores/{data_store_id\}`
      */
     parent?: string;
+    /**
+     * Optional. The ID to use for the session, which will become the final component of the session's resource name. This value should be 1-63 characters, and valid characters are /a-z0-9{0,61\}[a-z0-9]/. If not specified, a unique ID will be generated.
+     */
+    sessionId?: string;
 
     /**
      * Request body metadata
@@ -45333,6 +46918,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -45513,6 +47099,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -45707,6 +47294,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -45978,6 +47566,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -46126,6 +47715,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -46383,6 +47973,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -46547,6 +48138,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -46584,6 +48176,7 @@ export namespace discoveryengine_v1 {
      *       //   "defaultSchemaId": "my_defaultSchemaId",
      *       //   "displayName": "my_displayName",
      *       //   "documentProcessingConfig": {},
+     *       //   "federatedSearchConfig": {},
      *       //   "healthcareFhirConfig": {},
      *       //   "identityMappingStore": "my_identityMappingStore",
      *       //   "industryVertical": "my_industryVertical",
@@ -46735,6 +48328,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -46881,6 +48475,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -46908,6 +48503,7 @@ export namespace discoveryengine_v1 {
      *   //   "defaultSchemaId": "my_defaultSchemaId",
      *   //   "displayName": "my_displayName",
      *   //   "documentProcessingConfig": {},
+     *   //   "federatedSearchConfig": {},
      *   //   "healthcareFhirConfig": {},
      *   //   "identityMappingStore": "my_identityMappingStore",
      *   //   "industryVertical": "my_industryVertical",
@@ -47050,6 +48646,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -47200,6 +48797,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -47358,6 +48956,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -47387,6 +48986,7 @@ export namespace discoveryengine_v1 {
      *       //   "defaultSchemaId": "my_defaultSchemaId",
      *       //   "displayName": "my_displayName",
      *       //   "documentProcessingConfig": {},
+     *       //   "federatedSearchConfig": {},
      *       //   "healthcareFhirConfig": {},
      *       //   "identityMappingStore": "my_identityMappingStore",
      *       //   "industryVertical": "my_industryVertical",
@@ -47416,6 +49016,7 @@ export namespace discoveryengine_v1 {
      *   //   "defaultSchemaId": "my_defaultSchemaId",
      *   //   "displayName": "my_displayName",
      *   //   "documentProcessingConfig": {},
+     *   //   "federatedSearchConfig": {},
      *   //   "healthcareFhirConfig": {},
      *   //   "identityMappingStore": "my_identityMappingStore",
      *   //   "industryVertical": "my_industryVertical",
@@ -47680,6 +49281,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -47862,6 +49464,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -48048,6 +49651,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -48188,6 +49792,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -48348,6 +49953,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -48524,6 +50130,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -48685,6 +50292,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -48869,6 +50477,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -49125,6 +50734,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -49271,6 +50881,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -49421,6 +51032,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -49635,6 +51247,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud_search.query',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -49831,6 +51444,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -49996,6 +51610,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -50185,6 +51800,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -50369,6 +51985,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -50507,6 +52124,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -50666,6 +52284,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -50828,6 +52447,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -51076,6 +52696,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -51246,6 +52867,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -51418,6 +53040,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -51556,6 +53179,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -51711,6 +53335,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -51874,6 +53499,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -52135,6 +53761,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -52283,6 +53910,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -52482,6 +54110,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -52630,6 +54259,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -52829,6 +54459,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -52993,6 +54624,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -53141,6 +54773,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -53292,6 +54925,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -53449,6 +55083,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -53674,6 +55309,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -53684,7 +55320,7 @@ export namespace discoveryengine_v1 {
      *   // Do the magic
      *   const res =
      *     await discoveryengine.projects.locations.dataStores.servingConfigs.answer({
-     *       // Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. This field is used to identify the serving configuration name, set of models used to make the search.
+     *       // Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. Or the resource name of the agent engine serving config, such as: `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_agent_answer`. (use when `enable_agent_invocation` set to true, and you have custom `AI_MODE` agent engine configured) This field is used to identify the serving configuration name, set of models used to make the search.
      *       servingConfig:
      *         'projects/my-project/locations/my-location/dataStores/my-dataStore/servingConfigs/my-servingConfig',
      *
@@ -53849,6 +55485,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -54051,6 +55688,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -54189,6 +55827,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -54358,6 +55997,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -54517,6 +56157,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -54715,6 +56356,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -54888,6 +56530,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -54911,13 +56554,16 @@ export namespace discoveryengine_v1 {
      *         //   "canonicalFilter": "my_canonicalFilter",
      *         //   "contentSearchSpec": {},
      *         //   "crowdingSpecs": [],
+     *         //   "customRankingParams": {},
      *         //   "dataStoreSpecs": [],
      *         //   "displaySpec": {},
+     *         //   "entity": "my_entity",
      *         //   "facetSpecs": [],
      *         //   "filter": "my_filter",
      *         //   "imageQuery": {},
      *         //   "languageCode": "my_languageCode",
      *         //   "naturalLanguageQueryUnderstandingSpec": {},
+     *         //   "numResultsPerDataStore": 0,
      *         //   "offset": 0,
      *         //   "oneBoxPageSize": 0,
      *         //   "orderBy": "my_orderBy",
@@ -55095,6 +56741,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -55119,13 +56766,16 @@ export namespace discoveryengine_v1 {
      *           //   "canonicalFilter": "my_canonicalFilter",
      *           //   "contentSearchSpec": {},
      *           //   "crowdingSpecs": [],
+     *           //   "customRankingParams": {},
      *           //   "dataStoreSpecs": [],
      *           //   "displaySpec": {},
+     *           //   "entity": "my_entity",
      *           //   "facetSpecs": [],
      *           //   "filter": "my_filter",
      *           //   "imageQuery": {},
      *           //   "languageCode": "my_languageCode",
      *           //   "naturalLanguageQueryUnderstandingSpec": {},
+     *           //   "numResultsPerDataStore": 0,
      *           //   "offset": 0,
      *           //   "oneBoxPageSize": 0,
      *           //   "orderBy": "my_orderBy",
@@ -55303,6 +56953,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -55314,7 +56965,7 @@ export namespace discoveryengine_v1 {
      *   const res =
      *     await discoveryengine.projects.locations.dataStores.servingConfigs.streamAnswer(
      *       {
-     *         // Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. This field is used to identify the serving configuration name, set of models used to make the search.
+     *         // Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. Or the resource name of the agent engine serving config, such as: `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_agent_answer`. (use when `enable_agent_invocation` set to true, and you have custom `AI_MODE` agent engine configured) This field is used to identify the serving configuration name, set of models used to make the search.
      *         servingConfig:
      *           'projects/my-project/locations/my-location/dataStores/my-dataStore/servingConfigs/my-servingConfig',
      *
@@ -55458,7 +57109,7 @@ export namespace discoveryengine_v1 {
 
   export interface Params$Resource$Projects$Locations$Datastores$Servingconfigs$Answer extends StandardParameters {
     /**
-     * Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. This field is used to identify the serving configuration name, set of models used to make the search.
+     * Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. Or the resource name of the agent engine serving config, such as: `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_agent_answer`. (use when `enable_agent_invocation` set to true, and you have custom `AI_MODE` agent engine configured) This field is used to identify the serving configuration name, set of models used to make the search.
      */
     servingConfig?: string;
 
@@ -55558,7 +57209,7 @@ export namespace discoveryengine_v1 {
   }
   export interface Params$Resource$Projects$Locations$Datastores$Servingconfigs$Streamanswer extends StandardParameters {
     /**
-     * Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. This field is used to identify the serving configuration name, set of models used to make the search.
+     * Required. The resource name of the Search serving config, such as `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_serving_config`, or `projects/x/locations/global/collections/default_collection/dataStores/x/servingConfigs/default_serving_config`. Or the resource name of the agent engine serving config, such as: `projects/x/locations/global/collections/default_collection/engines/x/servingConfigs/default_agent_answer`. (use when `enable_agent_invocation` set to true, and you have custom `AI_MODE` agent engine configured) This field is used to identify the serving configuration name, set of models used to make the search.
      */
     servingConfig?: string;
 
@@ -55605,6 +57256,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -55618,6 +57270,8 @@ export namespace discoveryengine_v1 {
      *       // Required. Full resource name of parent data store. Format: `projects/{project\}/locations/{location\}/collections/{collection\}/dataStores/{data_store_id\}`
      *       parent:
      *         'projects/my-project/locations/my-location/dataStores/my-dataStore',
+     *       // Optional. The ID to use for the session, which will become the final component of the session's resource name. This value should be 1-63 characters, and valid characters are /a-z0-9{0,61\}[a-z0-9]/. If not specified, a unique ID will be generated.
+     *       sessionId: 'placeholder-value',
      *
      *       // Request body metadata
      *       requestBody: {
@@ -55784,6 +57438,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -55923,6 +57578,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -56083,6 +57739,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -56248,6 +57905,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -56405,6 +58063,10 @@ export namespace discoveryengine_v1 {
      * Required. Full resource name of parent data store. Format: `projects/{project\}/locations/{location\}/collections/{collection\}/dataStores/{data_store_id\}`
      */
     parent?: string;
+    /**
+     * Optional. The ID to use for the session, which will become the final component of the session's resource name. This value should be 1-63 characters, and valid characters are /a-z0-9{0,61\}[a-z0-9]/. If not specified, a unique ID will be generated.
+     */
+    sessionId?: string;
 
     /**
      * Request body metadata
@@ -56496,6 +58158,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -56683,6 +58346,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -56842,6 +58506,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -57001,6 +58666,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -57205,6 +58871,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -57369,6 +59036,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -57519,6 +59187,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -57712,6 +59381,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -57874,6 +59544,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -58045,6 +59716,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -58195,6 +59867,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -58356,6 +60029,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -58518,6 +60192,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -58753,6 +60428,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -58916,6 +60592,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -59105,6 +60782,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -59258,6 +60936,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -59422,6 +61101,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -59584,6 +61264,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -59612,6 +61293,7 @@ export namespace discoveryengine_v1 {
      *         //   "directUserRequest": false,
      *         //   "documents": [],
      *         //   "engine": "my_engine",
+     *         //   "entity": "my_entity",
      *         //   "eventTime": "my_eventTime",
      *         //   "eventType": "my_eventType",
      *         //   "filter": "my_filter",
@@ -59641,6 +61323,7 @@ export namespace discoveryengine_v1 {
      *   //   "directUserRequest": false,
      *   //   "documents": [],
      *   //   "engine": "my_engine",
+     *   //   "entity": "my_entity",
      *   //   "eventTime": "my_eventTime",
      *   //   "eventType": "my_eventType",
      *   //   "filter": "my_filter",
@@ -59854,6 +61537,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -60046,6 +61730,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -60315,6 +62000,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -60506,6 +62192,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -60677,6 +62364,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -60825,6 +62513,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -60977,6 +62666,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -61138,6 +62828,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -61296,6 +62987,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -61456,6 +63148,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -61712,6 +63405,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -61862,6 +63556,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -62063,6 +63758,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -62246,6 +63942,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -62405,6 +64102,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -62629,6 +64327,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -62775,6 +64474,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -62983,6 +64683,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -63144,6 +64845,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -63329,6 +65031,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -63479,6 +65182,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -63640,6 +65344,7 @@ export namespace discoveryengine_v1 {
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.assist.readwrite',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -63666,6 +65371,7 @@ export namespace discoveryengine_v1 {
      *       //   "directUserRequest": false,
      *       //   "documents": [],
      *       //   "engine": "my_engine",
+     *       //   "entity": "my_entity",
      *       //   "eventTime": "my_eventTime",
      *       //   "eventType": "my_eventType",
      *       //   "filter": "my_filter",
@@ -63695,6 +65401,7 @@ export namespace discoveryengine_v1 {
      *   //   "directUserRequest": false,
      *   //   "documents": [],
      *   //   "engine": "my_engine",
+     *   //   "entity": "my_entity",
      *   //   "eventTime": "my_eventTime",
      *   //   "eventType": "my_eventType",
      *   //   "filter": "my_filter",
@@ -63903,6 +65610,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -64042,321 +65750,6 @@ export namespace discoveryengine_v1 {
     }
 
     /**
-     * Creates a new User Store.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const discoveryengine = google.discoveryengine('v1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: [
-     *       'https://www.googleapis.com/auth/cloud-platform',
-     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
-     *     ],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await discoveryengine.projects.locations.userStores.create({
-     *     // Required. The parent collection resource name, such as `projects/{project\}/locations/{location\}`.
-     *     parent: 'projects/my-project/locations/my-location',
-     *     // Required. The ID of the User Store to create. The ID must contain only letters (a-z, A-Z), numbers (0-9), underscores (_), and hyphens (-). The maximum length is 63 characters.
-     *     userStoreId: 'placeholder-value',
-     *
-     *     // Request body metadata
-     *     requestBody: {
-     *       // request body parameters
-     *       // {
-     *       //   "defaultLicenseConfig": "my_defaultLicenseConfig",
-     *       //   "displayName": "my_displayName",
-     *       //   "enableExpiredLicenseAutoUpdate": false,
-     *       //   "enableLicenseAutoRegister": false,
-     *       //   "name": "my_name"
-     *       // }
-     *     },
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "defaultLicenseConfig": "my_defaultLicenseConfig",
-     *   //   "displayName": "my_displayName",
-     *   //   "enableExpiredLicenseAutoUpdate": false,
-     *   //   "enableLicenseAutoRegister": false,
-     *   //   "name": "my_name"
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    create(
-      params: Params$Resource$Projects$Locations$Userstores$Create,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    create(
-      params?: Params$Resource$Projects$Locations$Userstores$Create,
-      options?: MethodOptions
-    ): Promise<
-      GaxiosResponseWithHTTP2<Schema$GoogleCloudDiscoveryengineV1UserStore>
-    >;
-    create(
-      params: Params$Resource$Projects$Locations$Userstores$Create,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    create(
-      params: Params$Resource$Projects$Locations$Userstores$Create,
-      options:
-        | MethodOptions
-        | BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1UserStore>,
-      callback: BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1UserStore>
-    ): void;
-    create(
-      params: Params$Resource$Projects$Locations$Userstores$Create,
-      callback: BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1UserStore>
-    ): void;
-    create(
-      callback: BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1UserStore>
-    ): void;
-    create(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Userstores$Create
-        | BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1UserStore>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1UserStore>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$GoogleCloudDiscoveryengineV1UserStore>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<
-          GaxiosResponseWithHTTP2<Schema$GoogleCloudDiscoveryengineV1UserStore>
-        >
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Userstores$Create;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Userstores$Create;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://discoveryengine.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1/{+parent}/userStores').replace(
-              /([^:]\/)\/+/g,
-              '$1'
-            ),
-            method: 'POST',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['parent'],
-        pathParams: ['parent'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$GoogleCloudDiscoveryengineV1UserStore>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$GoogleCloudDiscoveryengineV1UserStore>(
-          parameters
-        );
-      }
-    }
-
-    /**
-     * Deletes the User Store.
-     * @example
-     * ```js
-     * // Before running the sample:
-     * // - Enable the API at:
-     * //   https://console.developers.google.com/apis/api/discoveryengine.googleapis.com
-     * // - Login into gcloud by running:
-     * //   ```sh
-     * //   $ gcloud auth application-default login
-     * //   ```
-     * // - Install the npm module by running:
-     * //   ```sh
-     * //   $ npm install googleapis
-     * //   ```
-     *
-     * const {google} = require('googleapis');
-     * const discoveryengine = google.discoveryengine('v1');
-     *
-     * async function main() {
-     *   const auth = new google.auth.GoogleAuth({
-     *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: [
-     *       'https://www.googleapis.com/auth/cloud-platform',
-     *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
-     *     ],
-     *   });
-     *
-     *   // Acquire an auth client, and bind it to all future calls
-     *   const authClient = await auth.getClient();
-     *   google.options({auth: authClient});
-     *
-     *   // Do the magic
-     *   const res = await discoveryengine.projects.locations.userStores.delete({
-     *     // Required. The name of the User Store to delete. Format: `projects/{project\}/locations/{location\}/userStores/{user_store_id\}`
-     *     name: 'projects/my-project/locations/my-location/userStores/my-userStore',
-     *   });
-     *   console.log(res.data);
-     *
-     *   // Example response
-     *   // {
-     *   //   "done": false,
-     *   //   "error": {},
-     *   //   "metadata": {},
-     *   //   "name": "my_name",
-     *   //   "response": {}
-     *   // }
-     * }
-     *
-     * main().catch(e => {
-     *   console.error(e);
-     *   throw e;
-     * });
-     *
-     * ```
-     *
-     * @param params - Parameters for request
-     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
-     * @param callback - Optional callback that handles the response.
-     * @returns A promise if used with async/await, or void if used with a callback.
-     */
-    delete(
-      params: Params$Resource$Projects$Locations$Userstores$Delete,
-      options: StreamMethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
-    delete(
-      params?: Params$Resource$Projects$Locations$Userstores$Delete,
-      options?: MethodOptions
-    ): Promise<GaxiosResponseWithHTTP2<Schema$GoogleLongrunningOperation>>;
-    delete(
-      params: Params$Resource$Projects$Locations$Userstores$Delete,
-      options: StreamMethodOptions | BodyResponseCallback<Readable>,
-      callback: BodyResponseCallback<Readable>
-    ): void;
-    delete(
-      params: Params$Resource$Projects$Locations$Userstores$Delete,
-      options:
-        | MethodOptions
-        | BodyResponseCallback<Schema$GoogleLongrunningOperation>,
-      callback: BodyResponseCallback<Schema$GoogleLongrunningOperation>
-    ): void;
-    delete(
-      params: Params$Resource$Projects$Locations$Userstores$Delete,
-      callback: BodyResponseCallback<Schema$GoogleLongrunningOperation>
-    ): void;
-    delete(
-      callback: BodyResponseCallback<Schema$GoogleLongrunningOperation>
-    ): void;
-    delete(
-      paramsOrCallback?:
-        | Params$Resource$Projects$Locations$Userstores$Delete
-        | BodyResponseCallback<Schema$GoogleLongrunningOperation>
-        | BodyResponseCallback<Readable>,
-      optionsOrCallback?:
-        | MethodOptions
-        | StreamMethodOptions
-        | BodyResponseCallback<Schema$GoogleLongrunningOperation>
-        | BodyResponseCallback<Readable>,
-      callback?:
-        | BodyResponseCallback<Schema$GoogleLongrunningOperation>
-        | BodyResponseCallback<Readable>
-    ):
-      | void
-      | Promise<GaxiosResponseWithHTTP2<Schema$GoogleLongrunningOperation>>
-      | Promise<GaxiosResponseWithHTTP2<Readable>> {
-      let params = (paramsOrCallback ||
-        {}) as Params$Resource$Projects$Locations$Userstores$Delete;
-      let options = (optionsOrCallback || {}) as MethodOptions;
-
-      if (typeof paramsOrCallback === 'function') {
-        callback = paramsOrCallback;
-        params = {} as Params$Resource$Projects$Locations$Userstores$Delete;
-        options = {};
-      }
-
-      if (typeof optionsOrCallback === 'function') {
-        callback = optionsOrCallback;
-        options = {};
-      }
-
-      const rootUrl =
-        options.rootUrl || 'https://discoveryengine.googleapis.com/';
-      const parameters = {
-        options: Object.assign(
-          {
-            url: (rootUrl + '/v1/{+name}').replace(/([^:]\/)\/+/g, '$1'),
-            method: 'DELETE',
-            apiVersion: '',
-          },
-          options
-        ),
-        params,
-        requiredParams: ['name'],
-        pathParams: ['name'],
-        context: this.context,
-      };
-      if (callback) {
-        createAPIRequest<Schema$GoogleLongrunningOperation>(
-          parameters,
-          callback as BodyResponseCallback<unknown>
-        );
-      } else {
-        return createAPIRequest<Schema$GoogleLongrunningOperation>(parameters);
-      }
-    }
-
-    /**
      * Gets the User Store.
      * @example
      * ```js
@@ -64381,6 +65774,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -64533,6 +65927,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -64686,27 +66081,6 @@ export namespace discoveryengine_v1 {
      */
     requestBody?: Schema$GoogleCloudDiscoveryengineV1BatchUpdateUserLicensesRequest;
   }
-  export interface Params$Resource$Projects$Locations$Userstores$Create extends StandardParameters {
-    /**
-     * Required. The parent collection resource name, such as `projects/{project\}/locations/{location\}`.
-     */
-    parent?: string;
-    /**
-     * Required. The ID of the User Store to create. The ID must contain only letters (a-z, A-Z), numbers (0-9), underscores (_), and hyphens (-). The maximum length is 63 characters.
-     */
-    userStoreId?: string;
-
-    /**
-     * Request body metadata
-     */
-    requestBody?: Schema$GoogleCloudDiscoveryengineV1UserStore;
-  }
-  export interface Params$Resource$Projects$Locations$Userstores$Delete extends StandardParameters {
-    /**
-     * Required. The name of the User Store to delete. Format: `projects/{project\}/locations/{location\}/userStores/{user_store_id\}`
-     */
-    name?: string;
-  }
   export interface Params$Resource$Projects$Locations$Userstores$Get extends StandardParameters {
     /**
      * Required. The name of the User Store to get. Format: `projects/{project\}/locations/{location\}/userStores/{user_store_id\}`
@@ -64760,6 +66134,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -64930,6 +66305,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -64940,7 +66316,9 @@ export namespace discoveryengine_v1 {
      *   // Do the magic
      *   const res =
      *     await discoveryengine.projects.locations.userStores.userLicenses.list({
-     *       // Optional. The order in which the UserLicenses are listed. The value must be a comma-separated list of fields. Default sorting order is ascending. To specify descending order for a field, append a " desc" suffix. Redundant space characters in the syntax are insignificant. Supported fields: * `license_assignment_state` * `user_principal` * `user_profile` * `last_login_date` * `update_time` If not set, the default ordering is by `user_principal`. Examples: * `user_principal desc` to order by `user_principal` in descending order. * `license_assignment_state` to order by `license_assignment_state` in ascending order. * `last_login_date desc` to order by `last_login_date` in descending order. * `update_time desc` to order by `update_time` in descending order. * `last_login_date desc, user_principal` to order by `last_login_date` in descending order and then by `user_principal` in ascending order.
+     *       // Optional. Filter for the list request. Supported fields: * `license_assignment_state` * `user_principal` * Examples: * `license_assignment_state = ASSIGNED` to list assigned user licenses. * `license_assignment_state = NO_LICENSE` to list not licensed users. * `license_assignment_state = NO_LICENSE_ATTEMPTED_LOGIN` to list users who attempted login but no license assigned. * `license_assignment_state != NO_LICENSE_ATTEMPTED_LOGIN` to filter out users who attempted login but no license assigned. * `user_principal = user1@example.com` to list user license for `user1@example.com`.
+     *       filter: 'placeholder-value',
+     *       // Optional. The order in which the UserLicenses are listed. The value must be a comma-separated list of fields. Default sorting order is ascending. To specify descending order for a field, append a " desc" suffix. Redundant space characters in the syntax are insignificant. Supported fields (only `user_principal` is supported for now): * `user_principal` If not set, the default ordering is by `user_principal`. Examples: * `user_principal` to order by `user_principal` in ascending order. * `user_principal desc` to order by `user_principal` in descending order.
      *       orderBy: 'placeholder-value',
      *       // Optional. Requested page size. Server may return fewer items than requested. If unspecified, defaults to 10. The maximum value is 50; values above 50 will be coerced to 50. If this field is negative, an INVALID_ARGUMENT error is returned.
      *       pageSize: 'placeholder-value',
@@ -65069,7 +66447,11 @@ export namespace discoveryengine_v1 {
 
   export interface Params$Resource$Projects$Locations$Userstores$Userlicenses$List extends StandardParameters {
     /**
-     * Optional. The order in which the UserLicenses are listed. The value must be a comma-separated list of fields. Default sorting order is ascending. To specify descending order for a field, append a " desc" suffix. Redundant space characters in the syntax are insignificant. Supported fields: * `license_assignment_state` * `user_principal` * `user_profile` * `last_login_date` * `update_time` If not set, the default ordering is by `user_principal`. Examples: * `user_principal desc` to order by `user_principal` in descending order. * `license_assignment_state` to order by `license_assignment_state` in ascending order. * `last_login_date desc` to order by `last_login_date` in descending order. * `update_time desc` to order by `update_time` in descending order. * `last_login_date desc, user_principal` to order by `last_login_date` in descending order and then by `user_principal` in ascending order.
+     * Optional. Filter for the list request. Supported fields: * `license_assignment_state` * `user_principal` * Examples: * `license_assignment_state = ASSIGNED` to list assigned user licenses. * `license_assignment_state = NO_LICENSE` to list not licensed users. * `license_assignment_state = NO_LICENSE_ATTEMPTED_LOGIN` to list users who attempted login but no license assigned. * `license_assignment_state != NO_LICENSE_ATTEMPTED_LOGIN` to filter out users who attempted login but no license assigned. * `user_principal = user1@example.com` to list user license for `user1@example.com`.
+     */
+    filter?: string;
+    /**
+     * Optional. The order in which the UserLicenses are listed. The value must be a comma-separated list of fields. Default sorting order is ascending. To specify descending order for a field, append a " desc" suffix. Redundant space characters in the syntax are insignificant. Supported fields (only `user_principal` is supported for now): * `user_principal` If not set, the default ordering is by `user_principal`. Examples: * `user_principal` to order by `user_principal` in ascending order. * `user_principal desc` to order by `user_principal` in descending order.
      */
     orderBy?: string;
     /**
@@ -65117,6 +66499,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -65259,6 +66642,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
@@ -65405,6 +66789,7 @@ export namespace discoveryengine_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/discoveryengine.readwrite',
+     *       'https://www.googleapis.com/auth/discoveryengine.serving.readwrite',
      *     ],
      *   });
      *
