@@ -204,6 +204,15 @@ export namespace gkehub_v1alpha {
     workloadIdentityPool?: string | null;
   }
   /**
+   * Configuration for automatic upgrades.
+   */
+  export interface Schema$AutoUpgradeConfig {
+    /**
+     * Optional. Specifies the scope of automation for the creation of rollouts. Represents the types of rollouts (version upgrades) the sequence should initiate automatically. If this field is `unset`, it defaults to all types. If this field is `set` but the internal `upgrade_types` list is `empty`, most automatic rollouts are disabled for this sequence. Exceptions are rollouts enforcing our security policies (e.g. such as end-of-support and outdated control plane patch enforcements). These policy enforcements cannot be disabled.
+     */
+    rolloutCreationScope?: Schema$RolloutCreationScope;
+  }
+  /**
    * BinaryAuthorizationConfig defines the fleet level configuration of binary authorization feature.
    */
   export interface Schema$BinaryAuthorizationConfig {
@@ -1582,6 +1591,15 @@ export namespace gkehub_v1alpha {
     mode?: string | null;
   }
   /**
+   * Request message for force-completing a rollout stage.
+   */
+  export interface Schema$ForceCompleteRolloutStageRequest {
+    /**
+     * Required. The stage number to force-complete.
+     */
+    stageNumber?: number | null;
+  }
+  /**
    * GenerateConnectManifestResponse contains manifest information for installing/upgrading a Connect agent.
    */
   export interface Schema$GenerateConnectManifestResponse {
@@ -1994,7 +2012,7 @@ export namespace gkehub_v1alpha {
      */
     nodeCount?: number | null;
     /**
-     * Output only. Node providerID as reported by the first node in the list of nodes on the Kubernetes endpoint. On Kubernetes platforms that support zero-node clusters (like GKE-on-GCP), the node_count will be zero and the node_provider_id will be empty.
+     * Output only. Node providerID as reported by the first node in the list of nodes on the Kubernetes endpoint. On Kubernetes platforms that support zero-node clusters (like GKE on Google Cloud), the node_count will be zero and the node_provider_id will be empty.
      */
     nodeProviderId?: string | null;
     /**
@@ -2395,7 +2413,7 @@ export namespace gkehub_v1alpha {
      */
     edgeCluster?: Schema$EdgeCluster;
     /**
-     * Optional. Specific information for a GKE-on-GCP cluster.
+     * Optional. Specific information for a GKE on Google Cloud cluster.
      */
     gkeCluster?: Schema$GkeCluster;
     /**
@@ -3118,7 +3136,7 @@ export namespace gkehub_v1alpha {
     predefinedRole?: string | null;
   }
   /**
-   * Rollout contains the Rollout metadata and configuration.
+   * Rollout contains the Rollout metadata and configuration. Next ID: 28
    */
   export interface Schema$Rollout {
     /**
@@ -3170,6 +3188,10 @@ export namespace gkehub_v1alpha {
      */
     stateReason?: string | null;
     /**
+     * Output only. StateReasonType specifies the reason type of the Rollout state.
+     */
+    stateReasonType?: string | null;
+    /**
      * Output only. Google-generated UUID for this resource. This is unique across all Rollout resources. If a Rollout resource is deleted and another resource with the same name is created, it gets a different uid.
      */
     uid?: string | null;
@@ -3181,6 +3203,15 @@ export namespace gkehub_v1alpha {
      * Optional. Config for version upgrade of clusters.
      */
     versionUpgrade?: Schema$VersionUpgrade;
+  }
+  /**
+   * The scope for automatic rollout creation.
+   */
+  export interface Schema$RolloutCreationScope {
+    /**
+     * Optional. The list of enabled upgrade types.
+     */
+    upgradeTypes?: string[] | null;
   }
   /**
    * Metadata about single cluster (GKE Hub membership) that's part of this Rollout.
@@ -3204,6 +3235,10 @@ export namespace gkehub_v1alpha {
    */
   export interface Schema$RolloutSequence {
     /**
+     * Optional. Configuration for automatic upgrades. If this message is `unset`, the system applies default behavior.
+     */
+    autoUpgradeConfig?: Schema$AutoUpgradeConfig;
+    /**
      * Output only. The timestamp at which the Rollout Sequence was created.
      */
     createTime?: string | null;
@@ -3216,9 +3251,17 @@ export namespace gkehub_v1alpha {
      */
     displayName?: string | null;
     /**
+     * Output only. The resolved auto-upgrade options which are in effect.
+     */
+    effectiveAutoUpgradeConfig?: Schema$AutoUpgradeConfig;
+    /**
      * Output only. etag of the Rollout Sequence Ex. abc1234
      */
     etag?: string | null;
+    /**
+     * Optional. Selector for clusters to exclude from the Rollout Sequence.
+     */
+    ignoredClustersSelector?: Schema$ClusterSelector;
     /**
      * Optional. Labels for this Rollout Sequence.
      */
@@ -3249,6 +3292,10 @@ export namespace gkehub_v1alpha {
    */
   export interface Schema$RolloutSequenceState {
     /**
+     * Output only. The timestamp at which the LifecycleState was last changed. Used to track how long it has been in the current state.
+     */
+    lastStateChangeTime?: string | null;
+    /**
      * Output only. Lifecycle state of the Rollout Sequence.
      */
     lifecycleState?: string | null;
@@ -3262,23 +3309,23 @@ export namespace gkehub_v1alpha {
    */
   export interface Schema$RolloutStage {
     /**
-     * Optional. Output only. The time at which the wave ended.
+     * Optional. Output only. The time at which the stage ended.
      */
     endTime?: string | null;
     /**
-     * Optional. Duration to soak after this wave before starting the next wave.
+     * Optional. Duration to soak after this stage before starting the next stage.
      */
     soakDuration?: string | null;
     /**
-     * Output only. The wave number to which this status applies.
+     * Output only. The stage number to which this status applies.
      */
     stageNumber?: number | null;
     /**
-     * Optional. Output only. The time at which the wave started.
+     * Optional. Output only. The time at which the stage started.
      */
     startTime?: string | null;
     /**
-     * Output only. The state of the wave.
+     * Output only. The state of the stage.
      */
     state?: string | null;
   }
@@ -4167,7 +4214,7 @@ export namespace gkehub_v1alpha {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the ListLocationsRequest.name field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -4197,7 +4244,7 @@ export namespace gkehub_v1alpha {
      *
      *   // Do the magic
      *   const res = await gkehub.projects.locations.list({
-     *     // Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     *     // Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      *     extraLocationTypes: 'placeholder-value',
      *     // A filter to narrow down results to a preferred subset. The filtering language accepts strings like `"displayName=tokyo"`, and is documented in more detail in [AIP-160](https://google.aip.dev/160).
      *     filter: 'placeholder-value',
@@ -4323,7 +4370,7 @@ export namespace gkehub_v1alpha {
   }
   export interface Params$Resource$Projects$Locations$List extends StandardParameters {
     /**
-     * Optional. Do not use this field. It is unsupported and is ignored unless explicitly documented otherwise. This is primarily for internal usage.
+     * Optional. Do not use this field unless explicitly documented otherwise. This is primarily for internal usage.
      */
     extraLocationTypes?: string[];
     /**
@@ -11133,7 +11180,157 @@ export namespace gkehub_v1alpha {
     }
 
     /**
-     * Retrieve a single rollout.
+     * Force-completes a rollout stage. Only the active stage of an active rollout can be force-completed.
+     * @example
+     * ```js
+     * // Before running the sample:
+     * // - Enable the API at:
+     * //   https://console.developers.google.com/apis/api/gkehub.googleapis.com
+     * // - Login into gcloud by running:
+     * //   ```sh
+     * //   $ gcloud auth application-default login
+     * //   ```
+     * // - Install the npm module by running:
+     * //   ```sh
+     * //   $ npm install googleapis
+     * //   ```
+     *
+     * const {google} = require('googleapis');
+     * const gkehub = google.gkehub('v1alpha');
+     *
+     * async function main() {
+     *   const auth = new google.auth.GoogleAuth({
+     *     // Scopes can be specified either as an array or as a single, space-delimited string.
+     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *   });
+     *
+     *   // Acquire an auth client, and bind it to all future calls
+     *   const authClient = await auth.getClient();
+     *   google.options({auth: authClient});
+     *
+     *   // Do the magic
+     *   const res = await gkehub.projects.locations.rollouts.forceCompleteStage({
+     *     // Required. The name of the rollout. Format: projects/{project\}/locations/{location\}/rollouts/{rollout\}
+     *     name: 'projects/my-project/locations/my-location/rollouts/my-rollout',
+     *
+     *     // Request body metadata
+     *     requestBody: {
+     *       // request body parameters
+     *       // {
+     *       //   "stageNumber": 0
+     *       // }
+     *     },
+     *   });
+     *   console.log(res.data);
+     *
+     *   // Example response
+     *   // {
+     *   //   "done": false,
+     *   //   "error": {},
+     *   //   "metadata": {},
+     *   //   "name": "my_name",
+     *   //   "response": {}
+     *   // }
+     * }
+     *
+     * main().catch(e => {
+     *   console.error(e);
+     *   throw e;
+     * });
+     *
+     * ```
+     *
+     * @param params - Parameters for request
+     * @param options - Optionally override request options, such as `url`, `method`, and `encoding`.
+     * @param callback - Optional callback that handles the response.
+     * @returns A promise if used with async/await, or void if used with a callback.
+     */
+    forceCompleteStage(
+      params: Params$Resource$Projects$Locations$Rollouts$Forcecompletestage,
+      options: StreamMethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Readable>>;
+    forceCompleteStage(
+      params?: Params$Resource$Projects$Locations$Rollouts$Forcecompletestage,
+      options?: MethodOptions
+    ): Promise<GaxiosResponseWithHTTP2<Schema$Operation>>;
+    forceCompleteStage(
+      params: Params$Resource$Projects$Locations$Rollouts$Forcecompletestage,
+      options: StreamMethodOptions | BodyResponseCallback<Readable>,
+      callback: BodyResponseCallback<Readable>
+    ): void;
+    forceCompleteStage(
+      params: Params$Resource$Projects$Locations$Rollouts$Forcecompletestage,
+      options: MethodOptions | BodyResponseCallback<Schema$Operation>,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    forceCompleteStage(
+      params: Params$Resource$Projects$Locations$Rollouts$Forcecompletestage,
+      callback: BodyResponseCallback<Schema$Operation>
+    ): void;
+    forceCompleteStage(callback: BodyResponseCallback<Schema$Operation>): void;
+    forceCompleteStage(
+      paramsOrCallback?:
+        | Params$Resource$Projects$Locations$Rollouts$Forcecompletestage
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      optionsOrCallback?:
+        | MethodOptions
+        | StreamMethodOptions
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>,
+      callback?:
+        | BodyResponseCallback<Schema$Operation>
+        | BodyResponseCallback<Readable>
+    ):
+      | void
+      | Promise<GaxiosResponseWithHTTP2<Schema$Operation>>
+      | Promise<GaxiosResponseWithHTTP2<Readable>> {
+      let params = (paramsOrCallback ||
+        {}) as Params$Resource$Projects$Locations$Rollouts$Forcecompletestage;
+      let options = (optionsOrCallback || {}) as MethodOptions;
+
+      if (typeof paramsOrCallback === 'function') {
+        callback = paramsOrCallback;
+        params =
+          {} as Params$Resource$Projects$Locations$Rollouts$Forcecompletestage;
+        options = {};
+      }
+
+      if (typeof optionsOrCallback === 'function') {
+        callback = optionsOrCallback;
+        options = {};
+      }
+
+      const rootUrl = options.rootUrl || 'https://gkehub.googleapis.com/';
+      const parameters = {
+        options: Object.assign(
+          {
+            url: (rootUrl + '/v1alpha/{+name}:forceCompleteStage').replace(
+              /([^:]\/)\/+/g,
+              '$1'
+            ),
+            method: 'POST',
+            apiVersion: '',
+          },
+          options
+        ),
+        params,
+        requiredParams: ['name'],
+        pathParams: ['name'],
+        context: this.context,
+      };
+      if (callback) {
+        createAPIRequest<Schema$Operation>(
+          parameters,
+          callback as BodyResponseCallback<unknown>
+        );
+      } else {
+        return createAPIRequest<Schema$Operation>(parameters);
+      }
+    }
+
+    /**
+     * Retrieves a single rollout.
      * @example
      * ```js
      * // Before running the sample:
@@ -11182,6 +11379,7 @@ export namespace gkehub_v1alpha {
      *   //   "stages": [],
      *   //   "state": "my_state",
      *   //   "stateReason": "my_stateReason",
+     *   //   "stateReasonType": "my_stateReasonType",
      *   //   "uid": "my_uid",
      *   //   "updateTime": "my_updateTime",
      *   //   "versionUpgrade": {}
@@ -11281,7 +11479,7 @@ export namespace gkehub_v1alpha {
     }
 
     /**
-     * Retrieve the list of all rollouts.
+     * Retrieves the list of all rollouts.
      * @example
      * ```js
      * // Before running the sample:
@@ -11427,6 +11625,17 @@ export namespace gkehub_v1alpha {
     }
   }
 
+  export interface Params$Resource$Projects$Locations$Rollouts$Forcecompletestage extends StandardParameters {
+    /**
+     * Required. The name of the rollout. Format: projects/{project\}/locations/{location\}/rollouts/{rollout\}
+     */
+    name?: string;
+
+    /**
+     * Request body metadata
+     */
+    requestBody?: Schema$ForceCompleteRolloutStageRequest;
+  }
   export interface Params$Resource$Projects$Locations$Rollouts$Get extends StandardParameters {
     /**
      * Required. The name of the rollout to retrieve. projects/{project\}/locations/{location\}/rollouts/{rollout\}
@@ -11459,7 +11668,7 @@ export namespace gkehub_v1alpha {
     }
 
     /**
-     * Create a new rollout sequence resource.
+     * Creates a new rollout sequence resource.
      * @example
      * ```js
      * // Before running the sample:
@@ -11498,10 +11707,13 @@ export namespace gkehub_v1alpha {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "autoUpgradeConfig": {},
      *       //   "createTime": "my_createTime",
      *       //   "deleteTime": "my_deleteTime",
      *       //   "displayName": "my_displayName",
+     *       //   "effectiveAutoUpgradeConfig": {},
      *       //   "etag": "my_etag",
+     *       //   "ignoredClustersSelector": {},
      *       //   "labels": {},
      *       //   "name": "my_name",
      *       //   "stages": [],
@@ -11620,7 +11832,7 @@ export namespace gkehub_v1alpha {
     }
 
     /**
-     * Remove a RolloutSequence.
+     * Removes a RolloutSequence.
      * @example
      * ```js
      * // Before running the sample:
@@ -11796,10 +12008,13 @@ export namespace gkehub_v1alpha {
      *
      *   // Example response
      *   // {
+     *   //   "autoUpgradeConfig": {},
      *   //   "createTime": "my_createTime",
      *   //   "deleteTime": "my_deleteTime",
      *   //   "displayName": "my_displayName",
+     *   //   "effectiveAutoUpgradeConfig": {},
      *   //   "etag": "my_etag",
+     *   //   "ignoredClustersSelector": {},
      *   //   "labels": {},
      *   //   "name": "my_name",
      *   //   "stages": [],
@@ -11902,7 +12117,7 @@ export namespace gkehub_v1alpha {
     }
 
     /**
-     * Retrieve the list of all rollout sequences.
+     * Retrieves the list of all rollout sequences.
      * @example
      * ```js
      * // Before running the sample:
@@ -12052,7 +12267,7 @@ export namespace gkehub_v1alpha {
     }
 
     /**
-     * Update a rollout sequence.
+     * Updates a rollout sequence.
      * @example
      * ```js
      * // Before running the sample:
@@ -12091,10 +12306,13 @@ export namespace gkehub_v1alpha {
      *     requestBody: {
      *       // request body parameters
      *       // {
+     *       //   "autoUpgradeConfig": {},
      *       //   "createTime": "my_createTime",
      *       //   "deleteTime": "my_deleteTime",
      *       //   "displayName": "my_displayName",
+     *       //   "effectiveAutoUpgradeConfig": {},
      *       //   "etag": "my_etag",
+     *       //   "ignoredClustersSelector": {},
      *       //   "labels": {},
      *       //   "name": "my_name",
      *       //   "stages": [],
