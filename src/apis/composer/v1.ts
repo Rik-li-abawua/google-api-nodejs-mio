@@ -2119,6 +2119,7 @@ export namespace composer_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -2269,6 +2270,7 @@ export namespace composer_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -2415,6 +2417,7 @@ export namespace composer_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -2880,6 +2883,7 @@ export namespace composer_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -3956,6 +3960,7 @@ export namespace composer_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -4098,6 +4103,7 @@ export namespace composer_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -4757,6 +4763,7 @@ export namespace composer_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -4897,6 +4904,7 @@ export namespace composer_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -5260,6 +5268,7 @@ export namespace composer_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -5437,6 +5446,7 @@ export namespace composer_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -5749,6 +5759,7 @@ export namespace composer_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -5890,6 +5901,7 @@ export namespace composer_v1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *

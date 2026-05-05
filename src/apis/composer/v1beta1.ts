@@ -813,6 +813,10 @@ export namespace composer_v1beta1 {
      * Optional. The list of instance tags applied to all node VMs. Tags are used to identify valid sources or targets for network firewalls. Each tag within the list must comply with [RFC1035](https://www.ietf.org/rfc/rfc1035.txt). Cannot be updated.
      */
     tags?: string[] | null;
+    /**
+     * Optional. Configures how the environment routes traffic to other services. This field is supported for Cloud Composer environments in versions composer-3-airflow-*.*.*-build.* and newer.
+     */
+    trafficRoutingConfig?: Schema$TrafficRoutingConfig;
   }
   /**
    * This resource represents a long-running operation that is the result of a network API call.
@@ -1154,6 +1158,15 @@ export namespace composer_v1beta1 {
      * Optional. The mode of storage for Airflow workers task logs.
      */
     storageMode?: string | null;
+  }
+  /**
+   * Configuration for network traffic routing from the Cloud Composer environment to other services.
+   */
+  export interface Schema$TrafficRoutingConfig {
+    /**
+     * Optional. Controls how network traffic to Cloud Run functions is routed.
+     */
+    cloudRunFunctionsRouting?: string | null;
   }
   /**
    * Configuration for resources used by Airflow triggerers.
@@ -2126,6 +2139,7 @@ export namespace composer_v1beta1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -2276,6 +2290,7 @@ export namespace composer_v1beta1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -2422,6 +2437,7 @@ export namespace composer_v1beta1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -2887,6 +2903,7 @@ export namespace composer_v1beta1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -3960,6 +3977,7 @@ export namespace composer_v1beta1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -4102,6 +4120,7 @@ export namespace composer_v1beta1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -4760,6 +4779,7 @@ export namespace composer_v1beta1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -4900,6 +4920,7 @@ export namespace composer_v1beta1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -5263,6 +5284,7 @@ export namespace composer_v1beta1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -5440,6 +5462,7 @@ export namespace composer_v1beta1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -5752,6 +5775,7 @@ export namespace composer_v1beta1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
@@ -5893,6 +5917,7 @@ export namespace composer_v1beta1 {
      *     scopes: [
      *       'https://www.googleapis.com/auth/cloud-platform',
      *       'https://www.googleapis.com/auth/cloudcomposer',
+     *       'https://www.googleapis.com/auth/cloudcomposer.readonly',
      *     ],
      *   });
      *
