@@ -554,7 +554,7 @@ export namespace beyondcorp_v1alpha {
     userPort?: number | null;
   }
   /**
-   * A BeyondCorp AppConnection resource represents a BeyondCorp protected AppConnection to a remote application. It creates all the necessary GCP components needed for creating a BeyondCorp protected AppConnection. Multiple connectors can be authorised for a single AppConnection.
+   * A BeyondCorp AppConnection resource represents a BeyondCorp protected AppConnection to a remote application. It creates all the necessary GCP components needed for creating a BeyondCorp protected AppConnection. Multiple connectors can be authorized for a single AppConnection.
    */
   export interface Schema$GoogleCloudBeyondcorpAppconnectionsV1alphaAppConnection {
     /**
@@ -562,7 +562,7 @@ export namespace beyondcorp_v1alpha {
      */
     applicationEndpoint?: Schema$GoogleCloudBeyondcorpAppconnectionsV1alphaAppConnectionApplicationEndpoint;
     /**
-     * Optional. List of [google.cloud.beyondcorp.v1main.Connector.name] that are authorised to be associated with this AppConnection.
+     * Optional. List of [google.cloud.beyondcorp.v1main.Connector.name] that are authorized to be associated with this AppConnection.
      */
     connectors?: string[] | null;
     /**
@@ -974,7 +974,7 @@ export namespace beyondcorp_v1alpha {
     instanceConfig?: Schema$GoogleCloudBeyondcorpAppconnectorsV1alphaAppConnectorInstanceConfig;
   }
   /**
-   * ResourceInfo represents the information/status of an app connector resource. Such as: - remote_agent - container - runtime - appgateway - appconnector - appconnection - tunnel - logagent
+   * ResourceInfo represents the information or status of an app connector resource component that's used to report on various parts of the system. For example, ResourceInfo can be used to convey the status of a remote_agent, including the status of an appgateway for an runtime environment in a container instance.
    */
   export interface Schema$GoogleCloudBeyondcorpAppconnectorsV1alphaResourceInfo {
     /**
@@ -1627,6 +1627,10 @@ export namespace beyondcorp_v1alpha {
     unreachable?: string[] | null;
   }
   /**
+   * Configuration for Cloud Logging.
+   */
+  export interface Schema$GoogleCloudBeyondcorpSecuritygatewaysV1alphaLoggingConfig {}
+  /**
    * The configuration for the proxy.
    */
   export interface Schema$GoogleCloudBeyondcorpSecuritygatewaysV1alphaProxyProtocolConfig {
@@ -1677,6 +1681,10 @@ export namespace beyondcorp_v1alpha {
     hubs?: {
       [key: string]: Schema$GoogleCloudBeyondcorpSecuritygatewaysV1alphaHub;
     } | null;
+    /**
+     * Optional. Configuration for Cloud Logging. If this field is present, the logging will be enabled.
+     */
+    logging?: Schema$GoogleCloudBeyondcorpSecuritygatewaysV1alphaLoggingConfig;
     /**
      * Identifier. Name of the resource.
      */
@@ -1736,7 +1744,7 @@ export namespace beyondcorp_v1alpha {
    */
   export interface Schema$GoogleCloudBeyondcorpSecuritygatewaysV1alphaServiceDiscovery {
     /**
-     * Required. External API configuration.
+     * Optional. External API configuration.
      */
     apiGateway?: Schema$GoogleCloudBeyondcorpSecuritygatewaysV1alphaServiceDiscoveryApiGateway;
   }
@@ -1745,7 +1753,7 @@ export namespace beyondcorp_v1alpha {
    */
   export interface Schema$GoogleCloudBeyondcorpSecuritygatewaysV1alphaServiceDiscoveryApiGateway {
     /**
-     * Required. Enables fetching resource model updates to alter service behavior per Chrome profile.
+     * Optional. Enables fetching resource model updates to alter service behavior per Chrome profile.
      */
     resourceOverride?: Schema$GoogleCloudBeyondcorpSecuritygatewaysV1alphaServiceDiscoveryApiGatewayOperationDescriptor;
   }
@@ -1754,7 +1762,7 @@ export namespace beyondcorp_v1alpha {
    */
   export interface Schema$GoogleCloudBeyondcorpSecuritygatewaysV1alphaServiceDiscoveryApiGatewayOperationDescriptor {
     /**
-     * Required. Contains the URI path fragment where HTTP request is sent.
+     * Optional. Contains the URI path fragment where HTTP request is sent.
      */
     path?: string | null;
   }
@@ -4683,7 +4691,7 @@ export namespace beyondcorp_v1alpha {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the [ListLocationsRequest.name] field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -4909,7 +4917,7 @@ export namespace beyondcorp_v1alpha {
      *     appConnectionId: 'placeholder-value',
      *     // Required. The resource project name of the AppConnection location using the form: `projects/{project_id\}/locations/{location_id\}`
      *     parent: 'projects/my-project/locations/my-location',
-     *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *     requestId: 'placeholder-value',
      *     // Optional. If set, validates request by executing a dry-run which would not alter the resource in any way.
      *     validateOnly: 'placeholder-value',
@@ -5078,7 +5086,7 @@ export namespace beyondcorp_v1alpha {
      *   const res = await beyondcorp.projects.locations.appConnections.delete({
      *     // Required. BeyondCorp Connector name using the form: `projects/{project_id\}/locations/{location_id\}/appConnections/{app_connection_id\}`
      *     name: 'projects/my-project/locations/my-location/appConnections/my-appConnection',
-     *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes after the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes after the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *     requestId: 'placeholder-value',
      *     // Optional. If set, validates request by executing a dry-run which would not alter the resource in any way.
      *     validateOnly: 'placeholder-value',
@@ -5685,7 +5693,7 @@ export namespace beyondcorp_v1alpha {
      *     allowMissing: 'placeholder-value',
      *     // Required. Unique resource name of the AppConnection. The name is ignored when creating a AppConnection.
      *     name: 'projects/my-project/locations/my-location/appConnections/my-appConnection',
-     *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *     requestId: 'placeholder-value',
      *     // Required. Mask of fields to update. At least one path must be supplied in this field. The elements of the repeated paths field may only include these fields from [BeyondCorp.AppConnection]: * `labels` * `display_name` * `application_endpoint` * `connectors`
      *     updateMask: 'placeholder-value',
@@ -6297,7 +6305,7 @@ export namespace beyondcorp_v1alpha {
      */
     parent?: string;
     /**
-     * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      */
     requestId?: string;
     /**
@@ -6316,7 +6324,7 @@ export namespace beyondcorp_v1alpha {
      */
     name?: string;
     /**
-     * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes after the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes after the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      */
     requestId?: string;
     /**
@@ -6372,7 +6380,7 @@ export namespace beyondcorp_v1alpha {
      */
     name?: string;
     /**
-     * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
+     * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if the original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      */
     requestId?: string;
     /**
@@ -14422,6 +14430,7 @@ export namespace beyondcorp_v1alpha {
      *       //   "displayName": "my_displayName",
      *       //   "externalIps": [],
      *       //   "hubs": {},
+     *       //   "logging": {},
      *       //   "name": "my_name",
      *       //   "proxyProtocolConfig": {},
      *       //   "serviceDiscovery": {},
@@ -14732,6 +14741,7 @@ export namespace beyondcorp_v1alpha {
      *   //   "displayName": "my_displayName",
      *   //   "externalIps": [],
      *   //   "hubs": {},
+     *   //   "logging": {},
      *   //   "name": "my_name",
      *   //   "proxyProtocolConfig": {},
      *   //   "serviceDiscovery": {},
@@ -15194,6 +15204,7 @@ export namespace beyondcorp_v1alpha {
      *       //   "displayName": "my_displayName",
      *       //   "externalIps": [],
      *       //   "hubs": {},
+     *       //   "logging": {},
      *       //   "name": "my_name",
      *       //   "proxyProtocolConfig": {},
      *       //   "serviceDiscovery": {},
@@ -15781,7 +15792,7 @@ export namespace beyondcorp_v1alpha {
      *       // Required. The resource name of the parent SecurityGateway using the form: `projects/{project_id\}/locations/global/securityGateways/{security_gateway_id\}`
      *       parent:
      *         'projects/my-project/locations/my-location/securityGateways/my-securityGateway',
-     *       // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request.
+     *       // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request.
      *       requestId: 'placeholder-value',
      *
      *       // Request body metadata
@@ -17008,7 +17019,7 @@ export namespace beyondcorp_v1alpha {
      */
     parent?: string;
     /**
-     * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request.
+     * Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request.
      */
     requestId?: string;
 
