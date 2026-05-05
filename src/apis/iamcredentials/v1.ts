@@ -301,7 +301,7 @@ export namespace iamcredentials_v1 {
      *   // Do the magic
      *   const res = await iamcredentials.locations.workforcePools.getAllowedLocations(
      *     {
-     *       // Required. Resource name of workforce pool.
+     *       // Required. Resource name of workforce pool. Format: `locations/global/workforcePools/{pool_id\}`
      *       name: 'locations/my-location/workforcePools/my-workforcePool',
      *     },
      *   );
@@ -420,7 +420,7 @@ export namespace iamcredentials_v1 {
 
   export interface Params$Resource$Locations$Workforcepools$Getallowedlocations extends StandardParameters {
     /**
-     * Required. Resource name of workforce pool.
+     * Required. Resource name of workforce pool. Format: `locations/global/workforcePools/{pool_id\}`
      */
     name?: string;
   }
@@ -487,7 +487,7 @@ export namespace iamcredentials_v1 {
      *   const res =
      *     await iamcredentials.projects.locations.workloadIdentityPools.getAllowedLocations(
      *       {
-     *         // Required. Resource name of workload identity pool.
+     *         // Required. Resource name of workload identity pool. Format: `projects/{project_number\}/locations/global/workloadIdentityPools/{pool_id\}`
      *         name: 'projects/my-project/locations/my-location/workloadIdentityPools/my-workloadIdentityPool',
      *       },
      *     );
@@ -610,7 +610,7 @@ export namespace iamcredentials_v1 {
 
   export interface Params$Resource$Projects$Locations$Workloadidentitypools$Getallowedlocations extends StandardParameters {
     /**
-     * Required. Resource name of workload identity pool.
+     * Required. Resource name of workload identity pool. Format: `projects/{project_number\}/locations/global/workloadIdentityPools/{pool_id\}`
      */
     name?: string;
   }
@@ -962,7 +962,7 @@ export namespace iamcredentials_v1 {
      *   // Do the magic
      *   const res = await iamcredentials.projects.serviceAccounts.getAllowedLocations(
      *     {
-     *       // Required. Resource name of service account.
+     *       // Required. Resource name of service account. Format: `projects/-/serviceAccounts/{service_account_email\}`
      *       name: 'projects/my-project/serviceAccounts/my-serviceAccount',
      *     },
      *   );
@@ -1399,7 +1399,7 @@ export namespace iamcredentials_v1 {
   }
   export interface Params$Resource$Projects$Serviceaccounts$Getallowedlocations extends StandardParameters {
     /**
-     * Required. Resource name of service account.
+     * Required. Resource name of service account. Format: `projects/-/serviceAccounts/{service_account_email\}`
      */
     name?: string;
   }
