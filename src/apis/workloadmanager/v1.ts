@@ -224,15 +224,15 @@ export namespace workloadmanager_v1 {
     terraformTemplate?: string | null;
   }
   /**
-   * * An AgentCommand specifies a one-time executable program for the agent to run.
+   * An AgentCommand specifies a one-time executable program for the agent to run.
    */
   export interface Schema$AgentCommand {
     /**
-     * command is the name of the agent one-time executable that will be invoked.
+     * The name of the agent one-time executable that will be invoked.
      */
     command?: string | null;
     /**
-     * parameters is a map of key/value pairs that can be used to specify additional one-time executable settings.
+     * A map of key/value pairs that can be used to specify additional one-time executable settings.
      */
     parameters?: {[key: string]: string} | null;
   }
@@ -481,15 +481,15 @@ export namespace workloadmanager_v1 {
     latestBackupTime?: string | null;
   }
   /**
-   * Message describing big query destination
+   * BigQuery destination for evaluation results.
    */
   export interface Schema$BigQueryDestination {
     /**
-     * Optional. determine if results will be saved in a new table
+     * Optional. Determines if a new results table will be created when an Execution is created.
      */
     createNewResultsTable?: boolean | null;
     /**
-     * Optional. destination dataset to save evaluation results
+     * Optional. Destination dataset to save evaluation results.
      */
     destinationDataset?: string | null;
   }
@@ -515,7 +515,7 @@ export namespace workloadmanager_v1 {
     name?: string | null;
   }
   /**
-   * * Command specifies the type of command to execute.
+   * Command specifies the type of command to execute.
    */
   export interface Schema$Command {
     /**
@@ -722,15 +722,15 @@ export namespace workloadmanager_v1 {
    */
   export interface Schema$Empty {}
   /**
-   * Message describing Evaluation object
+   * Represents a Workload Manager Evaluation configuration. An Evaluation defines a set of rules to be validated against a scope of Cloud resources.
    */
   export interface Schema$Evaluation {
     /**
-     * Optional. BigQuery destination
+     * Optional. The BigQuery destination for detailed evaluation results. If this field is specified, the results of each evaluation execution are exported to BigQuery.
      */
     bigQueryDestination?: Schema$BigQueryDestination;
     /**
-     * Output only. [Output only] Create time stamp
+     * Output only. [Output only] Create time stamp.
      */
     createTime?: string | null;
     /**
@@ -738,109 +738,105 @@ export namespace workloadmanager_v1 {
      */
     customRulesBucket?: string | null;
     /**
-     * Description of the Evaluation
+     * Description of the Evaluation.
      */
     description?: string | null;
     /**
-     * Evaluation type
+     * Evaluation type.
      */
     evaluationType?: string | null;
     /**
-     * Optional. Immutable. Customer-managed encryption key name, in the format projects/x/locations/x/keyRings/x/cryptoKeys/x.
+     * Optional. Immutable. Customer-managed encryption key name, in the format projects/x/locations/x/keyRings/x/cryptoKeys/x. The key will be used for CMEK encryption of the evaluation resource.
      */
     kmsKey?: string | null;
     /**
-     * Labels as key value pairs
+     * Labels as key value pairs.
      */
     labels?: {[key: string]: string} | null;
     /**
-     * name of resource names have the form 'projects/{project_id\}/locations/{location_id\}/evaluations/{evaluation_id\}'
+     * Name of resource that has the form `projects/{project_id\}/locations/{location_id\}/evaluations/{evaluation_id\}`.
      */
     name?: string | null;
     /**
-     * annotations as key value pairs
+     * Resource filter for an evaluation defining the scope of resources to be evaluated.
      */
     resourceFilter?: Schema$ResourceFilter;
     /**
-     * Output only. [Output only] The updated rule ids if exist.
+     * Output only. [Output only] The current lifecycle state of the evaluation resource.
      */
     resourceStatus?: Schema$ResourceStatus;
     /**
-     * the name of the rule
+     * The names of the rules used for this evaluation.
      */
     ruleNames?: string[] | null;
     /**
-     * Output only. [Output only] The updated rule ids if exist.
-     */
-    ruleVersions?: string[] | null;
-    /**
-     * crontab format schedule for scheduled evaluation, currently only support the following schedule: "0 x/1 * * *", "0 x/6 * * *", "0 x/12 * * *", "0 0 x/1 * *", "0 0 x/7 * *",
+     * Crontab format schedule for scheduled evaluation, currently only supports the following fixed schedules: * `0 x/1 * * *` # Hourly * `0 x/6 * * *` # Every 6 hours * `0 x/12 * * *` # Every 12 hours * `0 0 x/1 * *` # Daily * `0 0 x/7 * *` # Weekly * `0 0 x/14 * *` # Every 14 days * `0 0 1 x/1 *` # Monthly
      */
     schedule?: string | null;
     /**
-     * Output only. [Output only] Update time stamp
+     * Output only. [Output only] Update time stamp.
      */
     updateTime?: string | null;
   }
   /**
-   * Message describing Execution object
+   * Execution that represents a single run of an Evaluation.
    */
   export interface Schema$Execution {
     /**
-     * Output only. [Output only] End time stamp
+     * Output only. [Output only] End time stamp.
      */
     endTime?: string | null;
     /**
-     * Optional. Engine
+     * Optional. Engine.
      */
     engine?: string | null;
     /**
-     * Output only. [Output only] Evaluation ID
+     * Output only. [Output only] Evaluation ID.
      */
     evaluationId?: string | null;
     /**
-     * Optional. External data sources
+     * Optional. External data sources.
      */
     externalDataSources?: Schema$ExternalDataSources[];
     /**
-     * Output only. [Output only] Inventory time stamp
+     * Output only. [Output only] Inventory time stamp.
      */
     inventoryTime?: string | null;
     /**
-     * Labels as key value pairs
+     * Labels as key value pairs.
      */
     labels?: {[key: string]: string} | null;
     /**
-     * The name of execution resource. The format is projects/{project\}/locations/{location\}/evaluations/{evaluation\}/executions/{execution\}
+     * The name of execution resource. The format is projects/{project\}/locations/{location\}/evaluations/{evaluation\}/executions/{execution\}.
      */
     name?: string | null;
     /**
-     * Output only. Additional information generated by the execution
+     * Output only. Additional information generated by the execution.
      */
     notices?: Schema$Notice[];
     /**
-     * Output only. [Output only] Result summary for the execution
+     * Output only. [Output only] Result summary for the execution.
      */
     resultSummary?: Schema$Summary;
     /**
-     * Output only. execution result summary per rule
+     * Output only. Execution result summary per rule.
      */
     ruleResults?: Schema$RuleExecutionResult[];
     /**
-     * type represent whether the execution executed directly by user or scheduled according evaluation.schedule field.
+     * Type which represents whether the execution executed directly by user or scheduled according to the `Evaluation.schedule` field.
      */
     runType?: string | null;
     /**
-     * Output only. [Output only] Start time stamp
+     * Output only. [Output only] Start time stamp.
      */
     startTime?: string | null;
     /**
-     * Output only. [Output only] State
+     * Output only. [Output only] State.
      */
     state?: string | null;
   }
   /**
-   * Message describing the result of an execution
+   * The result of an execution.
    */
   export interface Schema$ExecutionResult {
     /**
@@ -864,7 +860,7 @@ export namespace workloadmanager_v1 {
      */
     severity?: string | null;
     /**
-     * Execution result type of the scanned resource
+     * Execution result type of the scanned resource.
      */
     type?: string | null;
     /**
@@ -877,7 +873,7 @@ export namespace workloadmanager_v1 {
     violationMessage?: string | null;
   }
   /**
-   * Message for external data sources
+   * External data sources for an execution.
    */
   export interface Schema$ExternalDataSources {
     /**
@@ -885,24 +881,24 @@ export namespace workloadmanager_v1 {
      */
     assetType?: string | null;
     /**
-     * Optional. Name of external data source. The name will be used inside the rego/sql to refer the external data
+     * Optional. Name of external data source. The name will be used inside the rego/sql to refer the external data.
      */
     name?: string | null;
     /**
-     * Required. Type of external data source
+     * Required. Type of external data source.
      */
     type?: string | null;
     /**
-     * Required. URI of external data source. example of bq table {project_ID\}.{dataset_ID\}.{table_ID\}
+     * Required. URI of external data source. example of bq table {project_ID\}.{dataset_ID\}.{table_ID\}.
      */
     uri?: string | null;
   }
   /**
-   * Message describing compute engine instance filter
+   * A filter for matching Compute Engine instances.
    */
   export interface Schema$GceInstanceFilter {
     /**
-     * Service account of compute engine
+     * If non-empty, only Compute Engine instances associated with at least one of the provided service accounts will be included in the evaluation.
      */
     serviceAccounts?: string[] | null;
   }
@@ -1011,36 +1007,6 @@ export namespace workloadmanager_v1 {
     upcomingMaintenanceEvent?: Schema$UpcomingMaintenanceEvent;
   }
   /**
-   * Message represent an rule that failed to be validated.
-   */
-  export interface Schema$InvalidRule {
-    /**
-     * display name of the invalid rule
-     */
-    displayName?: string | null;
-    /**
-     * cloud storage destination of the invalid rule
-     */
-    gcsUri?: string | null;
-    /**
-     * name of the invalid rule
-     */
-    name?: string | null;
-    /**
-     * The error message of valdating rule formats.
-     */
-    valiadtionError?: string | null;
-  }
-  /**
-   * Message wrappes a list of invalid rules.
-   */
-  export interface Schema$InvalidRulesWrapper {
-    /**
-     * The invalid rules that failed to be validated.
-     */
-    invalidRules?: Schema$InvalidRule[];
-  }
-  /**
    * The response object from `ListActuations`.
    */
   export interface Schema$ListActuationsResponse {
@@ -1092,11 +1058,11 @@ export namespace workloadmanager_v1 {
     workloadProfiles?: Schema$WorkloadProfile[];
   }
   /**
-   * Message for response to listing Evaluations
+   * Response message for the ListEvaluations RPC.
    */
   export interface Schema$ListEvaluationsResponse {
     /**
-     * The list of Evaluation
+     * The list of evaluations.
      */
     evaluations?: Schema$Evaluation[];
     /**
@@ -1109,7 +1075,7 @@ export namespace workloadmanager_v1 {
     unreachable?: string[] | null;
   }
   /**
-   * Message for response of list execution results
+   * Response message for the ListExecutionResults RPC.
    */
   export interface Schema$ListExecutionResultsResponse {
     /**
@@ -1122,11 +1088,11 @@ export namespace workloadmanager_v1 {
     nextPageToken?: string | null;
   }
   /**
-   * Message for response to listing Executions
+   * Response message for the ListExecutions RPC.
    */
   export interface Schema$ListExecutionsResponse {
     /**
-     * The list of Execution
+     * The list of Execution.
      */
     executions?: Schema$Execution[];
     /**
@@ -1169,20 +1135,16 @@ export namespace workloadmanager_v1 {
     unreachable?: string[] | null;
   }
   /**
-   * Mesesage of response of list rules
+   * Response message for the ListRules RPC.
    */
   export interface Schema$ListRulesResponse {
     /**
-     * A wrapper of the invalid rules that failed to be validated.
-     */
-    invalidRulesWrapper?: Schema$InvalidRulesWrapper;
-    /**
-     * all rules in response
+     * All rules in response.
      */
     rules?: Schema$Rule[];
   }
   /**
-   * Message for response to list scanned resources
+   * Response message for the ListScannedResources RPC.
    */
   export interface Schema$ListScannedResourcesResponse {
     /**
@@ -1190,7 +1152,7 @@ export namespace workloadmanager_v1 {
      */
     nextPageToken?: string | null;
     /**
-     * All scanned resources in response
+     * All scanned resources in response.
      */
     scannedResources?: Schema$ScannedResource[];
   }
@@ -1270,11 +1232,11 @@ export namespace workloadmanager_v1 {
     zone2Name?: string | null;
   }
   /**
-   * Message for additional information generated by the execution
+   * Additional information generated by an execution.
    */
   export interface Schema$Notice {
     /**
-     * Output only. Message of the notice
+     * Output only. Message of the notice.
      */
     message?: string | null;
   }
@@ -1392,7 +1354,7 @@ export namespace workloadmanager_v1 {
     version?: string | null;
   }
   /**
-   * Message represent resource in execution result
+   * Resource in execution result.
    */
   export interface Schema$Resource {
     /**
@@ -1409,41 +1371,37 @@ export namespace workloadmanager_v1 {
     type?: string | null;
   }
   /**
-   * Message describing resource filters
+   * Resource filter for an evaluation defining the scope of resources to be evaluated.
    */
   export interface Schema$ResourceFilter {
     /**
-     * Filter compute engine resource
+     * Filter compute engine resources.
      */
     gceInstanceFilter?: Schema$GceInstanceFilter;
     /**
-     * The label used for filter resource
+     * Labels to filter resources by. Each key-value pair in the map must exist on the resource for it to be included (e.g. VM instance labels). For example, specifying `{ "env": "prod", "database": "nosql" \}` will only include resources that have labels `env=prod` and `database=nosql`.
      */
     inclusionLabels?: {[key: string]: string} | null;
     /**
-     * The id pattern for filter resource
+     * The pattern to filter resources by their id For example, a pattern of ".*prod-cluster.*" will match all resources that contain "prod-cluster" in their ID.
      */
     resourceIdPatterns?: string[] | null;
     /**
-     * The scopes of evaluation resource
+     * The scopes of evaluation resource. Format: * `projects/{project_id\}` * `folders/{folder_id\}` * `organizations/{organization_id\}`
      */
     scopes?: string[] | null;
   }
   /**
-   * Message describing resource status
+   * The lifecycle status of an Evaluation resource.
    */
   export interface Schema$ResourceStatus {
     /**
-     * Historical: Used before 2023-05-22 the new version of rule id if exists
-     */
-    rulesNewerVersions?: string[] | null;
-    /**
-     * State of the resource
+     * State of the Evaluation resource.
      */
     state?: string | null;
   }
   /**
-   * Message represent a rule
+   * A rule to be evaluated.
    */
   export interface Schema$Rule {
     /**
@@ -1451,31 +1409,31 @@ export namespace workloadmanager_v1 {
      */
     assetType?: string | null;
     /**
-     * descrite rule in plain language
+     * Describe rule in plain language.
      */
     description?: string | null;
     /**
-     * the name display in UI
+     * The name display in UI.
      */
     displayName?: string | null;
     /**
-     * the message template for rule
+     * The message template for rule.
      */
     errorMessage?: string | null;
     /**
-     * rule name
+     * Rule name.
      */
     name?: string | null;
     /**
-     * the primary category
+     * The primary category.
      */
     primaryCategory?: string | null;
     /**
-     * the remediation for the rule
+     * The remediation for the rule.
      */
     remediation?: string | null;
     /**
-     * Output only. the version of the rule
+     * Output only. The version of the rule.
      */
     revisionId?: string | null;
     /**
@@ -1483,44 +1441,44 @@ export namespace workloadmanager_v1 {
      */
     ruleType?: string | null;
     /**
-     * the secondary category
+     * The secondary category.
      */
     secondaryCategory?: string | null;
     /**
-     * the severity of the rule
+     * The severity of the rule.
      */
     severity?: string | null;
     /**
-     * List of user-defined tags
+     * List of user-defined tags.
      */
     tags?: string[] | null;
     /**
-     * the docuement url for the rule
+     * The document url for the rule.
      */
     uri?: string | null;
   }
   /**
-   * Message for execution result summary per rule
+   * Execution result summary per rule.
    */
   export interface Schema$RuleExecutionResult {
     /**
-     * Execution message, if any
+     * Execution message, if any.
      */
     message?: string | null;
     /**
-     * Number of violations
+     * Number of violations.
      */
     resultCount?: string | null;
     /**
-     * rule name
+     * Rule name as plain text like `sap-hana-configured`.
      */
     rule?: string | null;
     /**
-     * Number of total scanned resources
+     * Number of total scanned resources.
      */
     scannedResourceCount?: string | null;
     /**
-     * Output only. The execution status
+     * Output only. The execution status.
      */
     state?: string | null;
   }
@@ -1538,15 +1496,15 @@ export namespace workloadmanager_v1 {
     message?: string | null;
   }
   /**
-   * Message for creating a Execution
+   * Request message for the RunEvaluation RPC.
    */
   export interface Schema$RunEvaluationRequest {
     /**
-     * Required. The resource being created
+     * Required. The resource being created.
      */
     execution?: Schema$Execution;
     /**
-     * Required. Id of the requesting object If auto-generating Id server-side, remove this field and execution_id from the method_signature of Create RPC
+     * Required. ID of the execution which will be created.
      */
     executionId?: string | null;
     /**
@@ -2073,15 +2031,15 @@ export namespace workloadmanager_v1 {
     products?: Schema$Product[];
   }
   /**
-   * Message of scanned resource
+   * A scanned resource.
    */
   export interface Schema$ScannedResource {
     /**
-     * resource name
+     * Resource name.
      */
     resource?: string | null;
     /**
-     * resource type
+     * Resource type.
      */
     type?: string | null;
   }
@@ -2099,15 +2057,15 @@ export namespace workloadmanager_v1 {
     state?: string | null;
   }
   /**
-   * * A ShellCommand is invoked via the agent's command line executor
+   * A ShellCommand is invoked via the agent's command line executor.
    */
   export interface Schema$ShellCommand {
     /**
-     * args is a string of arguments to be passed to the command.
+     * Arguments to be passed to the command.
      */
     args?: string | null;
     /**
-     * command is the name of the command to be executed.
+     * The name of the command to be executed.
      */
     command?: string | null;
     /**
@@ -2290,19 +2248,19 @@ export namespace workloadmanager_v1 {
     message?: string | null;
   }
   /**
-   * Message for execution summary
+   * Execution summary.
    */
   export interface Schema$Summary {
     /**
-     * Output only. Number of failures
+     * Output only. Number of failures.
      */
     failures?: string | null;
     /**
-     * Output only. Number of new failures compared to the previous execution
+     * Output only. Number of new failures compared to the previous execution.
      */
     newFailures?: string | null;
     /**
-     * Output only. Number of new fixes compared to the previous execution
+     * Output only. Number of new fixes compared to the previous execution.
      */
     newFixes?: string | null;
   }
@@ -2366,7 +2324,7 @@ export namespace workloadmanager_v1 {
     type?: string | null;
   }
   /**
-   * Message describing the violation in an evaluation result.
+   * The violation in an evaluation result.
    */
   export interface Schema$ViolationDetails {
     /**
@@ -2624,7 +2582,7 @@ export namespace workloadmanager_v1 {
     }
 
     /**
-     * Lists information about the supported locations for this service. This method can be called in two ways: * **List all public locations:** Use the path `GET /v1/locations`. * **List project-visible locations:** Use the path `GET /v1/projects/{project_id\}/locations`. This may include public locations as well as private or other locations specifically visible to the project.
+     * Lists information about the supported locations for this service. This method lists locations based on the resource scope provided in the [ListLocationsRequest.name] field: * **Global locations**: If `name` is empty, the method lists the public locations available to all projects. * **Project-specific locations**: If `name` follows the format `projects/{project\}`, the method lists locations visible to that specific project. This includes public, private, or other project-specific locations enabled for the project. For gRPC and client library implementations, the resource name is passed as the `name` field. For direct service calls, the resource name is incorporated into the request path based on the specific service implementation and version.
      * @example
      * ```js
      * // Before running the sample:
@@ -4649,9 +4607,9 @@ export namespace workloadmanager_v1 {
      *
      *   // Do the magic
      *   const res = await workloadmanager.projects.locations.evaluations.create({
-     *     // Required. Id of the requesting object
+     *     // Required. Id of the requesting object.
      *     evaluationId: 'placeholder-value',
-     *     // Required. The resource prefix of the evaluation location using the form: `projects/{project_id\}/locations/{location_id\}`
+     *     // Required. The resource prefix of the evaluation location using the form: `projects/{project_id\}/locations/{location_id\}`.
      *     parent: 'projects/my-project/locations/my-location',
      *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *     requestId: 'placeholder-value',
@@ -4671,7 +4629,6 @@ export namespace workloadmanager_v1 {
      *       //   "resourceFilter": {},
      *       //   "resourceStatus": {},
      *       //   "ruleNames": [],
-     *       //   "ruleVersions": [],
      *       //   "schedule": "my_schedule",
      *       //   "updateTime": "my_updateTime"
      *       // }
@@ -4816,9 +4773,9 @@ export namespace workloadmanager_v1 {
      *
      *   // Do the magic
      *   const res = await workloadmanager.projects.locations.evaluations.delete({
-     *     // Optional. Followed the best practice from https://aip.dev/135#cascading-delete
+     *     // Optional. Followed the best practice from https://aip.dev/135#cascading-delete.
      *     force: 'placeholder-value',
-     *     // Required. Name of the resource
+     *     // Required. Name of the resource.
      *     name: 'projects/my-project/locations/my-location/evaluations/my-evaluation',
      *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes after the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *     requestId: 'placeholder-value',
@@ -4959,7 +4916,7 @@ export namespace workloadmanager_v1 {
      *
      *   // Do the magic
      *   const res = await workloadmanager.projects.locations.evaluations.get({
-     *     // Required. Name of the resource
+     *     // Required. Name of the resource.
      *     name: 'projects/my-project/locations/my-location/evaluations/my-evaluation',
      *   });
      *   console.log(res.data);
@@ -4977,7 +4934,6 @@ export namespace workloadmanager_v1 {
      *   //   "resourceFilter": {},
      *   //   "resourceStatus": {},
      *   //   "ruleNames": [],
-     *   //   "ruleVersions": [],
      *   //   "schedule": "my_schedule",
      *   //   "updateTime": "my_updateTime"
      *   // }
@@ -5109,13 +5065,13 @@ export namespace workloadmanager_v1 {
      *   const res = await workloadmanager.projects.locations.evaluations.list({
      *     // Filter to be applied when listing the evaluation results.
      *     filter: 'placeholder-value',
-     *     // Hint for how to order the results
+     *     // Hint for how to order the results.
      *     orderBy: 'placeholder-value',
      *     // Requested page size. Server may return fewer items than requested. If unspecified, server will pick an appropriate default.
      *     pageSize: 'placeholder-value',
      *     // A token identifying a page of results the server should return.
      *     pageToken: 'placeholder-value',
-     *     // Required. Parent value for ListEvaluationsRequest
+     *     // Required. Parent value for ListEvaluationsRequest.
      *     parent: 'projects/my-project/locations/my-location',
      *   });
      *   console.log(res.data);
@@ -5257,7 +5213,7 @@ export namespace workloadmanager_v1 {
      *
      *   // Do the magic
      *   const res = await workloadmanager.projects.locations.evaluations.patch({
-     *     // name of resource names have the form 'projects/{project_id\}/locations/{location_id\}/evaluations/{evaluation_id\}'
+     *     // Name of resource that has the form `projects/{project_id\}/locations/{location_id\}/evaluations/{evaluation_id\}`.
      *     name: 'projects/my-project/locations/my-location/evaluations/my-evaluation',
      *     // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes since the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *     requestId: 'placeholder-value',
@@ -5279,7 +5235,6 @@ export namespace workloadmanager_v1 {
      *       //   "resourceFilter": {},
      *       //   "resourceStatus": {},
      *       //   "ruleNames": [],
-     *       //   "ruleVersions": [],
      *       //   "schedule": "my_schedule",
      *       //   "updateTime": "my_updateTime"
      *       // }
@@ -5393,11 +5348,11 @@ export namespace workloadmanager_v1 {
 
   export interface Params$Resource$Projects$Locations$Evaluations$Create extends StandardParameters {
     /**
-     * Required. Id of the requesting object
+     * Required. Id of the requesting object.
      */
     evaluationId?: string;
     /**
-     * Required. The resource prefix of the evaluation location using the form: `projects/{project_id\}/locations/{location_id\}`
+     * Required. The resource prefix of the evaluation location using the form: `projects/{project_id\}/locations/{location_id\}`.
      */
     parent?: string;
     /**
@@ -5412,11 +5367,11 @@ export namespace workloadmanager_v1 {
   }
   export interface Params$Resource$Projects$Locations$Evaluations$Delete extends StandardParameters {
     /**
-     * Optional. Followed the best practice from https://aip.dev/135#cascading-delete
+     * Optional. Followed the best practice from https://aip.dev/135#cascading-delete.
      */
     force?: boolean;
     /**
-     * Required. Name of the resource
+     * Required. Name of the resource.
      */
     name?: string;
     /**
@@ -5426,7 +5381,7 @@ export namespace workloadmanager_v1 {
   }
   export interface Params$Resource$Projects$Locations$Evaluations$Get extends StandardParameters {
     /**
-     * Required. Name of the resource
+     * Required. Name of the resource.
      */
     name?: string;
   }
@@ -5436,7 +5391,7 @@ export namespace workloadmanager_v1 {
      */
     filter?: string;
     /**
-     * Hint for how to order the results
+     * Hint for how to order the results.
      */
     orderBy?: string;
     /**
@@ -5448,13 +5403,13 @@ export namespace workloadmanager_v1 {
      */
     pageToken?: string;
     /**
-     * Required. Parent value for ListEvaluationsRequest
+     * Required. Parent value for ListEvaluationsRequest.
      */
     parent?: string;
   }
   export interface Params$Resource$Projects$Locations$Evaluations$Patch extends StandardParameters {
     /**
-     * name of resource names have the form 'projects/{project_id\}/locations/{location_id\}/evaluations/{evaluation_id\}'
+     * Name of resource that has the form `projects/{project_id\}/locations/{location_id\}/evaluations/{evaluation_id\}`.
      */
     name?: string;
     /**
@@ -5520,7 +5475,7 @@ export namespace workloadmanager_v1 {
      *   // Do the magic
      *   const res =
      *     await workloadmanager.projects.locations.evaluations.executions.delete({
-     *       // Required. Name of the resource
+     *       // Required. Name of the resource.
      *       name: 'projects/my-project/locations/my-location/evaluations/my-evaluation/executions/my-execution',
      *       // Optional. An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. The server will guarantee that for at least 60 minutes after the first request. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported (00000000-0000-0000-0000-000000000000).
      *       requestId: 'placeholder-value',
@@ -5663,7 +5618,7 @@ export namespace workloadmanager_v1 {
      *   // Do the magic
      *   const res =
      *     await workloadmanager.projects.locations.evaluations.executions.get({
-     *       // Required. Name of the resource
+     *       // Required. Name of the resource.
      *       name: 'projects/my-project/locations/my-location/evaluations/my-evaluation/executions/my-execution',
      *     });
      *   console.log(res.data);
@@ -5812,7 +5767,7 @@ export namespace workloadmanager_v1 {
      *   // Do the magic
      *   const res =
      *     await workloadmanager.projects.locations.evaluations.executions.list({
-     *       // Filtering results
+     *       // Filtering results.
      *       filter: 'placeholder-value',
      *       // Field to sort by. See https://google.aip.dev/132#ordering for more details.
      *       orderBy: 'placeholder-value',
@@ -5820,7 +5775,7 @@ export namespace workloadmanager_v1 {
      *       pageSize: 'placeholder-value',
      *       // A token identifying a page of results the server should return.
      *       pageToken: 'placeholder-value',
-     *       // Required. The resource prefix of the Execution using the form: 'projects/{project\}/locations/{location\}/evaluations/{evaluation\}'
+     *       // Required. The resource prefix of the Execution using the form: `projects/{project\}/locations/{location\}/evaluations/{evaluation\}`.
      *       parent:
      *         'projects/my-project/locations/my-location/evaluations/my-evaluation',
      *     });
@@ -5965,7 +5920,7 @@ export namespace workloadmanager_v1 {
      *   // Do the magic
      *   const res =
      *     await workloadmanager.projects.locations.evaluations.executions.run({
-     *       // Required. The resource name of the Execution using the form: 'projects/{project\}/locations/{location\}/evaluations/{evaluation\}/executions/{execution\}'
+     *       // Required. The resource name of the Evaluation using the form: `projects/{project\}/locations/{location\}/evaluations/{evaluation\}`.
      *       name: 'projects/my-project/locations/my-location/evaluations/my-evaluation',
      *
      *       // Request body metadata
@@ -6090,7 +6045,7 @@ export namespace workloadmanager_v1 {
 
   export interface Params$Resource$Projects$Locations$Evaluations$Executions$Delete extends StandardParameters {
     /**
-     * Required. Name of the resource
+     * Required. Name of the resource.
      */
     name?: string;
     /**
@@ -6100,13 +6055,13 @@ export namespace workloadmanager_v1 {
   }
   export interface Params$Resource$Projects$Locations$Evaluations$Executions$Get extends StandardParameters {
     /**
-     * Required. Name of the resource
+     * Required. Name of the resource.
      */
     name?: string;
   }
   export interface Params$Resource$Projects$Locations$Evaluations$Executions$List extends StandardParameters {
     /**
-     * Filtering results
+     * Filtering results.
      */
     filter?: string;
     /**
@@ -6122,13 +6077,13 @@ export namespace workloadmanager_v1 {
      */
     pageToken?: string;
     /**
-     * Required. The resource prefix of the Execution using the form: 'projects/{project\}/locations/{location\}/evaluations/{evaluation\}'
+     * Required. The resource prefix of the Execution using the form: `projects/{project\}/locations/{location\}/evaluations/{evaluation\}`.
      */
     parent?: string;
   }
   export interface Params$Resource$Projects$Locations$Evaluations$Executions$Run extends StandardParameters {
     /**
-     * Required. The resource name of the Execution using the form: 'projects/{project\}/locations/{location\}/evaluations/{evaluation\}/executions/{execution\}'
+     * Required. The resource name of the Evaluation using the form: `projects/{project\}/locations/{location\}/evaluations/{evaluation\}`.
      */
     name?: string;
 
@@ -6177,13 +6132,13 @@ export namespace workloadmanager_v1 {
      *   const res =
      *     await workloadmanager.projects.locations.evaluations.executions.results.list(
      *       {
-     *         // Filtering results
+     *         // Filtering results.
      *         filter: 'placeholder-value',
      *         // Requested page size. Server may return fewer items than requested. If unspecified, server will pick an appropriate default.
      *         pageSize: 'placeholder-value',
      *         // A token identifying a page of results the server should return.
      *         pageToken: 'placeholder-value',
-     *         // Required. The execution results. Format: {parent\}/evaluations/x/executions/x/results
+     *         // Required. The execution results. Format: {parent\}/evaluations/x/executions/x/results.
      *         parent:
      *           'projects/my-project/locations/my-location/evaluations/my-evaluation/executions/my-execution',
      *       },
@@ -6303,7 +6258,7 @@ export namespace workloadmanager_v1 {
 
   export interface Params$Resource$Projects$Locations$Evaluations$Executions$Results$List extends StandardParameters {
     /**
-     * Filtering results
+     * Filtering results.
      */
     filter?: string;
     /**
@@ -6315,7 +6270,7 @@ export namespace workloadmanager_v1 {
      */
     pageToken?: string;
     /**
-     * Required. The execution results. Format: {parent\}/evaluations/x/executions/x/results
+     * Required. The execution results. Format: {parent\}/evaluations/x/executions/x/results.
      */
     parent?: string;
   }
@@ -6359,7 +6314,7 @@ export namespace workloadmanager_v1 {
      *   const res =
      *     await workloadmanager.projects.locations.evaluations.executions.scannedResources.list(
      *       {
-     *         // Filtering results
+     *         // Filtering results.
      *         filter: 'placeholder-value',
      *         // Field to sort by. See https://google.aip.dev/132#ordering for more details.
      *         orderBy: 'placeholder-value',
@@ -6367,10 +6322,10 @@ export namespace workloadmanager_v1 {
      *         pageSize: 'placeholder-value',
      *         // A token identifying a page of results the server should return.
      *         pageToken: 'placeholder-value',
-     *         // Required. parent for ListScannedResourcesRequest
+     *         // Required. Parent for ListScannedResourcesRequest.
      *         parent:
      *           'projects/my-project/locations/my-location/evaluations/my-evaluation/executions/my-execution',
-     *         // rule name
+     *         // Rule name.
      *         rule: 'placeholder-value',
      *       },
      *     );
@@ -6489,7 +6444,7 @@ export namespace workloadmanager_v1 {
 
   export interface Params$Resource$Projects$Locations$Evaluations$Executions$Scannedresources$List extends StandardParameters {
     /**
-     * Filtering results
+     * Filtering results.
      */
     filter?: string;
     /**
@@ -6505,11 +6460,11 @@ export namespace workloadmanager_v1 {
      */
     pageToken?: string;
     /**
-     * Required. parent for ListScannedResourcesRequest
+     * Required. Parent for ListScannedResourcesRequest.
      */
     parent?: string;
     /**
-     * rule name
+     * Rule name.
      */
     rule?: string;
   }
@@ -7483,20 +7438,19 @@ export namespace workloadmanager_v1 {
      *     customRulesBucket: 'placeholder-value',
      *     // Optional. The evaluation type of the rules will be applied to. The Cloud Storage bucket name for custom rules.
      *     evaluationType: 'placeholder-value',
-     *     // Filter based on primary_category, secondary_category
+     *     // Filter based on primary_category, secondary_category.
      *     filter: 'placeholder-value',
      *     // Requested page size. Server may return fewer items than requested. If unspecified, server will pick an appropriate default.
      *     pageSize: 'placeholder-value',
      *     // A token identifying a page of results the server should return.
      *     pageToken: 'placeholder-value',
-     *     // Required. The [project] on which to execute the request. The format is: projects/{project_id\}/locations/{location\} Currently, the pre-defined rules are global available to all projects and all regions
+     *     // Required. The [project] on which to execute the request. The format is: projects/{project_id\}/locations/{location\} Currently, the pre-defined rules are global available to all projects and all regions.
      *     parent: 'projects/my-project/locations/my-location',
      *   });
      *   console.log(res.data);
      *
      *   // Example response
      *   // {
-     *   //   "invalidRulesWrapper": {},
      *   //   "rules": []
      *   // }
      * }
@@ -7608,7 +7562,7 @@ export namespace workloadmanager_v1 {
      */
     evaluationType?: string;
     /**
-     * Filter based on primary_category, secondary_category
+     * Filter based on primary_category, secondary_category.
      */
     filter?: string;
     /**
@@ -7620,7 +7574,7 @@ export namespace workloadmanager_v1 {
      */
     pageToken?: string;
     /**
-     * Required. The [project] on which to execute the request. The format is: projects/{project_id\}/locations/{location\} Currently, the pre-defined rules are global available to all projects and all regions
+     * Required. The [project] on which to execute the request. The format is: projects/{project_id\}/locations/{location\} Currently, the pre-defined rules are global available to all projects and all regions.
      */
     parent?: string;
   }
