@@ -2647,7 +2647,7 @@ export namespace admin_directory_v1 {
    */
   export interface Schema$UserLocation {
     /**
-     * Textual location. This is most useful for display purposes to concisely describe the location. For example 'Mountain View, CA', 'Near Seattle', 'US-NYC-9TH 9A209A.''
+     * Required. Textual location. This is most useful for display purposes to concisely describe the location. For example 'Mountain View, CA', 'Near Seattle', 'US-NYC-9TH 9A209A.''
      */
     area?: string | null;
     /**
@@ -3974,7 +3974,7 @@ export namespace admin_directory_v1 {
      *     pageToken: 'placeholder-value',
      *     // Determines whether the response contains the full list of properties or only a subset.
      *     projection: 'placeholder-value',
-     *     // Search string in the format given at https://developers.google.com/workspace/admin/directory/v1/list-query-operators
+     *     // Search string in the format given at [List query operators](https://developers.google.com/workspace/admin/directory/v1/list-query-operators).
      *     query: 'placeholder-value',
      *     // Whether to return results in ascending or descending order. Must be used with the `orderBy` parameter.
      *     sortOrder: 'placeholder-value',
@@ -4795,7 +4795,7 @@ export namespace admin_directory_v1 {
      */
     projection?: string;
     /**
-     * Search string in the format given at https://developers.google.com/workspace/admin/directory/v1/list-query-operators
+     * Search string in the format given at [List query operators](https://developers.google.com/workspace/admin/directory/v1/list-query-operators).
      */
     query?: string;
     /**
@@ -5079,7 +5079,7 @@ export namespace admin_directory_v1 {
      *   const res = await admin.customer.devices.chromeos.countChromeOsDevices({
      *     // Required. Immutable ID of the Google Workspace account.
      *     customerId: 'placeholder-value',
-     *     // Optional. Search string in the format given at https://developers.google.com/workspace/admin/directory/v1/list-query-operators
+     *     // Optional. Search string in the format given at [List query operators](https://developers.google.com/workspace/admin/directory/v1/list-query-operators).
      *     filter: 'placeholder-value',
      *     // Optional. Return devices from all child orgunits, as well as the specified org unit. If this is set to true, 'orgUnitPath' must be provided.
      *     includeChildOrgunits: 'placeholder-value',
@@ -5372,7 +5372,7 @@ export namespace admin_directory_v1 {
      */
     customerId?: string;
     /**
-     * Optional. Search string in the format given at https://developers.google.com/workspace/admin/directory/v1/list-query-operators
+     * Optional. Search string in the format given at [List query operators](https://developers.google.com/workspace/admin/directory/v1/list-query-operators).
      */
     filter?: string;
     /**
@@ -20697,7 +20697,7 @@ export namespace admin_directory_v1 {
     }
 
     /**
-     * Create a guest user with access to a [subset of Workspace capabilities](https://support.google.com/a/answer/16558545?hl=en). This feature is currently in Alpha. Please reach out to support if you are interested in trying this feature.
+     * Create a guest user with access to a [subset of Workspace capabilities](https://support.google.com/a/answer/16558545). This feature is currently in Alpha. Please reach out to support if you are interested in trying this feature.
      * @example
      * ```js
      * // Before running the sample:
