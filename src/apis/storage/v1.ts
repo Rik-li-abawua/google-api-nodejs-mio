@@ -177,6 +177,10 @@ export namespace storage_v1 {
      */
     id?: string | null;
     /**
+     * Specifies whether objects are ingested into the cache upon write.
+     */
+    ingestOnWrite?: boolean | null;
+    /**
      * The kind of item this is. For Anywhere Cache, this is always storage#anywhereCache.
      */
     kind?: string | null;
@@ -1462,6 +1466,7 @@ export namespace storage_v1 {
      *   //   "bucket": "my_bucket",
      *   //   "createTime": "my_createTime",
      *   //   "id": "my_id",
+     *   //   "ingestOnWrite": false,
      *   //   "kind": "my_kind",
      *   //   "pendingUpdate": false,
      *   //   "selfLink": "my_selfLink",
@@ -1618,6 +1623,7 @@ export namespace storage_v1 {
      *   //   "bucket": "my_bucket",
      *   //   "createTime": "my_createTime",
      *   //   "id": "my_id",
+     *   //   "ingestOnWrite": false,
      *   //   "kind": "my_kind",
      *   //   "pendingUpdate": false,
      *   //   "selfLink": "my_selfLink",
@@ -1770,6 +1776,7 @@ export namespace storage_v1 {
      *       //   "bucket": "my_bucket",
      *       //   "createTime": "my_createTime",
      *       //   "id": "my_id",
+     *       //   "ingestOnWrite": false,
      *       //   "kind": "my_kind",
      *       //   "pendingUpdate": false,
      *       //   "selfLink": "my_selfLink",
@@ -2091,6 +2098,7 @@ export namespace storage_v1 {
      *   //   "bucket": "my_bucket",
      *   //   "createTime": "my_createTime",
      *   //   "id": "my_id",
+     *   //   "ingestOnWrite": false,
      *   //   "kind": "my_kind",
      *   //   "pendingUpdate": false,
      *   //   "selfLink": "my_selfLink",
@@ -2245,6 +2253,7 @@ export namespace storage_v1 {
      *   //   "bucket": "my_bucket",
      *   //   "createTime": "my_createTime",
      *   //   "id": "my_id",
+     *   //   "ingestOnWrite": false,
      *   //   "kind": "my_kind",
      *   //   "pendingUpdate": false,
      *   //   "selfLink": "my_selfLink",
@@ -2351,7 +2360,7 @@ export namespace storage_v1 {
     }
 
     /**
-     * Updates the config(ttl and admissionPolicy) of an Anywhere Cache instance.
+     * Updates the config of an Anywhere Cache instance.
      * @example
      * ```js
      * // Before running the sample:
@@ -2399,6 +2408,7 @@ export namespace storage_v1 {
      *       //   "bucket": "my_bucket",
      *       //   "createTime": "my_createTime",
      *       //   "id": "my_id",
+     *       //   "ingestOnWrite": false,
      *       //   "kind": "my_kind",
      *       //   "pendingUpdate": false,
      *       //   "selfLink": "my_selfLink",
