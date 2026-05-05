@@ -541,6 +541,10 @@ export namespace dataproc_v1 {
      */
     pysparkBatch?: Schema$PySparkBatch;
     /**
+     * Optional. PySpark notebook batch config.
+     */
+    pysparkNotebookBatch?: Schema$PySparkNotebookBatch;
+    /**
      * Optional. Runtime configuration for the batch execution.
      */
     runtimeConfig?: Schema$RuntimeConfig;
@@ -734,6 +738,10 @@ export namespace dataproc_v1 {
      */
     endpointConfig?: Schema$EndpointConfig;
     /**
+     * Optional. The cluster engine.
+     */
+    engine?: string | null;
+    /**
      * Optional. The shared Compute Engine config settings for all instances in a cluster.
      */
     gceClusterConfig?: Schema$GceClusterConfig;
@@ -912,6 +920,19 @@ export namespace dataproc_v1 {
      * Required. Repair action to take on the cluster resource.
      */
     clusterRepairAction?: string | null;
+  }
+  /**
+   * Information about the cohort that the workload belongs to.
+   */
+  export interface Schema$CohortInfo {
+    /**
+     * Output only. Final cohort that was used to tune the workload.
+     */
+    cohort?: string | null;
+    /**
+     * Output only. Source of the cohort.
+     */
+    cohortSource?: string | null;
   }
   /**
    * Confidential Instance Config for clusters using Confidential VMs (https://cloud.google.com/compute/confidential-vm/docs)
@@ -1108,6 +1129,10 @@ export namespace dataproc_v1 {
      * Optional. Network URI to connect workload to.
      */
     networkUri?: string | null;
+    /**
+     * Optional. Associates Resource Manager tags with the workload nodes. There is a max limit of 30 tags. Keys and values can be either in numeric format, such as tagKeys/{tag_key_id\} and tagValues/{tag_value_id\}, or in namespaced format, such as {org_id|project_id\}/{tag_key_short_name\} and {tag_value_short_name\}.
+     */
+    resourceManagerTags?: {[key: string]: string} | null;
     /**
      * Optional. Service account that used to execute workload.
      */
@@ -1593,6 +1618,10 @@ export namespace dataproc_v1 {
    * Instance flexibility Policy allowing a mixture of VM shapes and provisioning models.
    */
   export interface Schema$InstanceFlexibilityPolicy {
+    /**
+     * Output only. A map of instance short name to machine type. The key is the short name of the Compute Engine instance, and the value is the full machine-type name (e.g., 'n1-standard-16'). See Machine types for more information on valid machine type strings.
+     */
+    instanceMachineTypes?: {[key: string]: string} | null;
     /**
      * Optional. List of instance selection options that the group will use when creating new VMs.
      */
@@ -2799,6 +2828,35 @@ export namespace dataproc_v1 {
     pythonFileUris?: string[] | null;
   }
   /**
+   * A configuration for running a PySpark Notebook batch workload.
+   */
+  export interface Schema$PySparkNotebookBatch {
+    /**
+     * Optional. HCFS URIs of archives to be extracted into the working directory of each executor. Supported file types: .jar, .tar, .tar.gz, .tgz, and .zip.
+     */
+    archiveUris?: string[] | null;
+    /**
+     * Optional. HCFS URIs of files to be placed in the working directory of each executor
+     */
+    fileUris?: string[] | null;
+    /**
+     * Optional. HCFS URIs of jar files to be added to the Spark CLASSPATH.
+     */
+    jarFileUris?: string[] | null;
+    /**
+     * Required. The HCFS URI of the notebook file to execute.
+     */
+    notebookFileUri?: string | null;
+    /**
+     * Optional. The parameters to pass to the notebook.
+     */
+    params?: {[key: string]: string} | null;
+    /**
+     * Optional. HCFS URIs of Python files to pass to the PySpark framework.
+     */
+    pythonFileUris?: string[] | null;
+  }
+  /**
    * Quantile metrics data related to Tasks. Units can be seconds, bytes, milliseconds, etc depending on the message type.
    */
   export interface Schema$Quantiles {
@@ -3045,6 +3103,10 @@ export namespace dataproc_v1 {
      * Output only. Approximate workload resource usage, calculated when the workload completes (see Dataproc Serverless pricing (https://cloud.google.com/dataproc-serverless/pricing)).Note: This metric calculation may change in the future, for example, to capture cumulative workload resource consumption during workload execution (see the Dataproc Serverless release notes (https://cloud.google.com/dataproc-serverless/docs/release-notes) for announcements, changes, fixes and other Dataproc developments).
      */
     approximateUsage?: Schema$UsageMetrics;
+    /**
+     * Output only. Information about the cohort that the workload belongs to.
+     */
+    cohortInfo?: Schema$CohortInfo;
     /**
      * Output only. Snapshot of current workload resource usage.
      */
@@ -3765,6 +3827,10 @@ export namespace dataproc_v1 {
    */
   export interface Schema$SparkPlanGraphCluster {
     desc?: string | null;
+    /**
+     * Optional. Additional metadata for the spark plan graph cluster.
+     */
+    metadata?: {[key: string]: string} | null;
     metrics?: Schema$SqlPlanMetric[];
     name?: string | null;
     nodes?: Schema$SparkPlanGraphNodeWrapper[];
@@ -3782,6 +3848,10 @@ export namespace dataproc_v1 {
    */
   export interface Schema$SparkPlanGraphNode {
     desc?: string | null;
+    /**
+     * Optional. Additional metadata for the spark plan graph cluster.
+     */
+    metadata?: {[key: string]: string} | null;
     metrics?: Schema$SqlPlanMetric[];
     name?: string | null;
     sparkPlanGraphNodeId?: string | null;
@@ -4907,7 +4977,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5065,7 +5138,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5198,7 +5274,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5339,7 +5418,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5489,7 +5571,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5638,7 +5723,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5788,7 +5876,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -5940,7 +6031,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -6187,7 +6281,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -6337,7 +6434,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -6364,6 +6464,7 @@ export namespace dataproc_v1 {
      *       //   "name": "my_name",
      *       //   "operation": "my_operation",
      *       //   "pysparkBatch": {},
+     *       //   "pysparkNotebookBatch": {},
      *       //   "runtimeConfig": {},
      *       //   "runtimeInfo": {},
      *       //   "sparkBatch": {},
@@ -6506,7 +6607,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -6638,7 +6742,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -6661,6 +6769,7 @@ export namespace dataproc_v1 {
      *   //   "name": "my_name",
      *   //   "operation": "my_operation",
      *   //   "pysparkBatch": {},
+     *   //   "pysparkNotebookBatch": {},
      *   //   "runtimeConfig": {},
      *   //   "runtimeInfo": {},
      *   //   "sparkBatch": {},
@@ -6788,7 +6897,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -7007,7 +7120,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -7151,7 +7268,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -7304,7 +7425,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -7457,7 +7582,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -7610,7 +7739,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -7767,7 +7900,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -7926,7 +8063,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -8081,7 +8222,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -8241,7 +8386,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -8401,7 +8550,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -8563,7 +8716,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -8721,7 +8878,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -8883,7 +9044,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -9045,7 +9210,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -9211,7 +9380,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -9371,7 +9544,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -9527,7 +9704,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -9678,7 +9859,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -9835,7 +10020,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -9988,7 +10177,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -10531,7 +10723,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -10663,7 +10858,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -10795,7 +10993,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -10933,7 +11135,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -11132,7 +11338,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -11300,7 +11509,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -11440,7 +11652,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -11589,7 +11805,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -11735,7 +11955,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -11956,7 +12179,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -12104,7 +12331,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -12257,7 +12488,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -12410,7 +12645,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -12563,7 +12802,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -12722,7 +12965,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -12881,7 +13128,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -13036,7 +13287,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -13200,7 +13455,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -13360,7 +13619,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -13522,7 +13785,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -13682,7 +13949,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -13846,7 +14117,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -14008,7 +14283,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -14174,7 +14453,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -14336,7 +14619,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -14492,7 +14779,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -14645,7 +14936,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -14802,7 +15097,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -14957,7 +15256,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -15519,7 +15821,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -15685,7 +15990,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -15818,7 +16126,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -15962,7 +16274,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -16112,7 +16428,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -16335,7 +16654,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -16501,7 +16823,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -16636,7 +16961,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -16782,7 +17111,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -16931,7 +17263,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -17083,7 +17418,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -17245,7 +17583,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -17395,7 +17737,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -17544,7 +17889,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -17696,7 +18044,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -18002,7 +18353,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -18160,7 +18514,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -18293,7 +18650,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -18433,7 +18793,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -18582,7 +18945,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -18731,7 +19097,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -18880,7 +19249,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -19032,7 +19404,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -19280,7 +19655,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -19442,7 +19820,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -19593,7 +19974,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -19752,7 +20136,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -19901,7 +20289,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -20048,7 +20439,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -20202,7 +20596,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -20213,9 +20611,9 @@ export namespace dataproc_v1 {
      *   const res = await dataproc.projects.regions.clusters.list({
      *     // Optional. A filter constraining the clusters to list. Filters are case-sensitive and have the following syntax:field = value AND field = value ...where field is one of status.state, clusterName, or labels.[KEY], and [KEY] is a label key. value can be * to match all values. status.state can be one of the following: ACTIVE, INACTIVE, CREATING, RUNNING, ERROR, DELETING, UPDATING, STOPPING, or STOPPED. ACTIVE contains the CREATING, UPDATING, and RUNNING states. INACTIVE contains the DELETING, ERROR, STOPPING, and STOPPED states. clusterName is the name of the cluster provided at creation time. Only the logical AND operator is supported; space-separated items are treated as having an implicit AND operator.Example filter:status.state = ACTIVE AND clusterName = mycluster AND labels.env = staging AND labels.starred = *
      *     filter: 'placeholder-value',
-     *     // Optional. The standard List page size.
+     *     // Optional. The maximum number of clusters to return in each response. The service may return fewer than this value. If unspecified, the default value is 200. The maximum value is 1000.
      *     pageSize: 'placeholder-value',
-     *     // Optional. The standard List page token.
+     *     // Optional. A page token received from a previous ListClusters call. Provide this token to retrieve the subsequent page.
      *     pageToken: 'placeholder-value',
      *     // Required. The ID of the Google Cloud Platform project that the cluster belongs to.
      *     projectId: 'placeholder-value',
@@ -20349,7 +20747,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -20516,7 +20917,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -20675,7 +21079,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -20822,7 +21229,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -20976,7 +21386,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -21130,7 +21543,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -21377,11 +21793,11 @@ export namespace dataproc_v1 {
      */
     filter?: string;
     /**
-     * Optional. The standard List page size.
+     * Optional. The maximum number of clusters to return in each response. The service may return fewer than this value. If unspecified, the default value is 200. The maximum value is 1000.
      */
     pageSize?: number;
     /**
-     * Optional. The standard List page token.
+     * Optional. A page token received from a previous ListClusters call. Provide this token to retrieve the subsequent page.
      */
     pageToken?: string;
     /**
@@ -21532,7 +21948,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -21691,7 +22110,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -21828,7 +22251,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -21977,7 +22403,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -22186,7 +22615,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -22354,7 +22786,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -22492,7 +22927,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -22653,7 +23092,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -22800,7 +23242,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -22950,7 +23396,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -23142,7 +23591,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -23289,7 +23741,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -23457,7 +23912,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -23609,7 +24067,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -23929,7 +24390,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -24061,7 +24525,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -24193,7 +24660,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -24331,7 +24802,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -24478,7 +24952,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -24624,7 +25102,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -24771,7 +25252,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -25002,7 +25486,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -25168,7 +25655,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -25303,7 +25793,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -25449,7 +25943,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -25598,7 +26095,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -25750,7 +26250,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -25912,7 +26415,11 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *       'https://www.googleapis.com/auth/dataproc.read-only',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -26061,7 +26568,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -26210,7 +26720,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
@@ -26362,7 +26875,10 @@ export namespace dataproc_v1 {
      * async function main() {
      *   const auth = new google.auth.GoogleAuth({
      *     // Scopes can be specified either as an array or as a single, space-delimited string.
-     *     scopes: ['https://www.googleapis.com/auth/cloud-platform'],
+     *     scopes: [
+     *       'https://www.googleapis.com/auth/cloud-platform',
+     *       'https://www.googleapis.com/auth/dataproc',
+     *     ],
      *   });
      *
      *   // Acquire an auth client, and bind it to all future calls
