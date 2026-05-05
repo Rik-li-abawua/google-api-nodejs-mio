@@ -182,7 +182,7 @@ export namespace firebaseappdistribution_v1alpha {
      */
     hint?: string | null;
     /**
-     * Optional. A description of criteria the agent should use to determine if the goal has been successfully completed
+     * Optional. A visual description of the screen's expected state after the step has been successfully completed. This is referred to as the "final screen assertion" in the Firebase console and CLI tools. This field must be provided for the last step in a test case, and is optional for all other steps.
      */
     successCriteria?: string | null;
     /**
@@ -449,6 +449,14 @@ export namespace firebaseappdistribution_v1alpha {
      * Output only. A tap action.
      */
     tap?: Schema$AndroidxCrawlerOutputPoint;
+    /**
+     * Output only. The target folded state of the device in a set folded state action. The valid string values are device-dependent, and can be found using `adb shell cmd device_state print-states`.
+     */
+    targetFoldedState?: string | null;
+    /**
+     * Output only. The target orientation of the device in a set orientation action.
+     */
+    targetOrientation?: string | null;
     /**
      * Output only. A text input action, that types some text into whatever field is currently focused, if any. Unlike `enter_text` this action requires that the field be brought into focus first, for example by emitting a tap action before this one.
      */
@@ -781,6 +789,10 @@ export namespace firebaseappdistribution_v1alpha {
      */
     name?: string | null;
     /**
+     * Optional. Input only. The custom Cloud Storage bucket where test results are stored. Format: `projects/{project_number\}/buckets/{bucket\}` If not provided, the default test lab bucket is used.
+     */
+    resultsBucket?: string | null;
+    /**
      * Optional. The test case that was used to generate this release test. Note: The test case may have changed or been deleted since the release test was created. Format: `projects/{project_number\}/apps/{app\}/testCases/{test_case\}`
      */
     testCase?: string | null;
@@ -894,6 +906,10 @@ export namespace firebaseappdistribution_v1alpha {
      * Identifier. The name of the test configuration resource. Format: `projects/{project_number\}/apps/{app\}/testConfig`
      */
     name?: string | null;
+    /**
+     * Optional. The custom Cloud Storage bucket where test results are stored. Format: `projects/{project_number\}/buckets/{bucket\}` If not provided, the default test lab bucket is used.
+     */
+    resultsBucket?: string | null;
     /**
      * Optional. Configuration for Robo crawler
      */
@@ -2465,6 +2481,7 @@ export namespace firebaseappdistribution_v1alpha {
      *   // {
      *   //   "displayName": "my_displayName",
      *   //   "name": "my_name",
+     *   //   "resultsBucket": "my_resultsBucket",
      *   //   "roboCrawler": {},
      *   //   "testDevices": []
      *   // }
@@ -2615,6 +2632,7 @@ export namespace firebaseappdistribution_v1alpha {
      *       // {
      *       //   "displayName": "my_displayName",
      *       //   "name": "my_name",
+     *       //   "resultsBucket": "my_resultsBucket",
      *       //   "roboCrawler": {},
      *       //   "testDevices": []
      *       // }
@@ -2626,6 +2644,7 @@ export namespace firebaseappdistribution_v1alpha {
      *   // {
      *   //   "displayName": "my_displayName",
      *   //   "name": "my_name",
+     *   //   "resultsBucket": "my_resultsBucket",
      *   //   "roboCrawler": {},
      *   //   "testDevices": []
      *   // }
@@ -2967,6 +2986,7 @@ export namespace firebaseappdistribution_v1alpha {
      *         //   "displayName": "my_displayName",
      *         //   "loginCredential": {},
      *         //   "name": "my_name",
+     *         //   "resultsBucket": "my_resultsBucket",
      *         //   "testCase": "my_testCase",
      *         //   "testState": "my_testState"
      *         // }
@@ -2983,6 +3003,7 @@ export namespace firebaseappdistribution_v1alpha {
      *   //   "displayName": "my_displayName",
      *   //   "loginCredential": {},
      *   //   "name": "my_name",
+     *   //   "resultsBucket": "my_resultsBucket",
      *   //   "testCase": "my_testCase",
      *   //   "testState": "my_testState"
      *   // }
@@ -3138,6 +3159,7 @@ export namespace firebaseappdistribution_v1alpha {
      *   //   "displayName": "my_displayName",
      *   //   "loginCredential": {},
      *   //   "name": "my_name",
+     *   //   "resultsBucket": "my_resultsBucket",
      *   //   "testCase": "my_testCase",
      *   //   "testState": "my_testState"
      *   // }
