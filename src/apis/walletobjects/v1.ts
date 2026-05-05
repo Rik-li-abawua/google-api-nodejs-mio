@@ -540,6 +540,10 @@ export namespace walletobjects_v1 {
      */
     fromFileName?: string | null;
     /**
+     * The content type of the file detected by Fusion ID. go/fusionid
+     */
+    fromFusionId?: string | null;
+    /**
      * The content type of the file as specified in the request headers, multipart headers, or RUPIO start request.
      */
     fromHeader?: string | null;
@@ -547,6 +551,10 @@ export namespace walletobjects_v1 {
      * The content type of the file derived from the file extension of the URL path. The URL path is assumed to represent a file name (which is typically only true for agents that are providing a REST API).
      */
     fromUrlPath?: string | null;
+    /**
+     * Metadata information from Fusion ID detection. Serialized FusionIdDetectionMetadata proto. Only set if from_fusion_id is set.
+     */
+    fusionIdDetectionMetadata?: string | null;
   }
   export interface Schema$DateTime {
     /**
